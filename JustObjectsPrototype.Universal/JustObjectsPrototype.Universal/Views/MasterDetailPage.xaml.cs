@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace JustObjectsPrototype.Universal.Views
 {
-	public sealed partial class MasterDetailPage : Page
+	public partial class MasterDetailPage : Page
 	{
 		private List<NavMenuItem> navlist = new List<NavMenuItem>(
 			new[]
@@ -82,7 +82,10 @@ namespace JustObjectsPrototype.Universal.Views
 
 			// Don't play a content transition for first item load.
 			// Sometimes, this content will be animated as part of the page transition.
-			DisableContentTransitions();
+			if (DetailContentPresenter != null)
+			{
+				DetailContentPresenter.ContentTransitions.Clear();
+			}
 		}
 
 		private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
@@ -126,6 +129,22 @@ namespace JustObjectsPrototype.Universal.Views
 			}
 		}
 
+		private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
+		{
+			// Assure we are displaying the correct item. This is necessary in certain adaptive cases.
+			MasterListView.SelectedItem = _lastSelectedItem;
+		}
+
+		private async void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
+		{
+			var item = (NavMenuItem)((NavMenuListView)sender).ItemFromContainer(listViewItem);
+
+			if (item != null)
+			{
+				titleBar.Text = item.Label;
+			}
+		}
+
 		private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (ItemViewModel)e.ClickedItem;
@@ -139,57 +158,8 @@ namespace JustObjectsPrototype.Universal.Views
 			else
 			{
 				// Play a refresh animation when the user switches detail items.
-				EnableContentTransitions();
-			}
-		}
-
-		private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
-		{
-			// Assure we are displaying the correct item. This is necessary in certain adaptive cases.
-			MasterListView.SelectedItem = _lastSelectedItem;
-		}
-
-		private void EnableContentTransitions()
-		{
-			DetailContentPresenter.ContentTransitions.Clear();
-			DetailContentPresenter.ContentTransitions.Add(new EntranceThemeTransition());
-		}
-
-		private void DisableContentTransitions()
-		{
-			if (DetailContentPresenter != null)
-			{
 				DetailContentPresenter.ContentTransitions.Clear();
-			}
-		}
-
-		private void TogglePaneButton_Checked(object sender, RoutedEventArgs e)
-		{
-			this.CheckTogglePaneButtonSizeChanged();
-		}
-
-		/// <summary>
-		/// Check for the conditions where the navigation pane does not occupy the space under the floating
-		/// hamburger button and trigger the event.
-		/// </summary>
-		private void CheckTogglePaneButtonSizeChanged()
-		{
-			if (this.RootSplitView.DisplayMode == SplitViewDisplayMode.Inline ||
-				this.RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
-			{
-			}
-			else
-			{
-			}
-		}
-
-		private async void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
-		{
-			var item = (NavMenuItem)((NavMenuListView)sender).ItemFromContainer(listViewItem);
-
-			if (item != null)
-			{
-				titleBar.Text = item.Label;
+				DetailContentPresenter.ContentTransitions.Add(new EntranceThemeTransition());
 			}
 		}
 	}
