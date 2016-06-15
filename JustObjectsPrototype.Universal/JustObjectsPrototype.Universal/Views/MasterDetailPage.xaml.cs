@@ -1,5 +1,4 @@
 ﻿using JustObjectsPrototype.Universal.Controls;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -11,45 +10,13 @@ namespace JustObjectsPrototype.Universal.Views
 {
 	public partial class MasterDetailPage : Page
 	{
-		private List<NavMenuItem> navlist = new List<NavMenuItem>(
-			new[]
-			{
-				new NavMenuItem()
-				{
-					Symbol = Symbol.Contact,
-					Label = "Page1",
-				},
-				new NavMenuItem()
-				{
-					Symbol = Symbol.Edit,
-					Label = "Page2",
-				},
-				new NavMenuItem()
-				{
-					Symbol = Symbol.Favorite,
-					Label = "Page3",
-				},
-				new NavMenuItem()
-				{
-					Symbol = Symbol.Mail,
-					Label = "Master Detail",
-				},
-				new NavMenuItem()
-				{
-					Symbol = Symbol.Link,
-					Label = "Download Source Code",
-					DestinationPage = typeof(Uri),
-					Arguments = "http://scottge.net/product/uwp-windows-10-sample-navigation-panes",
-				}
-			});
-
 		private ItemViewModel _lastSelectedItem;
 
 		public MasterDetailPage()
 		{
 			this.InitializeComponent();
 
-			NavMenuList.ItemsSource = navlist;
+			DataContext = new MainViewModel();
 		}
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -74,18 +41,10 @@ namespace JustObjectsPrototype.Universal.Views
 			{
 				// Parameter is item ID
 				var id = (int)e.Parameter;
-				_lastSelectedItem =
-					items.Where((item) => item.ItemId == id).FirstOrDefault();
+				_lastSelectedItem = items.Where((item) => item.ItemId == id).FirstOrDefault();
 			}
 
 			UpdateForVisualState(AdaptiveStates.CurrentState);
-
-			// Don't play a content transition for first item load.
-			// Sometimes, this content will be animated as part of the page transition.
-			if (DetailContentPresenter != null)
-			{
-				DetailContentPresenter.ContentTransitions.Clear();
-			}
 		}
 
 		private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
@@ -107,10 +66,6 @@ namespace JustObjectsPrototype.Universal.Views
 
 			var isNarrow = newState == NarrowState;
 			EntranceNavigationTransitionInfo.SetIsTargetElement(MasterListView, isNarrow);
-			if (DetailContentPresenter != null)
-			{
-				EntranceNavigationTransitionInfo.SetIsTargetElement(DetailContentPresenter, !isNarrow);
-			}
 
 			Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, UpdateTitleBar);
 		}
@@ -135,7 +90,7 @@ namespace JustObjectsPrototype.Universal.Views
 			MasterListView.SelectedItem = _lastSelectedItem;
 		}
 
-		private async void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
+		private void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
 		{
 			var item = (NavMenuItem)((NavMenuListView)sender).ItemFromContainer(listViewItem);
 
@@ -154,12 +109,6 @@ namespace JustObjectsPrototype.Universal.Views
 			{
 				// Use "drill in" transition for navigating from master list to detail view
 				Frame.Navigate(typeof(DetailPage), clickedItem.ItemId, new DrillInNavigationTransitionInfo());
-			}
-			else
-			{
-				// Play a refresh animation when the user switches detail items.
-				DetailContentPresenter.ContentTransitions.Clear();
-				DetailContentPresenter.ContentTransitions.Add(new EntranceThemeTransition());
 			}
 		}
 	}

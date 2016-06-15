@@ -44,22 +44,6 @@
                     Style="{ThemeResource ListCaptionAltTextblockStyle}" />
 			</Grid>
 		</DataTemplate>
-		<DataTemplate x:Key="DetailContentTemplate" x:DataType="local:ItemViewModel">
-			<StackPanel>
-				<TextBlock
-                    Margin="0,8"
-                    Style="{ThemeResource TitleTextBlockStyle}"
-                    HorizontalAlignment="Left"
-                    Text="{x:Bind Title}"/>
-
-				<TextBlock
-                    Margin="0,9"
-                    HorizontalAlignment="Left"
-                    MaxWidth="560"
-                    Style="{ThemeResource BodyTextBlockStyle}"
-                    Text="{x:Bind Text}" />
-			</StackPanel>
-		</DataTemplate>
 		<Style x:Key="SplitViewTogglePaneButtonStyle" TargetType="ToggleButton">
 			<Setter Property="FontSize" Value="20" />
 			<Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
@@ -250,8 +234,9 @@
                                           TabIndex="3"
                                           Margin="0,48,0,0"
                                           ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
-                                          ItemTemplate="{StaticResource NavMenuItemTemplate}"
 										  ItemInvoked="NavMenuList_ItemInvoked"
+										  ItemsSource="{Binding MenuItems}"
+                                          ItemTemplate="{StaticResource NavMenuItemTemplate}"
 										  >
 				</controls:NavMenuListView>
 			</SplitView.Pane>
@@ -280,8 +265,9 @@
 					Grid.Column="0"
 					Grid.Row="1"
 					ItemContainerTransitions="{x:Null}"
-					ItemTemplate="{StaticResource MasterListViewItemTemplate}"
 					IsItemClickEnabled="True"
+					ItemTemplate="{StaticResource MasterListViewItemTemplate}"
+					SelectedItem="{Binding SelectedObject,Mode=TwoWay}"
 					ItemClick="MasterListView_ItemClick">
 					<ListView.ItemContainerStyle>
 						<Style TargetType="ListViewItem">
@@ -290,20 +276,29 @@
 					</ListView.ItemContainerStyle>
 				</ListView>
 
-				<ContentPresenter
-					x:Name="DetailContentPresenter"
+				
+				<StackPanel
 					Grid.Column="1"
 					Grid.RowSpan="2"
 					BorderThickness="1,0,0,0"
 					Padding="24,0"
 					BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
-					Content="{x:Bind MasterListView.SelectedItem, Mode=OneWay}"
-					ContentTemplate="{StaticResource DetailContentTemplate}">
-					<ContentPresenter.ContentTransitions>
-						<!-- Empty by default. See MasterListView_ItemClick -->
-						<TransitionCollection />
-					</ContentPresenter.ContentTransitions>
-				</ContentPresenter>
+					>
+					<TextBlock
+						Margin="0,8"
+						Style="{ThemeResource TitleTextBlockStyle}"
+						HorizontalAlignment="Left"
+						Text="{Binding SelectedObject.Title}"/>
+
+					<TextBlock
+						Margin="0,9"
+						HorizontalAlignment="Left"
+						MaxWidth="560"
+						Style="{ThemeResource BodyTextBlockStyle}"
+						Text="{Binding SelectedObject.Text}" />
+				</StackPanel>
+
+
 			</Grid>
 
 		</SplitView>

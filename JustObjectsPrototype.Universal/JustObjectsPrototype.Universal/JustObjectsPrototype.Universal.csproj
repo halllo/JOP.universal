@@ -102,6 +102,7 @@
       <DependentUpon>DetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ItemViewModel.cs" />
+    <Compile Include="Views\MainViewModel.cs" />
     <Compile Include="Views\MasterDetailPage.xaml.cs">
       <DependentUpon>MasterDetailPage.xaml</DependentUpon>
     </Compile>
