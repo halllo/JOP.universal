@@ -1,4 +1,5 @@
-﻿using Windows.UI.Core;
+﻿using System.Linq;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -8,8 +9,7 @@ namespace JustObjectsPrototype.Universal.Views
 {
 	public sealed partial class DetailPage : Page
 	{
-		private static DependencyProperty s_itemProperty
-		   = DependencyProperty.Register("Item", typeof(ItemViewModel), typeof(DetailPage), new PropertyMetadata(null));
+		private static DependencyProperty s_itemProperty = DependencyProperty.Register("Item", typeof(ItemViewModel), typeof(DetailPage), new PropertyMetadata(null));
 
 		public static DependencyProperty ItemProperty
 		{
@@ -32,8 +32,7 @@ namespace JustObjectsPrototype.Universal.Views
 			System.Diagnostics.Debug.WriteLine("DetailPage.OnNavigatedTo");
 			base.OnNavigatedTo(e);
 
-			// Parameter is item ID
-			Item = ItemViewModel.FromItem(ItemsDataSource.GetItemById((int)e.Parameter));
+			Item = MainViewModel.Instance.Value.MasterItems.FirstOrDefault(mi => mi.Id == (int)e.Parameter);
 
 			var backStack = Frame.BackStack;
 			var backStackCount = backStack.Count;
@@ -47,7 +46,7 @@ namespace JustObjectsPrototype.Universal.Views
 				// will show the correct item in the side-by-side view.
 				var modifiedEntry = new PageStackEntry(
 					masterPageEntry.SourcePageType,
-					Item.ItemId,
+					Item.Id,
 					masterPageEntry.NavigationTransitionInfo
 					);
 				backStack.Add(modifiedEntry);

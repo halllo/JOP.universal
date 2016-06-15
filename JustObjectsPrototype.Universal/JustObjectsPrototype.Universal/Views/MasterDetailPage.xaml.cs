@@ -1,5 +1,4 @@
 ﻿using JustObjectsPrototype.Universal.Controls;
-using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,32 +15,16 @@ namespace JustObjectsPrototype.Universal.Views
 		{
 			this.InitializeComponent();
 
-			DataContext = new MainViewModel();
+			DataContext = MainViewModel.Instance.Value;
 		}
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			base.OnNavigatedTo(e);
 
-			var items = MasterListView.ItemsSource as List<ItemViewModel>;
-
-			if (items == null)
-			{
-				items = new List<ItemViewModel>();
-
-				foreach (var item in ItemsDataSource.GetAllItems())
-				{
-					items.Add(ItemViewModel.FromItem(item));
-				}
-
-				MasterListView.ItemsSource = items;
-			}
-
 			if (e.Parameter != null && e.Parameter.ToString() != string.Empty)
 			{
-				// Parameter is item ID
-				var id = (int)e.Parameter;
-				_lastSelectedItem = items.Where((item) => item.ItemId == id).FirstOrDefault();
+				_lastSelectedItem = MainViewModel.Instance.Value.MasterItems.FirstOrDefault(mi => mi.Id == (int)e.Parameter);
 			}
 
 			UpdateForVisualState(AdaptiveStates.CurrentState);
@@ -57,7 +40,7 @@ namespace JustObjectsPrototype.Universal.Views
 			if (newState == NarrowState && oldState == DefaultState && _lastSelectedItem != null)
 			{
 				// Resize down to the detail item. Don't play a transition.
-				Frame.Navigate(typeof(DetailPage), _lastSelectedItem.ItemId, new SuppressNavigationTransitionInfo());
+				Frame.Navigate(typeof(DetailPage), _lastSelectedItem.Id, new SuppressNavigationTransitionInfo());
 			}
 			else if (newState == DefaultState && oldState == NarrowState)
 			{
@@ -79,7 +62,7 @@ namespace JustObjectsPrototype.Universal.Views
 			}
 			else
 			{
-				this.titleBar.Margin = new Thickness(50, 6, 0, 0);
+				this.titleBar.Margin = new Thickness(60, 6, 0, 0);
 				System.Diagnostics.Debug.WriteLine("schmal");
 			}
 		}
@@ -108,7 +91,7 @@ namespace JustObjectsPrototype.Universal.Views
 			if (AdaptiveStates.CurrentState == NarrowState)
 			{
 				// Use "drill in" transition for navigating from master list to detail view
-				Frame.Navigate(typeof(DetailPage), clickedItem.ItemId, new DrillInNavigationTransitionInfo());
+				Frame.Navigate(typeof(DetailPage), clickedItem.Id, new DrillInNavigationTransitionInfo());
 			}
 		}
 	}

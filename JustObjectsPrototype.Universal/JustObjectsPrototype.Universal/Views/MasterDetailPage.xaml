@@ -224,20 +224,20 @@
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 
-		<SplitView x:Name="RootSplitView"
-				   Grid.Column="0"
-                   DisplayMode="Inline"
-                   OpenPaneLength="256"
-                   IsTabStop="False">
+		<SplitView 
+			x:Name="RootSplitView"
+			Grid.Column="0"
+            DisplayMode="Inline"
+            OpenPaneLength="256"
+            IsTabStop="False">
 			<SplitView.Pane>
-				<controls:NavMenuListView x:Name="NavMenuList"
-                                          TabIndex="3"
-                                          Margin="0,48,0,0"
-                                          ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
-										  ItemInvoked="NavMenuList_ItemInvoked"
-										  ItemsSource="{Binding MenuItems}"
-                                          ItemTemplate="{StaticResource NavMenuItemTemplate}"
-										  >
+				<controls:NavMenuListView 
+					TabIndex="3"
+                    Margin="0,48,0,0"
+                    ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
+					ItemInvoked="NavMenuList_ItemInvoked"
+					ItemsSource="{Binding MenuItems}"
+                    ItemTemplate="{StaticResource NavMenuItemTemplate}">
 				</controls:NavMenuListView>
 			</SplitView.Pane>
 
@@ -267,7 +267,8 @@
 					ItemContainerTransitions="{x:Null}"
 					IsItemClickEnabled="True"
 					ItemTemplate="{StaticResource MasterListViewItemTemplate}"
-					SelectedItem="{Binding SelectedObject,Mode=TwoWay}"
+					ItemsSource="{Binding MasterItems}"
+					SelectedItem="{Binding SelectedMasterItem,Mode=TwoWay}"
 					ItemClick="MasterListView_ItemClick">
 					<ListView.ItemContainerStyle>
 						<Style TargetType="ListViewItem">
@@ -276,7 +277,7 @@
 					</ListView.ItemContainerStyle>
 				</ListView>
 
-				
+
 				<StackPanel
 					Grid.Column="1"
 					Grid.RowSpan="2"
@@ -288,14 +289,14 @@
 						Margin="0,8"
 						Style="{ThemeResource TitleTextBlockStyle}"
 						HorizontalAlignment="Left"
-						Text="{Binding SelectedObject.Title}"/>
+						Text="{Binding SelectedMasterItem.Title}"/>
 
 					<TextBlock
 						Margin="0,9"
 						HorizontalAlignment="Left"
 						MaxWidth="560"
 						Style="{ThemeResource BodyTextBlockStyle}"
-						Text="{Binding SelectedObject.Text}" />
+						Text="{Binding SelectedMasterItem.Text}" />
 				</StackPanel>
 
 
