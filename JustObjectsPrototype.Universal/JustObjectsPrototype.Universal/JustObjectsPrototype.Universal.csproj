@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CommandBarBridge.cs" />
     <Compile Include="Controls\NavMenuListView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\DetailPage.xaml.cs">

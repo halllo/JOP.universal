@@ -10,18 +10,10 @@
     d:DesignWidth="400">
 
 	<StackPanel>
-		
-		<CommandBar x:Name="commandBar" Background="Transparent">
-			<AppBarButton Icon="Back" Label="Back"/>
-			<AppBarButton Icon="Stop" Label="Stop"/>
-			<AppBarButton Icon="Play" Label="Play"/>
-			<AppBarButton Icon="Forward" Label="Forward"/>
 
-			<CommandBar.SecondaryCommands>
-				<AppBarButton Icon="Like" Label="Like"/>
-				<AppBarButton Icon="Dislike" Label="Dislike"/>
-			</CommandBar.SecondaryCommands>
-			
+		<CommandBar x:Name="commandBar" Background="Transparent"
+					local:CommandBarBridge.DetailCommandsProperty="{Binding}">
+
 		</CommandBar>
 		
 		<TextBlock

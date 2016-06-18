@@ -306,14 +306,7 @@
 	</Grid>
 
 	<Page.BottomAppBar>
-		<CommandBar>
-			<AppBarButton Icon="Placeholder" Label="Play"/>
-
-			<CommandBar.SecondaryCommands>
-				<AppBarButton Icon="Like" Label="Like"/>
-				<AppBarButton Icon="Dislike" Label="Dislike"/>
-			</CommandBar.SecondaryCommands>
-
+		<CommandBar local:CommandBarBridge.MasterCommandsProperty="{x:Bind DataContext}">
 			<CommandBar.Content>
 				<TextBlock Text="{Binding SelectedMenuItem.Label}" Margin="12,14"/>
 			</CommandBar.Content>

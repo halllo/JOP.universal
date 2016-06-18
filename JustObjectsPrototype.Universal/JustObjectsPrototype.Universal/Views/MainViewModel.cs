@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using Windows.Globalization.DateTimeFormatting;
 using Windows.UI.Xaml.Controls;
 
@@ -17,6 +19,28 @@ namespace JustObjectsPrototype.Universal.Views
 		public event PropertyChangedEventHandler PropertyChanged;
 	}
 
+	public class Command : ICommand
+	{
+		Action _Command;
+
+		public Command(Action command)
+		{
+			_Command = command;
+		}
+
+		public event EventHandler CanExecuteChanged;
+
+		public bool CanExecute(object parameter)
+		{
+			return true;
+		}
+
+		public void Execute(object parameter)
+		{
+			_Command();
+		}
+	}
+
 
 
 
@@ -24,14 +48,7 @@ namespace JustObjectsPrototype.Universal.Views
 	{
 		public string Label { get; set; }
 		public Symbol Symbol { get; set; }
-		public char SymbolAsChar
-		{
-			get
-			{
-				return (char)this.Symbol;
-			}
-		}
-		public object Arguments { get; set; }
+		public char SymbolAsChar { get { return (char)this.Symbol; } }
 
 		public MenuItemViewModel()
 		{
@@ -63,6 +80,13 @@ namespace JustObjectsPrototype.Universal.Views
 		}
 	}
 
+	public class ActionViewModel
+	{
+		public Command Action { get; set; }
+		public string Label { get; set; }
+		public Symbol Icon { get; set; }
+	}
+
 
 
 
@@ -73,37 +97,30 @@ namespace JustObjectsPrototype.Universal.Views
 
 		private MainViewModel()
 		{
-			MenuItems = new List<MenuItemViewModel>
+			MenuItems = new ObservableCollection<MenuItemViewModel>
 			{
 				new MenuItemViewModel()
 				{
+					Label = "Items",
 					Symbol = Symbol.Contact,
-					Label = "Page1",
 				},
 				new MenuItemViewModel()
 				{
+					Label = "Other Items",
 					Symbol = Symbol.Edit,
-					Label = "Page2",
 				},
 				new MenuItemViewModel()
 				{
+					Label = "More Items",
 					Symbol = Symbol.Favorite,
-					Label = "Page3",
 				},
 				new MenuItemViewModel()
 				{
+					Label = "Stuff",
 					Symbol = Symbol.Mail,
-					Label = "Master Detail",
 				},
-				new MenuItemViewModel()
-				{
-					Symbol = Symbol.Link,
-					Label = "Download Source Code",
-					Arguments = "http://scottge.net/product/uwp-windows-10-sample-navigation-panes",
-				}
 			};
-
-			MasterItems = new List<ItemViewModel>
+			MasterItems = new ObservableCollection<ItemViewModel>
 			{
 				new ItemViewModel()
 				{
@@ -145,10 +162,49 @@ Aenean vulputate, turpis non tincidunt ornare, metus est sagittis erat, id lobor
 Nam vulputate eu erat ornare blandit. Proin eget lacinia erat. Praesent nisl lectus, pretium eget leo et, dapibus dapibus velit. Integer at bibendum mi, et fringilla sem."
 				}
 			};
+
+			MasterCommands = new ObservableCollection<ActionViewModel>
+			{
+				new ActionViewModel
+				{
+					Action = new Command(()=>
+					{
+						MasterItems.Add(new ItemViewModel
+						{
+							Id = MasterItems.Max(i => i.Id) + 1,
+							DateCreated = DateTime.Now,
+							Text = "neu neu",
+							Title = "item" + DateTime.Now.Ticks
+						});
+					}),
+					Label = "new item",
+					Icon = Symbol.NewWindow
+				},
+			};
+
+			DetailCommands = new ObservableCollection<ActionViewModel>
+			{
+				new ActionViewModel
+				{
+					Action = new Command(()=>
+					{
+						System.Diagnostics.Debug.WriteLine("d1");
+						DetailCommands.Add(new ActionViewModel
+						{
+							Label = "function" + DateTime.Now.Ticks,
+							Icon = Symbol.Placeholder,
+							Action = new Command(() => { })
+						});
+					}),
+					Label = "new function",
+					Icon = Symbol.NewFolder
+				},
+			};
 		}
 
 
-		public List<MenuItemViewModel> MenuItems { get; set; }
+
+		public ObservableCollection<MenuItemViewModel> MenuItems { get; set; }
 
 		public MenuItemViewModel SelectedMenuItem
 		{
@@ -157,7 +213,8 @@ Nam vulputate eu erat ornare blandit. Proin eget lacinia erat. Praesent nisl lec
 		}
 		MenuItemViewModel _SelectedMenuItem;
 
-		public List<ItemViewModel> MasterItems { get; set; }
+
+		public ObservableCollection<ItemViewModel> MasterItems { get; set; }
 
 		public ItemViewModel SelectedMasterItem
 		{
@@ -165,5 +222,9 @@ Nam vulputate eu erat ornare blandit. Proin eget lacinia erat. Praesent nisl lec
 			set { _SelectedMasterItem = value; PropertyChange(); }
 		}
 		ItemViewModel _SelectedMasterItem;
+
+
+		public ObservableCollection<ActionViewModel> MasterCommands { get; set; }
+		public ObservableCollection<ActionViewModel> DetailCommands { get; set; }
 	}
 }
