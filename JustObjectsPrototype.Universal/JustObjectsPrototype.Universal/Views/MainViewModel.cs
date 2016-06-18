@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JustObjectsPrototype.Universal.JOP;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -21,23 +22,29 @@ namespace JustObjectsPrototype.Universal.Views
 
 	public class Command : ICommand
 	{
-		Action _Command;
+		Action _Execute;
+		Func<bool> _CanExecute;
 
-		public Command(Action command)
+		public Command(Action execute, Func<bool> canExecute = null)
 		{
-			_Command = command;
+			_Execute = execute;
+			_CanExecute = canExecute ?? (() => true);
 		}
-
-		public event EventHandler CanExecuteChanged;
 
 		public bool CanExecute(object parameter)
 		{
-			return true;
+			return _CanExecute();
 		}
 
 		public void Execute(object parameter)
 		{
-			_Command();
+			_Execute();
+		}
+
+		public event EventHandler CanExecuteChanged;
+		public void RaiseCanExecuteChanged()
+		{
+			CanExecuteChanged?.Invoke(this, new EventArgs());
 		}
 	}
 
@@ -57,6 +64,8 @@ namespace JustObjectsPrototype.Universal.Views
 
 	public class ItemViewModel
 	{
+		public static int IdZaehler = 0;
+
 		public int Id
 		{
 			get; set;
@@ -86,6 +95,57 @@ namespace JustObjectsPrototype.Universal.Views
 		public string Label { get; set; }
 		public Symbol Icon { get; set; }
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -204,12 +264,71 @@ Nam vulputate eu erat ornare blandit. Proin eget lacinia erat. Praesent nisl lec
 
 
 
+
+		Objects _Objects;
+
+		public void Init(ObservableCollection<object> objects)
+		{
+			_Objects = new Objects(objects);
+
+
+			UpdateMenu(_Objects.Types);
+			_Objects.Types.CollectionChanged += (s, e) => UpdateMenu(_Objects.Types);
+		}
+
+
+		private void UpdateMenu(ObservableCollection<Type> types)
+		{
+			MenuItems.Clear();
+			foreach (var type in types)
+			{
+				var menuItemVM = new MenuItemViewModel
+				{
+					Label = type.Name,
+					Symbol = Symbol.AllApps
+				};
+				MenuItems.Add(menuItemVM);
+			}
+		}
+
+		private void UpdateItems(ObservableCollection<ObjectProxy> items)
+		{
+			MasterItems.Clear();
+			foreach (var item in items)
+			{
+				var itemVM = new ItemViewModel
+				{
+					Id = ++ItemViewModel.IdZaehler,
+					Title = item.ToString(),
+					Text = "...",
+					DateCreated = DateTime.Now
+				};
+				MasterItems.Add(itemVM);
+			}
+		}
+
+
+
+
+
+
+
 		public ObservableCollection<MenuItemViewModel> MenuItems { get; set; }
 
 		public MenuItemViewModel SelectedMenuItem
 		{
 			get { return _SelectedMenuItem; }
-			set { _SelectedMenuItem = value; PropertyChange(); }
+			set
+			{
+				_SelectedMenuItem = value; PropertyChange();
+
+				if (_SelectedMenuItem != null)
+				{
+					var selectedType = _Objects.Types.First(t => t.Name == SelectedMenuItem.Label);
+					UpdateItems(_Objects.OfType(selectedType));
+					_Objects.OfType(selectedType).CollectionChanged += (s, e) => UpdateItems(_Objects.OfType(selectedType));
+				}
+			}
 		}
 		MenuItemViewModel _SelectedMenuItem;
 
