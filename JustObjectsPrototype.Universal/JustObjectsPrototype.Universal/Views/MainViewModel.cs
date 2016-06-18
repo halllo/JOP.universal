@@ -1,5 +1,4 @@
-﻿using JustObjectsPrototype.Universal.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -20,6 +19,24 @@ namespace JustObjectsPrototype.Universal.Views
 
 
 
+
+	public class MenuItemViewModel
+	{
+		public string Label { get; set; }
+		public Symbol Symbol { get; set; }
+		public char SymbolAsChar
+		{
+			get
+			{
+				return (char)this.Symbol;
+			}
+		}
+		public object Arguments { get; set; }
+
+		public MenuItemViewModel()
+		{
+		}
+	}
 
 	public class ItemViewModel
 	{
@@ -56,29 +73,29 @@ namespace JustObjectsPrototype.Universal.Views
 
 		private MainViewModel()
 		{
-			MenuItems = new List<NavMenuItem>
+			MenuItems = new List<MenuItemViewModel>
 			{
-				new NavMenuItem()
+				new MenuItemViewModel()
 				{
 					Symbol = Symbol.Contact,
 					Label = "Page1",
 				},
-				new NavMenuItem()
+				new MenuItemViewModel()
 				{
 					Symbol = Symbol.Edit,
 					Label = "Page2",
 				},
-				new NavMenuItem()
+				new MenuItemViewModel()
 				{
 					Symbol = Symbol.Favorite,
 					Label = "Page3",
 				},
-				new NavMenuItem()
+				new MenuItemViewModel()
 				{
 					Symbol = Symbol.Mail,
 					Label = "Master Detail",
 				},
-				new NavMenuItem()
+				new MenuItemViewModel()
 				{
 					Symbol = Symbol.Link,
 					Label = "Download Source Code",
@@ -130,11 +147,17 @@ Nam vulputate eu erat ornare blandit. Proin eget lacinia erat. Praesent nisl lec
 			};
 		}
 
-		public List<NavMenuItem> MenuItems { get; set; }
 
+		public List<MenuItemViewModel> MenuItems { get; set; }
+
+		public MenuItemViewModel SelectedMenuItem
+		{
+			get { return _SelectedMenuItem; }
+			set { _SelectedMenuItem = value; PropertyChange(); }
+		}
+		MenuItemViewModel _SelectedMenuItem;
 
 		public List<ItemViewModel> MasterItems { get; set; }
-
 
 		public ItemViewModel SelectedMasterItem
 		{

@@ -140,7 +140,7 @@
 			<Setter Property="Height" Value="48"/>
 			<Setter Property="Padding" Value="0"/>
 		</Style>
-		<DataTemplate x:Key="NavMenuItemTemplate" x:DataType="controls:NavMenuItem">
+		<DataTemplate x:Key="NavMenuItemTemplate" x:DataType="local:MenuItemViewModel">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="48" />
@@ -237,6 +237,7 @@
                     ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
 					ItemInvoked="NavMenuList_ItemInvoked"
 					ItemsSource="{Binding MenuItems}"
+					SelectedItem="{Binding SelectedMenuItem,Mode=TwoWay}"
                     ItemTemplate="{StaticResource NavMenuItemTemplate}">
 				</controls:NavMenuListView>
 			</SplitView.Pane>
@@ -249,13 +250,13 @@
 				</Grid.RowDefinitions>
 
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition x:Name="MasterColumn" Width="600" />
+					<ColumnDefinition x:Name="MasterColumn" Width="500" />
 					<ColumnDefinition x:Name="DetailColumn" Width="*" />
 				</Grid.ColumnDefinitions>
 
 				<TextBlock
 					x:Name="titleBar"
-					Text="My Items"
+					Text="{Binding SelectedMenuItem.Label}"
 					MinHeight="48"
 					Style="{ThemeResource TitleTextBlockStyle}" />
 
@@ -283,20 +284,10 @@
 					Grid.RowSpan="2"
 					BorderThickness="1,0,0,0"
 					Padding="24,0"
-					BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
-					>
-					<TextBlock
-						Margin="0,8"
-						Style="{ThemeResource TitleTextBlockStyle}"
-						HorizontalAlignment="Left"
-						Text="{Binding SelectedMasterItem.Title}"/>
+					BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}">
 
-					<TextBlock
-						Margin="0,9"
-						HorizontalAlignment="Left"
-						MaxWidth="560"
-						Style="{ThemeResource BodyTextBlockStyle}"
-						Text="{Binding SelectedMasterItem.Text}" />
+					<local:DetailView DataContext="{Binding SelectedMasterItem}"/>
+					
 				</StackPanel>
 
 
@@ -311,6 +302,22 @@
                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                       />
 
+
 	</Grid>
+
+	<Page.BottomAppBar>
+		<CommandBar>
+			<AppBarButton Icon="Placeholder" Label="Play"/>
+
+			<CommandBar.SecondaryCommands>
+				<AppBarButton Icon="Like" Label="Like"/>
+				<AppBarButton Icon="Dislike" Label="Dislike"/>
+			</CommandBar.SecondaryCommands>
+
+			<CommandBar.Content>
+				<TextBlock Text="{Binding SelectedMenuItem.Label}" Margin="12,14"/>
+			</CommandBar.Content>
+		</CommandBar>
+	</Page.BottomAppBar>
 </Page>
     

@@ -1,5 +1,4 @@
-﻿using JustObjectsPrototype.Universal.Controls;
-using System.Linq;
+﻿using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -75,12 +74,6 @@ namespace JustObjectsPrototype.Universal.Views
 
 		private void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
 		{
-			var item = (NavMenuItem)((NavMenuListView)sender).ItemFromContainer(listViewItem);
-
-			if (item != null)
-			{
-				titleBar.Text = item.Label;
-			}
 		}
 
 		private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)

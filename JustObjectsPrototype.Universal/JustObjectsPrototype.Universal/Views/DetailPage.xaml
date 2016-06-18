@@ -19,18 +19,29 @@
 
     <!-- Don't realize our content by default. See PageRoot_Loaded. -->
 	<StackPanel x:Name="RootPanel" x:DeferLoadStrategy="Lazy">
-		<TextBlock
-            Margin="8,0"
-            Style="{ThemeResource TitleTextBlockStyle}"
-            HorizontalAlignment="Left"
-            Text="{x:Bind Item.Title, Mode=OneWay}" />
 
-		<TextBlock
-            Margin="12,8"
-            HorizontalAlignment="Left"
-            MaxWidth="560"
-            Style="{ThemeResource BodyTextBlockStyle}"
-            Text="{x:Bind Item.Text, Mode=OneWay}"
-            EntranceNavigationTransitionInfo.IsTargetElement="True" />
+		<local:DetailView 
+			Margin="12,8"
+			CommandBarVisible="False"
+			DataContext="{x:Bind Item, Mode=OneWay}"/>
+
 	</StackPanel>
+
+	<Page.BottomAppBar>
+		<CommandBar>
+			<AppBarButton Icon="Back" Label="Back"/>
+			<AppBarButton Icon="Stop" Label="Stop"/>
+			<AppBarButton Icon="Play" Label="Play"/>
+			<AppBarButton Icon="Forward" Label="Forward"/>
+
+			<CommandBar.SecondaryCommands>
+				<AppBarButton Icon="Like" Label="Like"/>
+				<AppBarButton Icon="Dislike" Label="Dislike"/>
+			</CommandBar.SecondaryCommands>
+
+			<CommandBar.Content>
+				<TextBlock Text="{x:Bind Item.Title,Mode=OneWay}" Margin="12,14"/>
+			</CommandBar.Content>
+		</CommandBar>
+	</Page.BottomAppBar>
 </Page>
