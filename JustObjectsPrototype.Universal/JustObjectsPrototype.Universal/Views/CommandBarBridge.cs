@@ -66,7 +66,7 @@ namespace JustObjectsPrototype.Universal.Views
 		private static void DetailCommandsPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
 		{
 			var commandBar = o as CommandBar;
-			var mainViewModel = MainViewModel.Instance.Value;
+			var mainViewModel = JopViewModel.Instance.Value;
 
 			mainViewModel.DetailCommands.CollectionChanged += (s, e2) =>
 			{

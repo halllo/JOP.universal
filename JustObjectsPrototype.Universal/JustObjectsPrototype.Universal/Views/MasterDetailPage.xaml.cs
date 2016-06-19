@@ -14,7 +14,7 @@ namespace JustObjectsPrototype.Universal.Views
 		{
 			this.InitializeComponent();
 
-			DataContext = MainViewModel.Instance.Value;
+			DataContext = JopViewModel.Instance.Value;
 		}
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -23,7 +23,7 @@ namespace JustObjectsPrototype.Universal.Views
 
 			if (e.Parameter != null && e.Parameter.ToString() != string.Empty)
 			{
-				_lastSelectedItem = MainViewModel.Instance.Value.MasterItems.FirstOrDefault(mi => mi.Id == (int)e.Parameter);
+				_lastSelectedItem = JopViewModel.Instance.Value.MasterItems.FirstOrDefault(mi => mi.Id == (int)e.Parameter);
 			}
 
 			UpdateForVisualState(AdaptiveStates.CurrentState);

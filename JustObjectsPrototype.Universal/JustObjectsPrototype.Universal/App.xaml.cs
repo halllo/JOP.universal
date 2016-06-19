@@ -88,7 +88,7 @@ namespace JustObjectsPrototype.Universal
 							Decimals = new List<decimal> { 3.5m, 3.3333m },
 						},
 					};
-					Views.MainViewModel.Instance.Value.Init(objects);
+					Views.JopViewModel.Instance.Value.Init(objects);
 
 					rootFrame.Navigate(typeof(Views.MasterDetailPage), e.Arguments);
 				}

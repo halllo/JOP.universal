@@ -64,7 +64,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			RaisePropertyChanged(propertyName);
 		}
 
-		private object GetMember(string propertyName)
+		public object GetMember(string propertyName)
 		{
 			var result = GetPropertyInfo(propertyName).GetValue(ProxiedObject, null);
 

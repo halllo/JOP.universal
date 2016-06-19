@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="JOP\ObjectDisplay.cs" />
     <Compile Include="JOP\ObjectProxy.cs" />
     <Compile Include="JOP\Objects.cs" />
     <Compile Include="JOP\TypeCreator.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Views\DetailView.xaml.cs">
       <DependentUpon>DetailView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\JopViewModel.cs" />
     <Compile Include="Views\MainViewModel.cs" />
     <Compile Include="Views\MasterDetailPage.xaml.cs">
       <DependentUpon>MasterDetailPage.xaml</DependentUpon>

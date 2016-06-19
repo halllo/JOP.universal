@@ -32,7 +32,7 @@ namespace JustObjectsPrototype.Universal.Views
 			System.Diagnostics.Debug.WriteLine("DetailPage.OnNavigatedTo");
 			base.OnNavigatedTo(e);
 
-			Item = MainViewModel.Instance.Value.MasterItems.FirstOrDefault(mi => mi.Id == (int)e.Parameter);
+			Item = JopViewModel.Instance.Value.MasterItems.FirstOrDefault(mi => mi.Id == (int)e.Parameter);
 
 			var backStack = Frame.BackStack;
 			var backStackCount = backStack.Count;
