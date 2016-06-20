@@ -113,6 +113,7 @@
     <Compile Include="Views\MasterDetailPage.xaml.cs">
       <DependentUpon>MasterDetailPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NullIsVisible.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -121,6 +122,10 @@
     <None Include="JustObjectsPrototype.Universal_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\down.png" />
+    <Content Include="Assets\left.png" />
+    <Content Include="Assets\textlogo.png" />
+    <Content Include="Assets\up.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

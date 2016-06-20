@@ -194,6 +194,7 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+		<local:NullIsVisible x:Key="nullIsVisible"/>
 	</Page.Resources>
 
 
@@ -288,6 +289,30 @@
 
 					<local:DetailView DataContext="{Binding SelectedMasterItem}"/>
 					
+				</StackPanel>
+
+
+				<StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding SelectedMenuItem,Converter={StaticResource nullIsVisible}}">
+					<Image Source="../Assets/left.png" Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+					<TextBlock FontSize="17" FontFamily="Consolas" VerticalAlignment="Center" Margin="10,10,0,4">
+						Show.Prototype(With.These(objects));
+					</TextBlock>
+					<TextBlock FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0">
+						and see all the types on the left side.<LineBreak/>
+						Select one type to see and edit all its instances.
+					</TextBlock>
+				</StackPanel>
+				<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="{Binding SelectedMenuItem,Converter={StaticResource nullIsVisible}}">
+					<TextBlock FontSize="16" VerticalAlignment="Center" Margin="0,0,0,40">
+						Invoke methods of the selected type.
+					</TextBlock>
+					<Image Source="../Assets/down.png" Stretch="None"/>
+				</StackPanel>
+				<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="{Binding SelectedMenuItem,Converter={StaticResource nullIsVisible}}">
+					<TextBlock FontSize="16" VerticalAlignment="Center" Margin="0,40,0,0">
+						Invoke methods of the selected instance.
+					</TextBlock>
+					<Image Source="../Assets/up.png" Stretch="None"/>
 				</StackPanel>
 
 
