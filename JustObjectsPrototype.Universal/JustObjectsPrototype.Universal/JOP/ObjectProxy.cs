@@ -71,7 +71,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			if (result != null)
 			{
 				var resultType = result.GetType();
-				if (resultType.IsConstructedGenericType//IsGenericType
+				if (resultType.GetTypeInfo().IsGenericType
 					&& (resultType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
 						||
 						resultType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IEnumerable)))

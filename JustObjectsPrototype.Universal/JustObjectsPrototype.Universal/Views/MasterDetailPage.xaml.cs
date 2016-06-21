@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -20,11 +19,6 @@ namespace JustObjectsPrototype.Universal.Views
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			base.OnNavigatedTo(e);
-
-			if (e.Parameter != null && e.Parameter.ToString() != string.Empty)
-			{
-				_lastSelectedItem = JopViewModel.Instance.Value.MasterItems.FirstOrDefault(mi => mi.Id == (int)e.Parameter);
-			}
 
 			UpdateForVisualState(AdaptiveStates.CurrentState);
 		}
@@ -64,12 +58,6 @@ namespace JustObjectsPrototype.Universal.Views
 				this.titleBar.Margin = new Thickness(60, 6, 0, 0);
 				System.Diagnostics.Debug.WriteLine("schmal");
 			}
-		}
-
-		private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
-		{
-			// Assure we are displaying the correct item. This is necessary in certain adaptive cases.
-			MasterListView.SelectedItem = _lastSelectedItem;
 		}
 
 		private void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)

@@ -1,0 +1,123 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:local="using:JustObjectsPrototype.Universal.JOP.Editors"
+					>
+	
+	<local:PropertyTemplateSelector x:Key="propertyTemplateSelector"
+									BooleanPropertyTemplate="{StaticResource booleanPropertyTemplate}"
+									DateTimePropertyTemplate="{StaticResource dateTimePropertyTemplate}"
+									SimpleTypePropertyTemplate="{StaticResource simpleTypePropertyTemplate}"
+									SimpleTypeListPropertyTemplate="{StaticResource simpleTypeListPropertyTemplate}"
+									ReferenceTypePropertyTemplate="{StaticResource referenceTypePropertyTemplate}"
+									ReferenceTypeListPropertyTemplate="{StaticResource referenceTypeListPropertyTemplate}"
+									/>
+	<local:DateTimeToDateTimeOffsetConverter x:Key="dateTimeToDateTimeOffsetConverter"/>
+
+	<DataTemplate x:Key="booleanPropertyTemplate">
+		<Grid Margin="10,10,0,10">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<CheckBox Content="{Binding Label}" Foreground="Gray" IsChecked="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}"/>
+		</Grid>
+	</DataTemplate>
+	<DataTemplate x:Key="dateTimePropertyTemplate">
+		<Grid Margin="10,10,0,10">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
+			<DatePicker Grid.Row="1" Date="{Binding Value,Mode=TwoWay,Converter={StaticResource dateTimeToDateTimeOffsetConverter}}" IsEnabled="{Binding CanWrite}"/>
+		</Grid>
+	</DataTemplate>
+	<DataTemplate x:Key="simpleTypePropertyTemplate">
+		<Grid Margin="10,10,0,10">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
+			<TextBox Grid.Row="1" Text="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}" AcceptsReturn="True"/>
+		</Grid>
+	</DataTemplate>
+	<DataTemplate x:Key="simpleTypeListPropertyTemplate">
+		<Grid Margin="10,10,0,10">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<StackPanel Grid.Row="0" Orientation="Horizontal">
+				<TextBlock Text="{Binding Label}" Foreground="Gray"/>
+				<TextBlock Text=" " />
+				<TextBlock Text="{Binding Error}" Foreground="Red"/>
+			</StackPanel>
+			<Button Grid.Row="1"/>
+			<!--<DataGrid Grid.Row="1" Style="{StaticResource GrayGridLines}" IsEnabled="{Binding CanWrite}"
+									  ItemsSource="{Binding Value}" AutoGenerateColumns="False">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="{x:Null}" Binding="{Binding Value}" />
+				</DataGrid.Columns>
+			</DataGrid>-->
+		</Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="referenceTypePropertyTemplate">
+		<Grid Margin="10,10,0,10">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
+			<ComboBox Grid.Row="1" ItemsSource="{Binding References}" SelectedItem="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock local:ObjectDisplay.DisplayProperty="{Binding}"/>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+		</Grid>
+	</DataTemplate>
+	<DataTemplate x:Key="referenceTypeListPropertyTemplate">
+		<Grid Margin="10,10,0,10">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
+				<Button Grid.Row="0" Grid.Column="1" BorderThickness="0" Background="Transparent"
+										Command="{Binding AddReference}">
+					<Button.Content>
+						<Image Source="../Resources/add.png" Height="15"/>
+					</Button.Content>
+				</Button>
+			</StackPanel>
+			<ListBox Grid.Row="1" Grid.ColumnSpan="2" IsEnabled="{Binding CanWrite}"
+									 ItemsSource="{Binding Value,Mode=TwoWay}" HorizontalContentAlignment="Stretch">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="1" BorderThickness="0" Background="Transparent"
+													Command="{Binding RemoveReference}">
+								<Button.Content>
+									<Image Source="../Resources/remove.png" Height="15"/>
+								</Button.Content>
+							</Button>
+							<ComboBox ItemsSource="{Binding References}" SelectedItem="{Binding Value,Mode=TwoWay}">
+								<ComboBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock local:ObjectDisplay.DisplayProperty="{Binding}"/>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</Grid>
+	</DataTemplate>
+</ResourceDictionary>

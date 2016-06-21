@@ -95,7 +95,16 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="JOP\ObjectDisplay.cs" />
+    <Compile Include="Controls\ViewModel.cs" />
+    <Compile Include="JOP\Editors\DateTimeToDateTimeOffsetConverter.cs" />
+    <Compile Include="JOP\Editors\IPropertyViewModel.cs" />
+    <Compile Include="JOP\Editors\PropertiesViewModels.cs" />
+    <Compile Include="JOP\Editors\PropertyTemplateSelector.cs" />
+    <Compile Include="JOP\Editors\ReferenceTypeListPropertyViewModel.cs" />
+    <Compile Include="JOP\Editors\ReferenceTypePropertyViewModel.cs" />
+    <Compile Include="JOP\Editors\SimpleTypeListPropertyViewModel.cs" />
+    <Compile Include="JOP\Editors\SimpleTypePropertyViewModel.cs" />
+    <Compile Include="JOP\Editors\ObjectDisplay.cs" />
     <Compile Include="JOP\ObjectProxy.cs" />
     <Compile Include="JOP\Objects.cs" />
     <Compile Include="JOP\TypeCreator.cs" />
@@ -140,6 +149,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="JOP\Editors\PropertiesViews.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\DetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

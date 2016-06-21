@@ -9,25 +9,32 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
+	<UserControl.Resources>
+		<ResourceDictionary Source="../JOP/Editors/PropertiesViews.xaml" />
+	</UserControl.Resources>
+
 	<StackPanel>
 
 		<CommandBar x:Name="commandBar" Background="Transparent"
 					local:CommandBarBridge.DetailCommandsProperty="{Binding}">
 
 		</CommandBar>
-		
+
 		<TextBlock
 			Margin="0,8"
 			Style="{ThemeResource TitleTextBlockStyle}"
 			HorizontalAlignment="Left"
 			Text="{Binding Title}"/>
 
-		<TextBlock
-			Margin="0,9"
-			HorizontalAlignment="Left"
-			MaxWidth="560"
-			Style="{ThemeResource BodyTextBlockStyle}"
-			Text="{Binding Text}" />
-		
+		<ItemsControl ItemsSource="{x:Bind JopViewModel.Properties, Mode=OneWay}" 
+					  ItemTemplateSelector="{StaticResource propertyTemplateSelector}"
+					  Padding="20">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Vertical"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+		</ItemsControl>
+
 	</StackPanel>
 </UserControl>

@@ -198,7 +198,7 @@
 	</Page.Resources>
 
 
-	<Grid x:Name="LayoutRoot" Loaded="LayoutRoot_Loaded">
+	<Grid x:Name="LayoutRoot">
 		<VisualStateManager.VisualStateGroups>
 			<VisualStateGroup x:Name="AdaptiveStates" CurrentStateChanged="AdaptiveStates_CurrentStateChanged">
 				<VisualState x:Name="DefaultState">
@@ -218,7 +218,6 @@
 					<VisualState.Setters>
 						<Setter Target="MasterColumn.Width" Value="*" />
 						<Setter Target="DetailColumn.Width" Value="0" />
-						<Setter Target="MasterListView.SelectionMode" Value="None" />
 						<Setter Target="RootSplitView.DisplayMode" Value="Overlay"/>
 					</VisualState.Setters>
 				</VisualState>

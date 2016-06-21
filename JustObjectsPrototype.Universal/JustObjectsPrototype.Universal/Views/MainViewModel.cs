@@ -1,50 +1,11 @@
-﻿using System;
+﻿using JustObjectsPrototype.Universal.Controls;
+using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 using Windows.Globalization.DateTimeFormatting;
 using Windows.UI.Xaml.Controls;
 
 namespace JustObjectsPrototype.Universal.Views
 {
-	public abstract class ViewModel : INotifyPropertyChanged
-	{
-		protected void PropertyChange([CallerMemberName]string member = null)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(member));
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-	}
-
-	public class Command : ICommand
-	{
-		Action _Execute;
-		Func<bool> _CanExecute;
-
-		public Command(Action execute, Func<bool> canExecute = null)
-		{
-			_Execute = execute;
-			_CanExecute = canExecute ?? (() => true);
-		}
-
-		public bool CanExecute(object parameter)
-		{
-			return _CanExecute();
-		}
-
-		public void Execute(object parameter)
-		{
-			_Execute();
-		}
-
-		public event EventHandler CanExecuteChanged;
-		public void RaiseCanExecuteChanged()
-		{
-			CanExecuteChanged?.Invoke(this, new EventArgs());
-		}
-	}
 
 
 
@@ -80,7 +41,7 @@ namespace JustObjectsPrototype.Universal.Views
 		}
 	}
 
-	public class ItemViewModel
+	public class ItemViewModel : ViewModel
 	{
 		public static int IdZaehler = 0;
 
@@ -165,7 +126,7 @@ namespace JustObjectsPrototype.Universal.Views
 			get { return _SelectedMenuItem; }
 			set
 			{
-				_SelectedMenuItem = value; PropertyChange();
+				_SelectedMenuItem = value; Changed();
 				OnSelectedMenuItem(_SelectedMenuItem);
 			}
 		}
@@ -179,7 +140,7 @@ namespace JustObjectsPrototype.Universal.Views
 			get { return _SelectedMasterItem; }
 			set
 			{
-				_SelectedMasterItem = value; PropertyChange();
+				_SelectedMasterItem = value; Changed();
 				OnSelectedMasterItem(_SelectedMasterItem);
 			}
 		}
