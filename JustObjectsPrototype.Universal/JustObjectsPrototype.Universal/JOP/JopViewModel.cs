@@ -1,6 +1,5 @@
-﻿using JustObjectsPrototype.Universal.Controls;
-using JustObjectsPrototype.Universal.JOP;
-using JustObjectsPrototype.Universal.JOP.Editors;
+﻿using JustObjectsPrototype.Universal.JOP.Editors;
+using JustObjectsPrototype.Universal.Shell;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Windows.UI.Xaml.Controls;
 
-namespace JustObjectsPrototype.Universal.Views
+namespace JustObjectsPrototype.Universal.JOP
 {
 	public class JopViewModel : MainViewModel
 	{

@@ -1,10 +1,9 @@
-﻿using JustObjectsPrototype.Universal.Controls;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using Windows.Globalization.DateTimeFormatting;
 using Windows.UI.Xaml.Controls;
 
-namespace JustObjectsPrototype.Universal.Views
+namespace JustObjectsPrototype.Universal.Shell
 {
 
 

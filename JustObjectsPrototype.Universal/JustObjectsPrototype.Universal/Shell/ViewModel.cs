@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
-namespace JustObjectsPrototype.Universal.Controls
+namespace JustObjectsPrototype.Universal.Shell
 {
 	public abstract class ViewModel : INotifyPropertyChanged
 	{

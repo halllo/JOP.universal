@@ -95,7 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ViewModel.cs" />
+    <Compile Include="Shell\ViewModel.cs" />
     <Compile Include="JOP\Editors\DateTimeToDateTimeOffsetConverter.cs" />
     <Compile Include="JOP\Editors\IPropertyViewModel.cs" />
     <Compile Include="JOP\Editors\PropertiesViewModels.cs" />
@@ -108,21 +108,21 @@
     <Compile Include="JOP\ObjectProxy.cs" />
     <Compile Include="JOP\Objects.cs" />
     <Compile Include="JOP\TypeCreator.cs" />
-    <Compile Include="Views\CommandBarBridge.cs" />
-    <Compile Include="Controls\NavMenuListView.cs" />
+    <Compile Include="Shell\CommandBarBridge.cs" />
+    <Compile Include="Shell\NavMenuListView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\DetailPage.xaml.cs">
+    <Compile Include="Shell\DetailPage.xaml.cs">
       <DependentUpon>DetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DetailView.xaml.cs">
+    <Compile Include="Shell\DetailView.xaml.cs">
       <DependentUpon>DetailView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\JopViewModel.cs" />
-    <Compile Include="Views\MainViewModel.cs" />
-    <Compile Include="Views\MasterDetailPage.xaml.cs">
+    <Compile Include="JOP\JopViewModel.cs" />
+    <Compile Include="Shell\MainViewModel.cs" />
+    <Compile Include="Shell\MasterDetailPage.xaml.cs">
       <DependentUpon>MasterDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NullIsVisible.cs" />
+    <Compile Include="Shell\NullIsVisible.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -153,15 +153,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DetailPage.xaml">
+    <Page Include="Shell\DetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DetailView.xaml">
+    <Page Include="Shell\DetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MasterDetailPage.xaml">
+    <Page Include="Shell\MasterDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

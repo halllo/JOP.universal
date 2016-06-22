@@ -1,7 +1,8 @@
-﻿using Windows.UI.Xaml;
+﻿using JustObjectsPrototype.Universal.JOP;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace JustObjectsPrototype.Universal.Views
+namespace JustObjectsPrototype.Universal.Shell
 {
 	public static class CommandBarBridge
 	{

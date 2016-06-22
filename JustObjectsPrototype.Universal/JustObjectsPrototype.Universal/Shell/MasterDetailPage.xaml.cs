@@ -1,9 +1,10 @@
-﻿using Windows.UI.Xaml;
+﻿using JustObjectsPrototype.Universal.JOP;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-namespace JustObjectsPrototype.Universal.Views
+namespace JustObjectsPrototype.Universal.Shell
 {
 	public partial class MasterDetailPage : Page
 	{

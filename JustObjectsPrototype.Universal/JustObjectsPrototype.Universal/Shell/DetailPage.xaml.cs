@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using JustObjectsPrototype.Universal.JOP;
+using System.Linq;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-namespace JustObjectsPrototype.Universal.Views
+namespace JustObjectsPrototype.Universal.Shell
 {
 	public sealed partial class DetailPage : Page
 	{
@@ -137,6 +138,7 @@ namespace JustObjectsPrototype.Universal.Views
 			// Mark event as handled so we don't get bounced out of the app.
 			e.Handled = true;
 
+			JopViewModel.Instance.Value.SelectedMasterItem = null;
 			OnBackRequested();
 		}
 	}

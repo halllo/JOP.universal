@@ -1,4 +1,6 @@
-﻿namespace JustObjectsPrototype.Universal.Views
+﻿using JustObjectsPrototype.Universal.JOP;
+
+namespace JustObjectsPrototype.Universal.Shell
 {
 	public sealed partial class DetailView
 	{

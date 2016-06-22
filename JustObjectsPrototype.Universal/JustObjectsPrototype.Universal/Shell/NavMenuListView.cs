@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace JustObjectsPrototype.Universal.Controls
+namespace JustObjectsPrototype.Universal.Shell
 {
 	/// <summary>
 	/// A specialized ListView to represent the items in the navigation menu.
