@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="JOP\IconAttribute.cs" />
     <Compile Include="Shell\ViewModel.cs" />
     <Compile Include="JOP\Editors\DateTimeToDateTimeOffsetConverter.cs" />
     <Compile Include="JOP\Editors\IPropertyViewModel.cs" />

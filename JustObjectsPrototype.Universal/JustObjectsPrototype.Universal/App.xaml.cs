@@ -224,6 +224,7 @@ namespace JustObjectsPrototype.Universal
 		}
 	}
 
+	[JOP.Icon(Symbol.Folder)]
 	public class Akte
 	{
 		public Akte()
@@ -260,6 +261,7 @@ namespace JustObjectsPrototype.Universal
 		}
 	}
 
+	//[JOP.Symbol(Symbol.Document)]
 	public class Rechnung
 	{
 		public Kunde Empfänger { get; set; }
@@ -280,6 +282,7 @@ namespace JustObjectsPrototype.Universal
 		}
 	}
 
+	[JOP.Icon(Symbol.Contact)]
 	public class Kunde
 	{
 		public bool Geändert { get; set; }

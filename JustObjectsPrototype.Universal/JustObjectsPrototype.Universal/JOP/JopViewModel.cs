@@ -83,7 +83,7 @@ namespace JustObjectsPrototype.Universal.JOP
 				var menuItemVM = new MenuItemViewModel
 				{
 					Label = type.Name,
-					Symbol = Symbol.AllApps,
+					Symbol = type.GetTypeInfo().GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder,
 					Tag = type
 				};
 				MenuItems.Add(menuItemVM);
