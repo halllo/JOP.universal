@@ -1,13 +1,13 @@
 ﻿<Page
-    x:Class="JustObjectsPrototype.Universal.Shell.MasterDetailPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:JustObjectsPrototype.Universal.Shell"
+	x:Class="JustObjectsPrototype.Universal.Shell.MasterDetailPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="using:JustObjectsPrototype.Universal.Shell"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    NavigationCacheMode="Enabled"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	NavigationCacheMode="Enabled"
+	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 	<Page.Transitions>
 		<TransitionCollection>
 			<NavigationThemeTransition />
@@ -28,19 +28,21 @@
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 
-				<TextBlock Text="{x:Bind Title}" Style="{ThemeResource BaseTextBlockStyle}" />
+				<TextBlock 
+					Text="{x:Bind Title,Mode=OneWay}" 
+					Style="{ThemeResource BaseTextBlockStyle}" />
+
+				<TextBlock 
+					Text="{x:Bind Text,Mode=OneWay}"
+					MaxLines="1" 
+					Grid.Row="1" 
+					Style="{ThemeResource ListBodyTextBlockStyle}" />
 
 				<TextBlock
-                    Text="{x:Bind Text}"
-                    Grid.Row="1"
-                    MaxLines="1"
-                    Style="{ThemeResource ListBodyTextBlockStyle}" />
-
-				<TextBlock
-                    Text="{x:Bind DateCreatedHourMinute}"
-                    Grid.Column="1"
-                    Margin="12,1,0,0"
-                    Style="{ThemeResource ListCaptionAltTextblockStyle}" />
+					Text="{x:Bind DateCreatedHourMinute}"
+					Grid.Column="1"
+					Margin="12,1,0,0"
+					Style="{ThemeResource ListCaptionAltTextblockStyle}" />
 			</Grid>
 		</DataTemplate>
 		<Style x:Key="SplitViewTogglePaneButtonStyle" TargetType="ToggleButton">
@@ -124,11 +126,11 @@
 								</VisualStateGroup>
 							</VisualStateManager.VisualStateGroups>
 							<ContentPresenter x:Name="ContentPresenter"
-                                          Content="{TemplateBinding Content}"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw" />
+										  Content="{TemplateBinding Content}"
+										  Margin="{TemplateBinding Padding}"
+										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+										  AutomationProperties.AccessibilityView="Raw" />
 						</Grid>
 					</ControlTemplate>
 				</Setter.Value>
@@ -146,9 +148,9 @@
 					<ColumnDefinition />
 				</Grid.ColumnDefinitions>
 				<!-- Showing a ToolTip and the Label is redundant.  We put the ToolTip on the icon.
-                     It appears when the user hovers over the icon, but not the label which provides
-                     value when the SplitView is 'Compact' while reducing the likelihood of showing
-                     redundant information when the label is shown.-->
+					 It appears when the user hovers over the icon, but not the label which provides
+					 value when the SplitView is 'Compact' while reducing the likelihood of showing
+					 redundant information when the label is shown.-->
 				<FontIcon x:Name="Glyph" FontSize="16" Glyph="{x:Bind SymbolAsChar}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind Label}"/>
 				<TextBlock x:Name="Text" Grid.Column="1" Text="{x:Bind Label}" />
 			</Grid>
@@ -226,18 +228,18 @@
 		<SplitView 
 			x:Name="RootSplitView"
 			Grid.Column="0"
-            DisplayMode="Inline"
-            OpenPaneLength="256"
-            IsTabStop="False">
+			DisplayMode="Inline"
+			OpenPaneLength="256"
+			IsTabStop="False">
 			<SplitView.Pane>
 				<local:NavMenuListView 
 					TabIndex="3"
-                    Margin="0,48,0,0"
-                    ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
+					Margin="0,48,0,0"
+					ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
 					ItemInvoked="NavMenuList_ItemInvoked"
 					ItemsSource="{Binding MenuItems}"
 					SelectedItem="{Binding SelectedMenuItem,Mode=TwoWay}"
-                    ItemTemplate="{StaticResource NavMenuItemTemplate}">
+					ItemTemplate="{StaticResource NavMenuItemTemplate}">
 				</local:NavMenuListView>
 			</SplitView.Pane>
 
@@ -286,7 +288,7 @@
 					BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}">
 
 					<local:DetailView DataContext="{Binding SelectedMasterItem}"/>
-					
+
 				</StackPanel>
 
 
@@ -320,10 +322,10 @@
 
 		<!-- Declared last to have it rendered above everything else, but it needs to be the first item in the tab sequence. -->
 		<ToggleButton x:Name="TogglePaneButton"
-                      TabIndex="1"
-                      Style="{StaticResource SplitViewTogglePaneButtonStyle}"
-                      IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
-                      />
+					  TabIndex="1"
+					  Style="{StaticResource SplitViewTogglePaneButtonStyle}"
+					  IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
+					  />
 
 
 	</Grid>
@@ -336,4 +338,4 @@
 		</CommandBar>
 	</Page.BottomAppBar>
 </Page>
-    
+	

@@ -101,13 +101,17 @@ namespace JustObjectsPrototype.Universal.JOP
 
 		private void UpdateItems(ObservableCollection<ObjectProxy> items)
 		{
+			foreach (var item in MasterItems)
+			{
+				(item.Tag as ObjectProxy).RemovePropertyChangedCallbacks();
+			}
 			MasterItems.Clear();
+
 			foreach (var item in items)
 			{
 				var itemVM = new ItemViewModel
 				{
 					Id = ++ItemViewModel.IdZaehler,
-					DateCreated = DateTime.Now,
 					Tag = item
 				};
 				UpdateViewModel(itemVM, item);
@@ -129,9 +133,12 @@ namespace JustObjectsPrototype.Universal.JOP
 				.ToList();
 
 			var firstString = properties.FirstOrDefault(p => p.PropertyType == typeof(string));
+			var secondString = properties.Except(new[] { firstString }).FirstOrDefault(p => p.PropertyType == typeof(string));
+			var firstDateTime = properties.FirstOrDefault(p => p.PropertyType == typeof(DateTime));
 
-			itemVM.Title = firstString != null ? item.GetMember(firstString.Name)?.ToString() ?? string.Empty : item.ToString();
-			itemVM.Text = string.Join("\n", properties.Except(new[] { firstString }).Select(p => ObjectDisplay.Nicely(p) + ": " + item.GetMember(p.Name)));
+			itemVM.Title = firstString != null ? item.GetMember(firstString.Name) as string : item.ProxiedObject.ToString();
+			itemVM.Text = secondString != null ? item.GetMember(secondString.Name) as string : null;
+			itemVM.Date = firstDateTime != null ? item.GetMember(firstDateTime.Name) as DateTime? : null;
 		}
 
 		protected override void OnSelectedMasterItem(ItemViewModel o)

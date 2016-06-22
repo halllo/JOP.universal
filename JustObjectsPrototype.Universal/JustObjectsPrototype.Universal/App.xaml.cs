@@ -233,7 +233,8 @@ namespace JustObjectsPrototype.Universal
 		public string Name { get; set; }
 		Kunde mandant = new Kunde { Vorname = "Hans", Nachname = "Müller" };
 		public Kunde Mandant { get { return mandant; } }
-		public DateTime Datum { get; set; }
+		public DateTime Datum { get { return _Datum; } set { _Datum = value; } }
+		DateTime _Datum;
 
 		public void Rechnungen_Löschen(ObservableCollection<Rechnung> rechnungen)
 		{

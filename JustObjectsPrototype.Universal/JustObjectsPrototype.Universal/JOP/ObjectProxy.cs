@@ -23,6 +23,10 @@ namespace JustObjectsPrototype.Universal.JOP
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+		public void RemovePropertyChangedCallbacks()
+		{
+			PropertyChanged = null;
+		}
 
 		public override bool TryConvert(ConvertBinder binder, out object result)
 		{

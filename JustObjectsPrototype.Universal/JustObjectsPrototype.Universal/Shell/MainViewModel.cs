@@ -53,15 +53,26 @@ namespace JustObjectsPrototype.Universal.Shell
 		{
 			get
 			{
-				var formatter = new DateTimeFormatter("hour minute");
-				return formatter.Format(DateCreated);
+				if (Date == null) return string.Empty;
+				else
+				{
+					try
+					{
+						var formatter = new DateTimeFormatter("hour minute");
+						return formatter.Format(Date.Value);
+					}
+					catch (Exception)
+					{
+						return "-";
+					}
+				}
 			}
 		}
 
 		public string Title { get; set; }
 		public string Text { get; set; }
 		public object Tag { get; set; }
-		public DateTime DateCreated { get; set; }
+		public DateTime? Date { get; set; }
 
 		public ItemViewModel()
 		{

@@ -13,6 +13,11 @@ namespace JustObjectsPrototype.Universal.Shell
 			Changed(member);
 		}
 
+		public void RemovePropertyChangedCallbacks()
+		{
+			PropertyChanged = null;
+		}
+
 		protected void Changed([CallerMemberName]string member = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(member));
