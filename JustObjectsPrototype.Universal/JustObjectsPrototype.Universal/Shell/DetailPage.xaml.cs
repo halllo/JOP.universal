@@ -55,7 +55,6 @@ namespace JustObjectsPrototype.Universal.Shell
 				backStack.Add(modifiedEntry);
 			}
 
-			// Register for hardware and software back request from the system
 			SystemNavigationManager systemNavigationManager = SystemNavigationManager.GetForCurrentView();
 			systemNavigationManager.BackRequested += DetailPage_BackRequested;
 			systemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
@@ -72,10 +71,6 @@ namespace JustObjectsPrototype.Universal.Shell
 
 		private void OnBackRequested()
 		{
-			// Page above us will be our master view.
-			// Make sure we are using the "drill out" animation in this transition.
-
-			//Frame.GoBack();
 			Frame.GoBack(new DrillInNavigationTransitionInfo());
 		}
 
@@ -135,7 +130,6 @@ namespace JustObjectsPrototype.Universal.Shell
 
 		private void DetailPage_BackRequested(object sender, BackRequestedEventArgs e)
 		{
-			// Mark event as handled so we don't get bounced out of the app.
 			e.Handled = true;
 
 			JopViewModel.Instance.Value.SelectedMasterItem = null;

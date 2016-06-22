@@ -24,6 +24,9 @@ namespace JustObjectsPrototype.Universal.JOP
 				{
 					Action = new Command(()=>
 					{
+						var frame = Windows.UI.Xaml.Window.Current.Content as Frame;
+						frame.Navigate(typeof(InfoPage), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+
 						//MasterItems.Add(new ItemViewModel
 						//{
 						//	Id = MasterItems.Max(i => i.Id) + 1,
@@ -31,9 +34,6 @@ namespace JustObjectsPrototype.Universal.JOP
 						//	Text = "neu neu",
 						//	Title = "item" + DateTime.Now.Ticks
 						//});
-
-						MasterItems.First().Title += "!";
-						MasterItems.First().RaiseChanged("");
 					}),
 					Label = "new item",
 					Icon = Symbol.NewWindow
