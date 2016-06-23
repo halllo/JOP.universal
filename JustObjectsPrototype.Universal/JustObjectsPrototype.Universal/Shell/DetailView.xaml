@@ -15,7 +15,7 @@
 
 	<StackPanel>
 
-		<CommandBar x:Name="commandBar" Background="Transparent"
+		<CommandBar x:Name="commandBar" Background="Transparent" IsOpen="True" IsSticky="True"
 					local:CommandBarBridge.DetailCommandsProperty="{Binding}">
 
 		</CommandBar>

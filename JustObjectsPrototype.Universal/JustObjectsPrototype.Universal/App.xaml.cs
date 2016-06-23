@@ -237,21 +237,25 @@ namespace JustObjectsPrototype.Universal
 		public DateTime Datum { get { return _Datum; } set { _Datum = value; } }
 		DateTime _Datum;
 
+		[JOP.Icon(Symbol.Delete)]
 		public void Rechnungen_Löschen(ObservableCollection<Rechnung> rechnungen)
 		{
 			rechnungen.Clear();
 		}
 
+		[JOP.Icon(Symbol.Document)]
 		public void Briefe_Schreiben(ObservableCollection<Brief> briefe, Kunde autor)
 		{
 			briefe.Add(new Brief(autor) { Inhalt = "Hallo Welt" });
 		}
 
+		[JOP.Icon(Symbol.Delete)]
 		public static void Alle_Löschen(ObservableCollection<Akte> akten)
 		{
 			akten.Clear();
 		}
 
+		[JOP.Icon(Symbol.Add)]
 		public static void Neu_Erzeugen(ObservableCollection<Akte> akten, int wieviele)
 		{
 			for (int i = 0; i < wieviele; i++)
@@ -261,7 +265,7 @@ namespace JustObjectsPrototype.Universal
 		}
 	}
 
-	//[JOP.Symbol(Symbol.Document)]
+	[JOP.Symbol(Symbol.Document)]
 	public class Rechnung
 	{
 		public Kunde Empfänger { get; set; }
@@ -276,6 +280,7 @@ namespace JustObjectsPrototype.Universal
 		public IEnumerable<string> Strings { get; set; }
 		public IEnumerable<decimal> Decimals { get; set; }
 
+		[JOP.Icon(Symbol.FontIncrease)]
 		public void Erhöhen()
 		{
 			Betrag += 1;
@@ -304,6 +309,7 @@ namespace JustObjectsPrototype.Universal
 			}
 		}
 
+		[JOP.Icon(Symbol.AddFriend)]
 		public List<Kunde> Neuer_Freund()
 		{
 			var kunde = new Kunde { Vorname = "Neuer" + DateTime.Now.Ticks, Nachname = "Freund" + DateTime.Now.Ticks };
@@ -312,16 +318,19 @@ namespace JustObjectsPrototype.Universal
 			return new List<Kunde> { kunde };
 		}
 
+		[JOP.Icon(Symbol.AddFriend)]
 		public void Neuer_Freund(Kunde freund)
 		{
 			Freunde.Add(freund);
 		}
 
+		[JOP.Icon(Symbol.Account)]
 		public Kunde Ich()
 		{
 			return this;
 		}
 
+		[JOP.Icon(Symbol.Document)]
 		public Brief Schreiben(string inhalts_text, bool wirklich)
 		{
 			return new Brief(this) { Inhalt = inhalts_text };
