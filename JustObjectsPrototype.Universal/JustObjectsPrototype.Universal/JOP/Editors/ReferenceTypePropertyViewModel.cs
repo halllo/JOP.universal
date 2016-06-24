@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace JustObjectsPrototype.Universal.JOP.Editors
 {
@@ -10,32 +9,22 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 	{
 		public static object NullEntry = " ";
 
-		ObjectProxy _Instance;
-		public ObjectProxy Instance
+		IValueStore _ValueStore;
+		public IValueStore ValueStore
 		{
-			private get { return _Instance; }
+			get { return _ValueStore; }
 			set
 			{
-				_Instance = value;
-				_Instance.PropertyChanged += (s, e) =>
-				{
-					if (e.PropertyName == Property.Name || e.PropertyName == string.Empty)
-					{
-						Changed(() => Value);
-					}
-				};
+				_ValueStore = value;
+				_ValueStore.PropertyChanged += (s, e) => Changed(() => Value);
 			}
 		}
-		public PropertyInfo Property { private get; set; }
+
 		public IEnumerable<object> Objects { private get; set; }
-		public Action<ObjectChangedEventArgs> ObjectChanged { private get; set; }
 
-		public bool CanWrite
-		{
-			get { return Property.CanWrite && Property.SetMethod.IsPublic; }
-		}
+		public bool CanWrite { get { return ValueStore.CanWrite; } }
 
-		public string Label { get { return ObjectDisplay.Nicely(Property); } }
+		public string Label { get { return ValueStore.Identifier; } }
 
 		public IEnumerable<object> References
 		{
@@ -45,21 +34,19 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 			}
 		}
 
-		public Type ValueType { get { return Property.PropertyType; } }
+		public Type ValueType { get { return ValueStore.ValueType; } }
 
 		public object Value
 		{
 			get
 			{
-				return Property.GetValue(Instance.ProxiedObject) ?? NullEntry;
+				return ValueStore.Value ?? NullEntry;
 			}
 			set
 			{
 				if (value == NullEntry) value = null;
 
-				Property.SetValue(Instance.ProxiedObject, value);
-				if (ObjectChanged != null) ObjectChanged(new ObjectChangedEventArgs { Object = Instance.ProxiedObject, PropertyName = Property.Name });
-				Instance.RaisePropertyChanged(string.Empty);
+				ValueStore.SetValue(value);
 			}
 		}
 

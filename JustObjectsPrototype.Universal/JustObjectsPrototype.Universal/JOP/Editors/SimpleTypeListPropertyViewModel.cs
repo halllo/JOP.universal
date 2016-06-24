@@ -10,31 +10,20 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 {
 	public class SimpleTypeListPropertyViewModel : ViewModel, IPropertyViewModel
 	{
-		ObjectProxy _Instance;
-		public ObjectProxy Instance
+		IValueStore _ValueStore;
+		public IValueStore ValueStore
 		{
-			private get { return _Instance; }
+			get { return _ValueStore; }
 			set
 			{
-				_Instance = value;
-				_Instance.PropertyChanged += (s, e) =>
-				{
-					if (e.PropertyName == Property.Name || e.PropertyName == string.Empty)
-					{
-						Changed(() => Value);
-					}
-				};
+				_ValueStore = value;
+				_ValueStore.PropertyChanged += (s, e) => Changed(() => Value);
 			}
 		}
-		public PropertyInfo Property { private get; set; }
-		public Action<ObjectChangedEventArgs> ObjectChanged { private get; set; }
 
-		public bool CanWrite
-		{
-			get { return Property.CanWrite && Property.SetMethod.IsPublic; }
-		}
+		public bool CanWrite { get { return ValueStore.CanWrite; } }
 
-		public string Label { get { return ObjectDisplay.Nicely(Property); } }
+		public string Label { get { return ValueStore.Identifier; } }
 
 		public string Error { get; set; }
 
@@ -56,7 +45,7 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		ObservableCollection<SimpleTypeWrapper> collection;
 		Type collectionItemType;
 
-		public Type ValueType { get { return Property.PropertyType; } }
+		public Type ValueType { get { return ValueStore.ValueType; } }
 
 		public object Value
 		{
@@ -64,8 +53,8 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 			{
 				if (collection == null)
 				{
-					collectionItemType = Property.PropertyType.GetTypeInfo().IsGenericType ? Property.PropertyType.GenericTypeArguments[0] : null;
-					var values = (IEnumerable)Property.GetValue(Instance.ProxiedObject);
+					collectionItemType = ValueStore.ValueType.GetTypeInfo().IsGenericType ? ValueStore.ValueType.GenericTypeArguments[0] : null;
+					var values = (IEnumerable)ValueStore.Value;
 					var wrapper = Enumerable.Empty<SimpleTypeWrapper>();
 					if (values != null)
 					{
@@ -99,9 +88,7 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 					list.Add(Convert.ChangeType(item.Value, collectionItemType ?? typeof(object)));
 				}
 
-				Property.SetValue(Instance.ProxiedObject, list);
-				if (ObjectChanged != null) ObjectChanged(new ObjectChangedEventArgs { Object = Instance.ProxiedObject, PropertyName = Property.Name });
-				Instance.RaisePropertyChanged(string.Empty);
+				ValueStore.SetValue(list);
 			}
 			catch (Exception ex)
 			{

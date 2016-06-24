@@ -265,7 +265,7 @@ namespace JustObjectsPrototype.Universal
 		}
 	}
 
-	[JOP.Symbol(Symbol.Document)]
+	[JOP.Icon(Symbol.Document)]
 	public class Rechnung
 	{
 		public Kunde Empfänger { get; set; }

@@ -98,6 +98,9 @@
     <Compile Include="InfoPage.xaml.cs">
       <DependentUpon>InfoPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="JOP\Editors\IValueStore.cs" />
+    <Compile Include="JOP\Editors\PropertyValueStore.cs" />
+    <Compile Include="JOP\Editors\SelfcontainedValueStore.cs" />
     <Compile Include="JOP\IconAttribute.cs" />
     <Compile Include="Shell\ViewModel.cs" />
     <Compile Include="JOP\Editors\DateTimeToDateTimeOffsetConverter.cs" />

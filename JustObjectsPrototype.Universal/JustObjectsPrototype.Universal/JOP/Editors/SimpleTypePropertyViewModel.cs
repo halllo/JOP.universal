@@ -1,6 +1,5 @@
 ﻿using JustObjectsPrototype.Universal.Shell;
 using System;
-using System.Reflection;
 
 namespace JustObjectsPrototype.Universal.JOP.Editors
 {
@@ -10,53 +9,35 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 
 	public class SimpleTypePropertyViewModel : ViewModel, IPropertyViewModel
 	{
-		ObjectProxy _Instance;
-		public ObjectProxy Instance
+		IValueStore _ValueStore;
+		public IValueStore ValueStore
 		{
-			private get { return _Instance; }
+			get { return _ValueStore; }
 			set
 			{
-				_Instance = value;
-				_Instance.PropertyChanged += (s, e) =>
-				{
-					if (e.PropertyName == Property.Name || e.PropertyName == string.Empty)
-					{
-						Changed(() => Value);
-					}
-				};
-			}
-		}
-		public PropertyInfo Property { private get; set; }
-		public Action<ObjectChangedEventArgs> ObjectChanged { private get; set; }
-
-		public bool CanWrite
-		{
-			get
-			{
-				return Property.CanWrite
-					&& Property.SetMethod.IsPublic
-					&& Property.Name != "ID" && Property.Name != "Id";
+				_ValueStore = value;
+				_ValueStore.PropertyChanged += (s, e) => Changed(() => Value);
 			}
 		}
 
-		public string Label { get { return ObjectDisplay.Nicely(Property); } }
+		public bool CanWrite { get { return ValueStore.CanWrite; } }
 
-		public Type ValueType { get { return Property.PropertyType; } }
+		public string Label { get { return ValueStore.Identifier; } }
+
+		public Type ValueType { get { return ValueStore.ValueType; } }
 
 		public object Value
 		{
 			get
 			{
-				return Property.GetValue(Instance.ProxiedObject);
+				return ValueStore.Value;
 			}
 			set
 			{
 				try
 				{
-					var convertedValue = Convert.ChangeType(value, Property.PropertyType);
-					Property.SetValue(Instance.ProxiedObject, convertedValue);
-					if (ObjectChanged != null) ObjectChanged(new ObjectChangedEventArgs { Object = Instance.ProxiedObject, PropertyName = Property.Name });
-					Instance.RaisePropertyChanged(string.Empty);
+					var convertedValue = Convert.ChangeType(value, ValueType);
+					ValueStore.SetValue(convertedValue);
 				}
 				catch (Exception ex)
 				{

@@ -16,29 +16,30 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 
 			var propertiesViewModels =
 				from property in properties
-				select property.CanRead && property.PropertyType == typeof(DateTime) ? (IPropertyViewModel)new DateTimePropertyViewModel { Instance = selectedObject, Property = property, ObjectChanged = objectChangedCallback }
+				let valueStore = new PropertyValueStore { Instance = selectedObject, Property = property, ObjectChanged = objectChangedCallback }
+				select property.CanRead && property.PropertyType == typeof(DateTime) ? (IPropertyViewModel)new DateTimePropertyViewModel { ValueStore = valueStore }
 
-					 : property.CanRead && property.PropertyType == typeof(bool) ? (IPropertyViewModel)new BooleanPropertyViewModel { Instance = selectedObject, Property = property, ObjectChanged = objectChangedCallback }
+					 : property.CanRead && property.PropertyType == typeof(bool) ? (IPropertyViewModel)new BooleanPropertyViewModel { ValueStore = valueStore }
 
-					 : property.CanRead && property.PropertyType == typeof(string) ? (IPropertyViewModel)new SimpleTypePropertyViewModel { Instance = selectedObject, Property = property, ObjectChanged = objectChangedCallback }
+					 : property.CanRead && property.PropertyType == typeof(string) ? (IPropertyViewModel)new SimpleTypePropertyViewModel { ValueStore = valueStore }
 
 					 : property.CanRead
 							&& property.PropertyType.GetTypeInfo().IsGenericType
 							&& (property.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
 								||
 								property.PropertyType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IEnumerable)))
-							&& objects.Types.Contains(property.PropertyType.GetGenericArguments().FirstOrDefault()) ? (IPropertyViewModel)new ReferenceTypeListPropertyViewModel { Instance = selectedObject, Property = property, Objects = objects.OfType(property.PropertyType.GetGenericArguments().FirstOrDefault()).Select(o => o.ProxiedObject), ObjectChanged = objectChangedCallback }
+							&& objects.Types.Contains(property.PropertyType.GetGenericArguments().FirstOrDefault()) ? (IPropertyViewModel)new ReferenceTypeListPropertyViewModel { ValueStore = valueStore, Objects = objects.OfType(property.PropertyType.GetGenericArguments().FirstOrDefault()).Select(o => o.ProxiedObject) }
 
 					: property.CanRead
 							&& property.PropertyType.GetTypeInfo().IsGenericType
 							&& (property.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
 								||
 								property.PropertyType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IEnumerable))) ?
-																														(IPropertyViewModel)new SimpleTypeListPropertyViewModel { Instance = selectedObject, Property = property, ObjectChanged = objectChangedCallback }
+																														(IPropertyViewModel)new SimpleTypeListPropertyViewModel { ValueStore = valueStore }
 
-					 : property.CanRead && objects.Types.Contains(property.PropertyType) ? (IPropertyViewModel)new ReferenceTypePropertyViewModel { Instance = selectedObject, Property = property, Objects = objects.OfType(property.PropertyType).Select(o => o.ProxiedObject), ObjectChanged = objectChangedCallback }
+					 : property.CanRead && objects.Types.Contains(property.PropertyType) ? (IPropertyViewModel)new ReferenceTypePropertyViewModel { ValueStore = valueStore, Objects = objects.OfType(property.PropertyType).Select(o => o.ProxiedObject) }
 
-					 : property.CanRead ? (IPropertyViewModel)new SimpleTypePropertyViewModel { Instance = selectedObject, Property = property, ObjectChanged = objectChangedCallback }
+					 : property.CanRead ? (IPropertyViewModel)new SimpleTypePropertyViewModel { ValueStore = valueStore }
 					 : null;
 
 			return propertiesViewModels.Where(p => p != null).ToList<IPropertyViewModel>();

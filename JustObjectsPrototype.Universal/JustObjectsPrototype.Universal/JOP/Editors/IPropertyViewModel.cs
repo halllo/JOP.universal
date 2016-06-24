@@ -8,12 +8,5 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		object Value { get; }
 		Type ValueType { get; }
 		void Refresh();
-		Action<ObjectChangedEventArgs> ObjectChanged { set; }
-	}
-
-	public class ObjectChangedEventArgs
-	{
-		public object Object { get; set; }
-		public string PropertyName { get; set; }
 	}
 }

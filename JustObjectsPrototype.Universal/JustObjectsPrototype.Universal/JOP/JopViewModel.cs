@@ -197,9 +197,13 @@ namespace JustObjectsPrototype.Universal.JOP
 				   where m.Name != "ToString"
 				   select Tuple.Create(ObjectDisplay.Nicely(m), m.GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder, new Command(() =>
 				   {
-					   //UpdateUserInput();
-
 					   var parameters = m.GetParameters();
+
+
+					   //TODO
+					   //new SelfcontainedValueStore { ValueType = ... }
+
+
 					   var runtimeTypeForParameters = TypeCreator.New(m.Name, parameters.ToDictionary(p => p.Name, p => p.ParameterType));
 					   var runtimeTypeForParametersInstance = Activator.CreateInstance(runtimeTypeForParameters);
 					   var propertiesViewModels = PropertiesViewModels
