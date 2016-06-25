@@ -7,8 +7,10 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 	{
 		string Identifier { get; }
 		Type ValueType { get; }
+		bool CanRead { get; }
 		bool CanWrite { get; }
 		object Value { get; }
+
 		void SetValue(object value);
 	}
 

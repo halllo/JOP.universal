@@ -39,7 +39,7 @@
 					Style="{ThemeResource ListBodyTextBlockStyle}" />
 
 				<TextBlock
-					Text="{x:Bind DateCreatedHourMinute}"
+					Text="{x:Bind DateCreatedHourMinute,Mode=OneWay}"
 					Grid.Column="1"
 					Margin="12,1,0,0"
 					Style="{ThemeResource ListCaptionAltTextblockStyle}" />

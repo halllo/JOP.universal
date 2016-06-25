@@ -130,9 +130,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			if (selectedObject != null)
 			{
 				var type = selectedObject.ProxiedObject.GetType();
-				Properties = PropertiesViewModels.Of(type, _Objects, selectedObject, null);
-
-
+				Properties = PropertiesViewModels.Of(PropertyValueStore.ForPropertiesOf(type, selectedObject, null), _Objects);
 
 				var methods = type.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 				var functions = GetFunctions(selectedObject, methods);
@@ -198,20 +196,24 @@ namespace JustObjectsPrototype.Universal.JOP
 				   select Tuple.Create(ObjectDisplay.Nicely(m), m.GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder, new Command(() =>
 				   {
 					   var parameters = m.GetParameters();
+					   var parameterValueStores = parameters
+						.Select(p => new SelfcontainedValueStore
+						{
+							Identifier = p.Name,
+							Value = null,
+							ValueType = p.ParameterType,
+						}).ToList<IValueStore>();
 
+					   var parameterValueStoresWithoutObservableCollections = parameterValueStores
+						.Where(vs => IsObservableCollection(vs.ValueType) == false)
+						.ToList();
 
-					   //TODO
-					   //new SelfcontainedValueStore { ValueType = ... }
+					   var propertiesViewModels = PropertiesViewModels.Of(parameterValueStoresWithoutObservableCollections, _Objects);
 
-
-					   var runtimeTypeForParameters = TypeCreator.New(m.Name, parameters.ToDictionary(p => p.Name, p => p.ParameterType));
-					   var runtimeTypeForParametersInstance = Activator.CreateInstance(runtimeTypeForParameters);
-					   var propertiesViewModels = PropertiesViewModels
-						   .Of(runtimeTypeForParameters, _Objects, new ObjectProxy(runtimeTypeForParametersInstance), null)
-						   .Where(p => IsObservableCollection(p.ValueType) == false).ToList();
-					   if (parameters.Any(p => IsObservableCollection(p.ParameterType) == false))
+					   if (parameterValueStoresWithoutObservableCollections.Any())
 					   {
 						   System.Diagnostics.Debug.WriteLine("ShowMethodInvocationDialog");
+						   //TODO: creation window
 						   //var dialogResult = ShowMethodInvocationDialog(new MethodInvocationDialogModel
 						   //{
 						   // MethodName = m.Name,
@@ -220,10 +222,11 @@ namespace JustObjectsPrototype.Universal.JOP
 						   //if (dialogResult != true) return;
 						   return;
 					   }
-					   var runtimeTypeForParametersProperties = runtimeTypeForParameters.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-					   var parameterInstances = runtimeTypeForParametersProperties.Select(p => IsObservableCollection(p.PropertyType)
-						   ? _Objects.OfType_OneWayToSourceChangePropagation(p.PropertyType.GetGenericArguments().First())
-						   : p.GetValue(runtimeTypeForParametersInstance)).ToList();
+					   var parameterInstances = parameterValueStores
+						.Select(vs => IsObservableCollection(vs.ValueType)
+						   ? _Objects.OfType_OneWayToSourceChangePropagation(vs.ValueType.GetGenericArguments().First())
+						   : vs.Value)
+						.ToList();
 
 					   object result = null;
 					   try

@@ -5,6 +5,10 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 {
 	public class SelfcontainedValueStore : IValueStore
 	{
+		public bool CanRead
+		{
+			get { return true; }
+		}
 		public bool CanWrite
 		{
 			get { return true; }
@@ -25,11 +29,11 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 			get; set;
 		}
 
-		public event PropertyChangedEventHandler PropertyChanged;
-
 		public void SetValue(object value)
 		{
 			Value = value;
 		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

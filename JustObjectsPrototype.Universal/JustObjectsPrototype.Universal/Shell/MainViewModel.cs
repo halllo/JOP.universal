@@ -58,7 +58,7 @@ namespace JustObjectsPrototype.Universal.Shell
 				{
 					try
 					{
-						var formatter = new DateTimeFormatter("hour minute");
+						var formatter = new DateTimeFormatter("shortdate");
 						return formatter.Format(Date.Value);
 					}
 					catch (Exception)

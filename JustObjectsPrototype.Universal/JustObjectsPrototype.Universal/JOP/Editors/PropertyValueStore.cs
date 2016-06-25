@@ -1,11 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 namespace JustObjectsPrototype.Universal.JOP.Editors
 {
 	public class PropertyValueStore : IValueStore
 	{
+		public static List<IValueStore> ForPropertiesOf(Type type, ObjectProxy selectedObject, Action<ObjectChangedEventArgs> objectChangedCallback)
+		{
+			var propertyValueStores = type
+				.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
+				.Where(property => property.GetIndexParameters().Length == 0)
+				.Select(property => new PropertyValueStore { Instance = selectedObject, Property = property, ObjectChanged = objectChangedCallback })
+				.ToList<IValueStore>();
+
+			return propertyValueStores;
+		}
+
+
 		ObjectProxy _Instance;
 		public ObjectProxy Instance
 		{
@@ -26,8 +40,6 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		public Action<ObjectChangedEventArgs> ObjectChanged { get; set; }
 
 
-		public event PropertyChangedEventHandler PropertyChanged;
-
 		public string Identifier
 		{
 			get { return ObjectDisplay.Nicely(Property); }
@@ -36,6 +48,11 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		public Type ValueType
 		{
 			get { return Property.PropertyType; }
+		}
+
+		public bool CanRead
+		{
+			get { return Property.CanRead; }
 		}
 
 		public bool CanWrite
@@ -60,12 +77,14 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		{
 			Property.SetValue(Instance.ProxiedObject, value);
 
-			if (ObjectChanged != null) ObjectChanged(new ObjectChangedEventArgs
+			ObjectChanged?.Invoke(new ObjectChangedEventArgs
 			{
 				Object = Instance.ProxiedObject,
 				PropertyName = Property.Name
 			});
 			Instance.RaisePropertyChanged(string.Empty);
 		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }
