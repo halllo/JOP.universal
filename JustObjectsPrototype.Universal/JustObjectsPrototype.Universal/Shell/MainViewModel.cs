@@ -27,7 +27,6 @@ namespace JustObjectsPrototype.Universal.Shell
 
 
 
-
 	public class MenuItemViewModel
 	{
 		public string Label { get; set; }

@@ -5,6 +5,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace JustObjectsPrototype.Universal
@@ -87,6 +88,10 @@ namespace JustObjectsPrototype.Universal
 							Strings = new List<string> { "Hallo", "Welt" },
 							Decimals = new List<decimal> { 3.5m, 3.3333m },
 						},
+					};
+					JOP.JopViewModel.Instance.Value.ShowMethodInvocationDialog = ps =>
+					{
+						(Window.Current.Content as Frame).Navigate(typeof(JOP.MethodInvocationPage), null, new DrillInNavigationTransitionInfo());
 					};
 					JOP.JopViewModel.Instance.Value.Init(objects);
 
@@ -247,6 +252,11 @@ namespace JustObjectsPrototype.Universal
 		public void Briefe_Schreiben(ObservableCollection<Brief> briefe, Kunde autor)
 		{
 			briefe.Add(new Brief(autor) { Inhalt = "Hallo Welt" });
+		}
+
+		public void Highlighten(string postfix)
+		{
+			Name += postfix;
 		}
 
 		[JOP.Icon(Symbol.Delete)]

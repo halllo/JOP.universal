@@ -183,8 +183,10 @@ namespace JustObjectsPrototype.Universal.JOP
 
 
 
-
-
+		public Action<List<IValueStore>> ShowMethodInvocationDialog { get; set; }
+		public string MethodInvocationTitle { get; set; }
+		public List<IPropertyViewModel> MethodInvocationParameters { get; set; }
+		public Command MethodInvocationContinuation { get; set; }
 
 
 		IEnumerable<Tuple<string, Symbol, Command>> GetFunctions(ObjectProxy instance, MethodInfo[] methods)
@@ -210,91 +212,95 @@ namespace JustObjectsPrototype.Universal.JOP
 
 					   var propertiesViewModels = PropertiesViewModels.Of(parameterValueStoresWithoutObservableCollections, _Objects);
 
+					   var selectedType = (Type)SelectedMenuItem.Tag;
 					   if (parameterValueStoresWithoutObservableCollections.Any())
 					   {
-						   System.Diagnostics.Debug.WriteLine("ShowMethodInvocationDialog");
-						   //TODO: creation window
-						   //var dialogResult = ShowMethodInvocationDialog(new MethodInvocationDialogModel
-						   //{
-						   // MethodName = m.Name,
-						   // Properties = propertiesViewModels
-						   //});
-						   //if (dialogResult != true) return;
-						   return;
+						   MethodInvocationTitle = ObjectDisplay.Nicely(m);
+						   MethodInvocationParameters = propertiesViewModels;
+						   MethodInvocationContinuation = new Command(() => InvokeMethod(instance, selectedType, m, parameterValueStores));
+						   ShowMethodInvocationDialog(parameterValueStoresWithoutObservableCollections);
 					   }
-					   var parameterInstances = parameterValueStores
-						.Select(vs => IsObservableCollection(vs.ValueType)
-						   ? _Objects.OfType_OneWayToSourceChangePropagation(vs.ValueType.GetGenericArguments().First())
-						   : vs.Value)
-						.ToList();
-
-					   object result = null;
-					   try
+					   else
 					   {
-						   result = m.Invoke(instance != null ? instance.ProxiedObject : null, parameterInstances.ToArray());
+						   InvokeMethod(instance, selectedType, m, parameterValueStores);
 					   }
-					   catch (TargetInvocationException tie)
-					   {
-						   System.Diagnostics.Debug.WriteLine("An Exception occured in " + m.Name + ".\n\n" + tie.InnerException.ToString());
-						   //MessageBox.Show("An Exception occured in " + m.Name + ".\n\n" + tie.InnerException.ToString(), "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
-						   return;
-					   }
-
-
-					   var objectsToRefreshCandidates = parameterInstances.SelectMany(i =>
-					   {
-						   if (i is IEnumerable)
-						   {
-							   return ((IEnumerable)i).OfType<object>();
-						   }
-						   else
-						   {
-							   return new[] { i }.OfType<object>();
-						   }
-					   });
-					   var ofTypeMethod = typeof(Enumerable).GetMethod("OfType").MakeGenericMethod((Type)SelectedMenuItem.Tag);
-					   var objectsToRefresh = (IEnumerable<object>)ofTypeMethod.Invoke(null, new[] { objectsToRefreshCandidates });
-					   foreach (var objectToRefresh in objectsToRefresh)
-					   {
-						   var proxy = _Objects.GetProxy(objectToRefresh);
-						   if (proxy != null) proxy.RaisePropertyChanged(string.Empty);
-					   }
-
-
-					   if (result != null)
-					   {
-						   var resultType = result.GetType();
-
-						   if (resultType.GetTypeInfo().IsGenericType
-							   && (resultType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
-								   ||
-								   resultType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IEnumerable)))
-							   && resultType.GetGenericArguments().Any()
-							   && resultType.GetGenericArguments().First().GetTypeInfo().IsValueType == false
-							   && IsMicrosoftType(resultType.GetGenericArguments().First()) == false)
-						   {
-							   var resultItemType = resultType.GetGenericArguments().First();
-							   var objectsOfType = _Objects.OfType(resultItemType);
-							   foreach (var resultItem in (IEnumerable)result)
-							   {
-								   if (resultItem != null && objectsOfType.All(o => !o.ProxiedObject.Equals(resultItem)))
-								   {
-									   objectsOfType.Add(new ObjectProxy(resultItem));
-								   }
-							   }
-						   }
-						   if (resultType.GetTypeInfo().IsValueType == false && IsMicrosoftType(resultType) == false)
-						   {
-							   var objectsOfType = _Objects.OfType(resultType);
-							   if (objectsOfType.All(o => !o.ProxiedObject.Equals(result)))
-							   {
-								   objectsOfType.Add(new ObjectProxy(result));
-							   }
-						   }
-					   }
-					   if (instance != null) instance.RaisePropertyChanged(string.Empty);
-					   if (Properties != null) Properties.ForEach(p => p.Refresh());
 				   }));
+		}
+
+		private void InvokeMethod(ObjectProxy instance, Type selectedType, MethodInfo method, List<IValueStore> parameterValueStores)
+		{
+			var parameterInstances = parameterValueStores
+									.Select(vs => IsObservableCollection(vs.ValueType)
+									   ? _Objects.OfType_OneWayToSourceChangePropagation(vs.ValueType.GetGenericArguments().First())
+									   : vs.Value)
+									.ToList();
+
+			object result = null;
+			try
+			{
+				result = method.Invoke(instance != null ? instance.ProxiedObject : null, parameterInstances.ToArray());
+			}
+			catch (TargetInvocationException tie)
+			{
+				System.Diagnostics.Debug.WriteLine("An Exception occured in " + method.Name + ".\n\n" + tie.InnerException.ToString());
+				//MessageBox.Show("An Exception occured in " + m.Name + ".\n\n" + tie.InnerException.ToString(), "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+
+			var objectsToRefreshCandidates = parameterInstances.SelectMany(i =>
+			{
+				if (i is IEnumerable)
+				{
+					return ((IEnumerable)i).OfType<object>();
+				}
+				else
+				{
+					return new[] { i }.OfType<object>();
+				}
+			});
+			var ofTypeMethod = typeof(Enumerable).GetMethod("OfType").MakeGenericMethod(selectedType);
+			var objectsToRefresh = (IEnumerable<object>)ofTypeMethod.Invoke(null, new[] { objectsToRefreshCandidates });
+			foreach (var objectToRefresh in objectsToRefresh)
+			{
+				var proxy = _Objects.GetProxy(objectToRefresh);
+				if (proxy != null) proxy.RaisePropertyChanged(string.Empty);
+			}
+
+
+			if (result != null)
+			{
+				var resultType = result.GetType();
+
+				if (resultType.GetTypeInfo().IsGenericType
+					&& (resultType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
+						||
+						resultType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IEnumerable)))
+					&& resultType.GetGenericArguments().Any()
+					&& resultType.GetGenericArguments().First().GetTypeInfo().IsValueType == false
+					&& IsMicrosoftType(resultType.GetGenericArguments().First()) == false)
+				{
+					var resultItemType = resultType.GetGenericArguments().First();
+					var objectsOfType = _Objects.OfType(resultItemType);
+					foreach (var resultItem in (IEnumerable)result)
+					{
+						if (resultItem != null && objectsOfType.All(o => !o.ProxiedObject.Equals(resultItem)))
+						{
+							objectsOfType.Add(new ObjectProxy(resultItem));
+						}
+					}
+				}
+				if (resultType.GetTypeInfo().IsValueType == false && IsMicrosoftType(resultType) == false)
+				{
+					var objectsOfType = _Objects.OfType(resultType);
+					if (objectsOfType.All(o => !o.ProxiedObject.Equals(result)))
+					{
+						objectsOfType.Add(new ObjectProxy(result));
+					}
+				}
+			}
+			if (instance != null) instance.RaisePropertyChanged(string.Empty);
+			if (Properties != null) Properties.ForEach(p => p.Refresh());
 		}
 
 		static bool IsObservableCollection(Type type)

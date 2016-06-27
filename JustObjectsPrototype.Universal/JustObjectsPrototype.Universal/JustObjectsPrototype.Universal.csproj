@@ -102,6 +102,9 @@
     <Compile Include="JOP\Editors\PropertyValueStore.cs" />
     <Compile Include="JOP\Editors\SelfcontainedValueStore.cs" />
     <Compile Include="JOP\IconAttribute.cs" />
+    <Compile Include="JOP\MethodInvocationPage.xaml.cs">
+      <DependentUpon>MethodInvocationPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Shell\ViewModel.cs" />
     <Compile Include="JOP\Editors\DateTimeToDateTimeOffsetConverter.cs" />
     <Compile Include="JOP\Editors\IPropertyViewModel.cs" />
@@ -161,6 +164,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="JOP\Editors\PropertiesViews.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="JOP\MethodInvocationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
