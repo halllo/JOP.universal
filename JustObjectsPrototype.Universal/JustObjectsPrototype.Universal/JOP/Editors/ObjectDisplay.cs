@@ -64,5 +64,10 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		{
 			return property.Name.Replace("_", " ");
 		}
+
+		public static string Nicely(ParameterInfo parameter)
+		{
+			return parameter.Name.Replace("_", " ");
+		}
 	}
 }

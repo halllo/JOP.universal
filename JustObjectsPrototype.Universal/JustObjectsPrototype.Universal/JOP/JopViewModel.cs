@@ -56,17 +56,18 @@ namespace JustObjectsPrototype.Universal.JOP
 			}
 		}
 
+		private Type SelectedType { get; set; }
 		protected override void OnSelectedMenuItem(MenuItemViewModel o)
 		{
 			if (o != null)
 			{
-				UpdateItems(_Objects.OfType((Type)o.Tag));
-				_Objects.OfType((Type)o.Tag).CollectionChanged += (s, e) => UpdateItems(_Objects.OfType((Type)o.Tag));
+				SelectedType = (Type)o.Tag;
+
+				UpdateItems(_Objects.OfType(SelectedType));
+				_Objects.OfType(SelectedType).CollectionChanged += (s, e) => UpdateItems(_Objects.OfType((Type)o.Tag));
 
 
-
-				var selectedType = (Type)SelectedMenuItem.Tag;
-				var staticMethods = selectedType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+				var staticMethods = SelectedType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
 				var staticFunctions = GetFunctions(null, staticMethods);
 
 				MasterCommands.Clear();
@@ -109,8 +110,7 @@ namespace JustObjectsPrototype.Universal.JOP
 
 		private void UpdateViewModel(ItemViewModel itemVM, ObjectProxy item)
 		{
-			var selectedType = (Type)SelectedMenuItem.Tag;
-			var properties = selectedType
+			var properties = SelectedType
 				.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
 				.Where(p => p.GetIndexParameters().Length == 0)
 				.ToList();
@@ -201,7 +201,7 @@ namespace JustObjectsPrototype.Universal.JOP
 					   var parameterValueStores = parameters
 						.Select(p => new SelfcontainedValueStore
 						{
-							Identifier = p.Name,
+							Identifier = ObjectDisplay.Nicely(p),
 							Value = null,
 							ValueType = p.ParameterType,
 						}).ToList<IValueStore>();
@@ -212,22 +212,21 @@ namespace JustObjectsPrototype.Universal.JOP
 
 					   var propertiesViewModels = PropertiesViewModels.Of(parameterValueStoresWithoutObservableCollections, _Objects);
 
-					   var selectedType = (Type)SelectedMenuItem.Tag;
 					   if (parameterValueStoresWithoutObservableCollections.Any())
 					   {
 						   MethodInvocationTitle = ObjectDisplay.Nicely(m);
 						   MethodInvocationParameters = propertiesViewModels;
-						   MethodInvocationContinuation = new Command(() => InvokeMethod(instance, selectedType, m, parameterValueStores));
+						   MethodInvocationContinuation = new Command(() => InvokeMethod(instance, m, parameterValueStores));
 						   ShowMethodInvocationDialog(parameterValueStoresWithoutObservableCollections);
 					   }
 					   else
 					   {
-						   InvokeMethod(instance, selectedType, m, parameterValueStores);
+						   InvokeMethod(instance, m, parameterValueStores);
 					   }
 				   }));
 		}
 
-		private void InvokeMethod(ObjectProxy instance, Type selectedType, MethodInfo method, List<IValueStore> parameterValueStores)
+		private void InvokeMethod(ObjectProxy instance, MethodInfo method, List<IValueStore> parameterValueStores)
 		{
 			var parameterInstances = parameterValueStores
 									.Select(vs => IsObservableCollection(vs.ValueType)
@@ -259,7 +258,7 @@ namespace JustObjectsPrototype.Universal.JOP
 					return new[] { i }.OfType<object>();
 				}
 			});
-			var ofTypeMethod = typeof(Enumerable).GetMethod("OfType").MakeGenericMethod(selectedType);
+			var ofTypeMethod = typeof(Enumerable).GetMethod("OfType").MakeGenericMethod(SelectedType);
 			var objectsToRefresh = (IEnumerable<object>)ofTypeMethod.Invoke(null, new[] { objectsToRefreshCandidates });
 			foreach (var objectToRefresh in objectsToRefresh)
 			{

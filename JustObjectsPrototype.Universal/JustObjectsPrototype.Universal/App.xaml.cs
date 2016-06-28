@@ -207,9 +207,16 @@ namespace JustObjectsPrototype.Universal
 
 		public DateTime Datum { get; set; }
 
-		public void Highlighten(string postfix)
+		[JOP.Icon(Symbol.Highlight)]
+		public void Highlighten()
 		{
-			Name += postfix;
+			Name += "!";
+		}
+
+		[JOP.Icon(Symbol.Document)]
+		public Dokument Schreiben(string inhalt)
+		{
+			return new Dokument { Adressat = Mandant, Inhalt = inhalt };
 		}
 
 		[JOP.Icon(Symbol.Delete)]
@@ -235,6 +242,7 @@ namespace JustObjectsPrototype.Universal
 		public string Vorname { get; set; }
 		public string Nachname { get; set; }
 		public List<Kunde> Freunde { get; set; }
+		public List<string> Spitznamen { get; set; }
 
 		public override string ToString()
 		{
@@ -258,6 +266,19 @@ namespace JustObjectsPrototype.Universal
 			}
 
 			Freunde.Add(freund);
+		}
+	}
+
+	[JOP.Icon(Symbol.Document)]
+	public class Dokument
+	{
+		public Kunde Adressat { get; set; }
+		public string Inhalt { get; set; }
+
+		[JOP.Icon(Symbol.Remove)]
+		public void Löschen(ObservableCollection<Dokument> dokumente)
+		{
+			dokumente.Remove(this);
 		}
 	}
 

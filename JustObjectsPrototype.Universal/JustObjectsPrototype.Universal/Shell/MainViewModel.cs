@@ -129,12 +129,20 @@ namespace JustObjectsPrototype.Universal.Shell
 
 	public abstract class MainViewModel : ViewModel
 	{
+		public bool PostFirstClick
+		{
+			get { return _PostFirstClick; }
+			set { _PostFirstClick = value; Changed(); }
+		}
+		bool _PostFirstClick = false;
+
 		public ObservableCollection<MenuItemViewModel> MenuItems { get; set; }
 		public MenuItemViewModel SelectedMenuItem
 		{
 			get { return _SelectedMenuItem; }
 			set
 			{
+				PostFirstClick = true;
 				_SelectedMenuItem = value; Changed();
 				OnSelectedMenuItem(_SelectedMenuItem);
 			}

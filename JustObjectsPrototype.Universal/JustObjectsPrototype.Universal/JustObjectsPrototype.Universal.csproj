@@ -132,7 +132,7 @@
     <Compile Include="Shell\MasterDetailPage.xaml.cs">
       <DependentUpon>MasterDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Shell\NullIsVisible.cs" />
+    <Compile Include="Shell\ValueConverters.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

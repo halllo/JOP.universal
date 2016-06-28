@@ -1,4 +1,5 @@
 ﻿using JustObjectsPrototype.Universal.JOP;
+using Windows.UI.Xaml.Controls;
 
 namespace JustObjectsPrototype.Universal.Shell
 {
@@ -16,5 +17,10 @@ namespace JustObjectsPrototype.Universal.Shell
 		}
 
 		public JopViewModel JopViewModel { get { return JopViewModel.Instance.Value; } }
+
+		private void OpenAgain(object sender, object e)
+		{
+			(sender as CommandBar).IsOpen = true;
+		}
 	}
 }

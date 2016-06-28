@@ -196,6 +196,7 @@
 			</Setter>
 		</Style>
 		<local:NullIsVisible x:Key="nullIsVisible"/>
+		<local:FalseIsVisible x:Key="falseIsVisible"/>
 	</Page.Resources>
 
 
@@ -292,7 +293,7 @@
 				</StackPanel>
 
 
-				<StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding SelectedMenuItem,Converter={StaticResource nullIsVisible}}">
+				<StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding PostFirstClick,Converter={StaticResource falseIsVisible}}">
 					<Image Source="../Assets/left.png" Stretch="None" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 					<TextBlock FontSize="15" FontFamily="Consolas" VerticalAlignment="Center" Margin="50,10,0,4">
 						Show.Prototype(With.These(objects));
@@ -302,13 +303,13 @@
 						Select one type to see and edit all its instances.
 					</TextBlock>
 				</StackPanel>
-				<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="{Binding SelectedMenuItem,Converter={StaticResource nullIsVisible}}">
+				<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Visibility="{Binding PostFirstClick,Converter={StaticResource falseIsVisible}}">
 					<TextBlock FontSize="14" VerticalAlignment="Center" Margin="0,0,0,40">
 						Invoke methods of the selected type.
 					</TextBlock>
 					<Image Source="../Assets/down.png" Stretch="None"/>
 				</StackPanel>
-				<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="{Binding SelectedMenuItem,Converter={StaticResource nullIsVisible}}">
+				<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="{Binding PostFirstClick,Converter={StaticResource falseIsVisible}}">
 					<TextBlock FontSize="14" VerticalAlignment="Center" Margin="0,40,0,0">
 						Invoke methods of the selected instance.
 					</TextBlock>
