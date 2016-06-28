@@ -81,13 +81,6 @@ namespace JustObjectsPrototype.Universal
 						},
 						new Kunde { Vorname = "Max", Nachname = "Musterman" },
 						new Kunde { Vorname = "King", Nachname = "Kong" },
-						new Rechnung { Betrag = 20.00m },
-						new Rechnung {
-							Betrag = 150.00m,
-							Empfänger = new Kunde { Nachname = "Maier"},
-							Strings = new List<string> { "Hallo", "Welt" },
-							Decimals = new List<decimal> { 3.5m, 3.3333m },
-						},
 					};
 					JOP.JopViewModel.Instance.Value.ShowMethodInvocationDialog = ps =>
 					{
@@ -201,34 +194,6 @@ namespace JustObjectsPrototype.Universal
 
 
 
-	public class Invoice
-	{
-		public Customer Receiver { get; set; }
-		public decimal Amount { get; set; }
-
-		public void Increase()
-		{
-			Amount += 1;
-		}
-	}
-	public class Customer
-	{
-		public string Name { get; set; }
-		public override string ToString()
-		{
-			return Name;
-		}
-
-		public Invoice Bill(decimal amount)
-		{
-			return new Invoice
-			{
-				Receiver = this,
-				Amount = amount,
-			};
-		}
-	}
-
 	[JOP.Icon(Symbol.Folder)]
 	public class Akte
 	{
@@ -237,22 +202,10 @@ namespace JustObjectsPrototype.Universal
 		}
 		public int ID { get; set; }
 		public string Name { get; set; }
-		Kunde mandant = new Kunde { Vorname = "Hans", Nachname = "Müller" };
-		public Kunde Mandant { get { return mandant; } }
-		public DateTime Datum { get { return _Datum; } set { _Datum = value; } }
-		DateTime _Datum;
 
-		[JOP.Icon(Symbol.Delete)]
-		public void Rechnungen_Löschen(ObservableCollection<Rechnung> rechnungen)
-		{
-			rechnungen.Clear();
-		}
+		public Kunde Mandant { get; set; }
 
-		[JOP.Icon(Symbol.Document)]
-		public void Briefe_Schreiben(ObservableCollection<Brief> briefe, Kunde autor)
-		{
-			briefe.Add(new Brief(autor) { Inhalt = "Hallo Welt" });
-		}
+		public DateTime Datum { get; set; }
 
 		public void Highlighten(string postfix)
 		{
@@ -275,35 +228,12 @@ namespace JustObjectsPrototype.Universal
 		}
 	}
 
-	[JOP.Icon(Symbol.Document)]
-	public class Rechnung
-	{
-		public Kunde Empfänger { get; set; }
-		public decimal Betrag { get; set; }
-		bool _Bezahlt;
-		public bool Bezahlt
-		{
-			get { return _Bezahlt; }
-			set { _Bezahlt = value; }
-		}
-		public bool BezahltSchreibgeschützt { get { return Bezahlt; } }
-		public IEnumerable<string> Strings { get; set; }
-		public IEnumerable<decimal> Decimals { get; set; }
-
-		[JOP.Icon(Symbol.FontIncrease)]
-		public void Erhöhen()
-		{
-			Betrag += 1;
-		}
-	}
-
 	[JOP.Icon(Symbol.Contact)]
 	public class Kunde
 	{
 		public bool Geändert { get; set; }
 		public string Vorname { get; set; }
 		public string Nachname { get; set; }
-		public Kunde Vertreter { get; set; }
 		public List<Kunde> Freunde { get; set; }
 
 		public override string ToString()
@@ -320,57 +250,14 @@ namespace JustObjectsPrototype.Universal
 		}
 
 		[JOP.Icon(Symbol.AddFriend)]
-		public List<Kunde> Neuer_Freund()
-		{
-			var kunde = new Kunde { Vorname = "Neuer" + DateTime.Now.Ticks, Nachname = "Freund" + DateTime.Now.Ticks };
-			Freunde.Add(kunde);
-
-			return new List<Kunde> { kunde };
-		}
-
-		[JOP.Icon(Symbol.AddFriend)]
 		public void Neuer_Freund(Kunde freund)
 		{
+			if (Freunde == null)
+			{
+				Freunde = new List<Kunde>();
+			}
+
 			Freunde.Add(freund);
-		}
-
-		[JOP.Icon(Symbol.Account)]
-		public Kunde Ich()
-		{
-			return this;
-		}
-
-		[JOP.Icon(Symbol.Document)]
-		public Brief Schreiben(string inhalts_text, bool wirklich)
-		{
-			return new Brief(this) { Inhalt = inhalts_text };
-		}
-	}
-
-	public class Brief
-	{
-		public Brief(Kunde autor)
-		{
-			Geschrieben_von = autor;
-		}
-
-		public string Inhalt { get; set; }
-
-		public Kunde Geschrieben_von { get; private set; }
-
-		public int Fünf()
-		{
-			return 5;
-		}
-
-		public string HalloWeltString()
-		{
-			return "hallo welt";
-		}
-
-		public CommandBar ContentElement()
-		{
-			return new CommandBar();
 		}
 	}
 

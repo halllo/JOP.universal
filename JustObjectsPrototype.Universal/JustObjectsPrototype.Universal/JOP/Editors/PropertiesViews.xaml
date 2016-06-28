@@ -71,7 +71,7 @@
 			<ComboBox Grid.Row="1" ItemsSource="{Binding References}" SelectedItem="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
-						<TextBlock local:ObjectDisplay.DisplayProperty="{Binding}"/>
+						<local:ObjectDisplay Display="{Binding}"/>
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
@@ -88,7 +88,7 @@
 				<Button Grid.Row="0" Grid.Column="1" BorderThickness="0" Background="Transparent"
 										Command="{Binding AddReference}">
 					<Button.Content>
-						<Image Source="../Resources/add.png" Height="15"/>
+						<SymbolIcon Symbol="Add"/>
 					</Button.Content>
 				</Button>
 			</StackPanel>
@@ -104,13 +104,13 @@
 							<Button Grid.Column="1" BorderThickness="0" Background="Transparent"
 													Command="{Binding RemoveReference}">
 								<Button.Content>
-									<Image Source="../Resources/remove.png" Height="15"/>
+									<SymbolIcon Symbol="Remove"/>
 								</Button.Content>
 							</Button>
 							<ComboBox ItemsSource="{Binding References}" SelectedItem="{Binding Value,Mode=TwoWay}">
 								<ComboBox.ItemTemplate>
 									<DataTemplate>
-										<TextBlock local:ObjectDisplay.DisplayProperty="{Binding}"/>
+										<local:ObjectDisplay Display="{Binding}"/>
 									</DataTemplate>
 								</ComboBox.ItemTemplate>
 							</ComboBox>

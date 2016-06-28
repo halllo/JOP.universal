@@ -5,25 +5,24 @@ using Windows.UI.Xaml.Controls;
 
 namespace JustObjectsPrototype.Universal.JOP.Editors
 {
-	public class ObjectDisplay
+	public class ObjectDisplay : ContentControl
 	{
-		public static readonly DependencyProperty DisplayProperty = DependencyProperty.RegisterAttached(
+		public static readonly DependencyProperty DisplayProperty = DependencyProperty.Register(
 			"Display",
 			typeof(object),
-			typeof(TextBlock),
+			typeof(ObjectDisplay),
 			new PropertyMetadata(null, new PropertyChangedCallback(DisplayPropertyChanged))
 		);
-		public static void SetDisplayProperty(UIElement element, object value)
+
+		public object Display
 		{
-			element.SetValue(DisplayProperty, value);
+			get { return (object)GetValue(DisplayProperty); }
+			set { SetValue(DisplayProperty, value); }
 		}
-		public static object GetDisplayProperty(UIElement element)
-		{
-			return (object)element.GetValue(DisplayProperty);
-		}
+
 		private static void DisplayPropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
 		{
-			var textBlock = o as TextBlock;
+			var objectDisplay = o as ObjectDisplay;
 			if (e.NewValue == null
 				||
 				(
@@ -38,11 +37,11 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 					)
 				))
 			{
-				textBlock.Text = "";
+				objectDisplay.Content = "";
 			}
 			else
 			{
-				textBlock.Text = ToStringOrJson(e.NewValue);
+				objectDisplay.Content = ToStringOrJson(e.NewValue);
 			}
 		}
 
