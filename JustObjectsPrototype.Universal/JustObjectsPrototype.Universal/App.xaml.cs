@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -241,9 +242,16 @@ namespace JustObjectsPrototype.Universal
 		public bool Geändert { get; set; }
 		public string Vorname { get; set; }
 		public string Nachname { get; set; }
-		public List<Kunde> Freunde { get; set; }
-		public List<string> Spitznamen { get; set; }
 
+		public List<Kunde> Freunde { get; set; }
+		public string Freunde_Info { get { return string.Join(", ", Freunde?.Select(f => f != null ? f.ToString() : "<NULL>") ?? new List<string>()); } }
+
+		public List<string> Spitznamen { get; set; }
+		public string Spitznamen_Info { get { return string.Join(", ", Spitznamen ?? new List<string>()); } }
+
+		public List<int> Ints { get; set; }
+		public string Ints_Info { get { return string.Join(", ", Ints ?? new List<int>()); } }
+		
 		public override string ToString()
 		{
 			return (Vorname + " " + Nachname).Trim();

@@ -11,21 +11,21 @@
     Loaded="PageRoot_Loaded"
     Unloaded="PageRoot_Unloaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.Transitions>
-        <TransitionCollection>
-            <NavigationThemeTransition />
-        </TransitionCollection>
-    </Page.Transitions>
+	<Page.Transitions>
+		<TransitionCollection>
+			<NavigationThemeTransition />
+		</TransitionCollection>
+	</Page.Transitions>
 
-    <!-- Don't realize our content by default. See PageRoot_Loaded. -->
-	<StackPanel x:Name="RootPanel" x:DeferLoadStrategy="Lazy">
+	<!-- Don't realize our content by default. See PageRoot_Loaded. -->
+	<ScrollViewer x:Name="RootPanel" x:DeferLoadStrategy="Lazy">
 
 		<local:DetailView 
 			Margin="12,8"
 			CommandBarVisible="False"
 			DataContext="{x:Bind Item, Mode=OneWay}"/>
 
-	</StackPanel>
+	</ScrollViewer>
 
 	<Page.BottomAppBar>
 		<CommandBar local:CommandBarBridge.DetailCommandsProperty="{x:Bind Item,Mode=OneWay}">

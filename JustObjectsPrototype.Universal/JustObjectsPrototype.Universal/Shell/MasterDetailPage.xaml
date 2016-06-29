@@ -281,7 +281,7 @@
 				</ListView>
 
 
-				<StackPanel
+				<ScrollViewer VerticalScrollMode="Auto"
 					Grid.Column="1"
 					Grid.RowSpan="2"
 					BorderThickness="1,0,0,0"
@@ -290,7 +290,7 @@
 
 					<local:DetailView DataContext="{Binding SelectedMasterItem}"/>
 
-				</StackPanel>
+				</ScrollViewer>
 
 
 				<StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="{Binding PostFirstClick,Converter={StaticResource falseIsVisible}}">

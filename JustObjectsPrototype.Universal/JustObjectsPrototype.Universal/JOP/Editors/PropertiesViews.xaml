@@ -49,16 +49,32 @@
 			</Grid.RowDefinitions>
 			<StackPanel Grid.Row="0" Orientation="Horizontal">
 				<TextBlock Text="{Binding Label}" Foreground="Gray"/>
-				<TextBlock Text=" " />
+				<TextBlock Width="5"/>
 				<TextBlock Text="{Binding Error}" Foreground="Red"/>
+				<Button Grid.Row="0" BorderThickness="0" Background="Transparent" Command="{Binding AddEntry}">
+					<Button.Content>
+						<SymbolIcon Symbol="Add"/>
+					</Button.Content>
+				</Button>
 			</StackPanel>
-			<Button Grid.Row="1" Content="Q"/>
-			<!--<DataGrid Grid.Row="1" Style="{StaticResource GrayGridLines}" IsEnabled="{Binding CanWrite}"
-									  ItemsSource="{Binding Value}" AutoGenerateColumns="False">
-				<DataGrid.Columns>
-					<DataGridTextColumn Header="{x:Null}" Binding="{Binding Value}" />
-				</DataGrid.Columns>
-			</DataGrid>-->
+			<ListBox Grid.Row="1" IsEnabled="{Binding CanWrite}" ItemsSource="{Binding Value,Mode=TwoWay}" HorizontalContentAlignment="Stretch">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<Button Grid.Column="1" BorderThickness="0" Background="Transparent" Command="{Binding RemoveEntry}">
+								<Button.Content>
+									<SymbolIcon Symbol="Remove"/>
+								</Button.Content>
+							</Button>
+							<TextBox Text="{Binding Value,Mode=TwoWay}" AcceptsReturn="True"/>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
 		</Grid>
     </DataTemplate>
     <DataTemplate x:Key="referenceTypePropertyTemplate">
@@ -85,15 +101,13 @@
 			</Grid.RowDefinitions>
 			<StackPanel Orientation="Horizontal">
 				<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
-				<Button Grid.Row="0" Grid.Column="1" BorderThickness="0" Background="Transparent"
-										Command="{Binding AddReference}">
+				<Button Grid.Row="0" BorderThickness="0" Background="Transparent" Command="{Binding AddReference}">
 					<Button.Content>
 						<SymbolIcon Symbol="Add"/>
 					</Button.Content>
 				</Button>
 			</StackPanel>
-			<ListBox Grid.Row="1" Grid.ColumnSpan="2" IsEnabled="{Binding CanWrite}"
-									 ItemsSource="{Binding Value,Mode=TwoWay}" HorizontalContentAlignment="Stretch">
+			<ListBox Grid.Row="1" IsEnabled="{Binding CanWrite}" ItemsSource="{Binding Value,Mode=TwoWay}" HorizontalContentAlignment="Stretch">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<Grid>
@@ -101,8 +115,7 @@
 								<ColumnDefinition/>
 								<ColumnDefinition Width="Auto"/>
 							</Grid.ColumnDefinitions>
-							<Button Grid.Column="1" BorderThickness="0" Background="Transparent"
-													Command="{Binding RemoveReference}">
+							<Button Grid.Column="1" BorderThickness="0" Background="Transparent" Command="{Binding RemoveReference}">
 								<Button.Content>
 									<SymbolIcon Symbol="Remove"/>
 								</Button.Content>
