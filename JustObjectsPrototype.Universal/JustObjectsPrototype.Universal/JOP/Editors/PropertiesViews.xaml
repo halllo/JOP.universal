@@ -48,9 +48,9 @@
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 			<StackPanel Grid.Row="0" Orientation="Horizontal">
-				<TextBlock Text="{Binding Label}" Foreground="Gray"/>
+				<TextBlock Text="{Binding Label}" Foreground="Gray" VerticalAlignment="Center"/>
 				<TextBlock Width="5"/>
-				<TextBlock Text="{Binding Error}" Foreground="Red"/>
+				<TextBlock Text="{Binding Error}" Foreground="Red" VerticalAlignment="Center"/>
 				<Button Grid.Row="0" BorderThickness="0" Background="Transparent" Command="{Binding AddEntry}">
 					<Button.Content>
 						<SymbolIcon Symbol="Add"/>
@@ -100,7 +100,7 @@
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
+				<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray" VerticalAlignment="Center"/>
 				<Button Grid.Row="0" BorderThickness="0" Background="Transparent" Command="{Binding AddReference}">
 					<Button.Content>
 						<SymbolIcon Symbol="Add"/>
