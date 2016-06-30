@@ -30,7 +30,7 @@ namespace JustObjectsPrototype.Universal.JOP
 
 		Objects _Objects;
 
-		public void Init(ObservableCollection<object> objects)
+		public void Init(ICollection<object> objects)
 		{
 			_Objects = new Objects(objects);
 

@@ -6,7 +6,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace JustObjectsPrototype.Universal.Sample
@@ -100,15 +99,9 @@ namespace JustObjectsPrototype.Universal.Sample
 						new Kunde { Vorname = "Max", Nachname = "Musterman" },
 						new Kunde { Vorname = "King", Nachname = "Kong" },
 					};
-					JOP.JopViewModel.Instance.Value.ShowMethodInvocationDialog = ps =>
-					{
-						(Window.Current.Content as Frame).Navigate(typeof(JOP.MethodInvocationPage), null, new DrillInNavigationTransitionInfo());
-					};
-					JOP.JopViewModel.Instance.Value.Init(objects);
-
-					rootFrame.Navigate(typeof(Shell.MasterDetailPage), e.Arguments);
 
 
+					Show.Prototype(With.These(objects));
 
 
 

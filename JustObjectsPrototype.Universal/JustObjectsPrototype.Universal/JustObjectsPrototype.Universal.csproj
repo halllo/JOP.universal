@@ -142,6 +142,7 @@
     <Compile Include="Shell\NavMenuListView.cs" />
     <Compile Include="Shell\ValueConverters.cs" />
     <Compile Include="Shell\ViewModel.cs" />
+    <Compile Include="Show.cs" />
     <EmbeddedResource Include="Properties\JustObjectsPrototype.Universal.rd.xml" />
   </ItemGroup>
   <ItemGroup>
