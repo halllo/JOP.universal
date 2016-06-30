@@ -7,14 +7,14 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="88d22244-aee4-4356-ab6b-e74e6ecb64c1"
+    Name="29fd58ce-7e95-4739-9df2-617da3fe6869"
     Publisher="CN=manue_000"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="88d22244-aee4-4356-ab6b-e74e6ecb64c1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="29fd58ce-7e95-4739-9df2-617da3fe6869" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>JustObjectsPrototype.Universal</DisplayName>
+    <DisplayName>JustObjectsPrototype.Universal.Sample</DisplayName>
     <PublisherDisplayName>manue_000</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -30,12 +30,12 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="JustObjectsPrototype.Universal.App">
+      EntryPoint="JustObjectsPrototype.Universal.Sample.App">
       <uap:VisualElements
-        DisplayName="JustObjectsPrototype.Universal"
+        DisplayName="JustObjectsPrototype.Universal.Sample"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="JustObjectsPrototype.Universal"
+        Description="JustObjectsPrototype.Universal.Sample"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

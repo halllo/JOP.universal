@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-namespace JustObjectsPrototype.Universal
+namespace JustObjectsPrototype.Universal.Sample
 {
 	/// <summary>
 	/// Provides application-specific behavior to supplement the default Application class.
@@ -31,7 +31,7 @@ namespace JustObjectsPrototype.Universal
 		/// will be used such as when the application is launched to open a specific file.
 		/// </summary>
 		/// <param name="e">Details about the launch request and process.</param>
-		protected override void OnLaunched(LaunchActivatedEventArgs e)
+		protected async override void OnLaunched(LaunchActivatedEventArgs e)
 		{
 			//#if DEBUG
 			//			if (System.Diagnostics.Debugger.IsAttached)
@@ -67,6 +67,23 @@ namespace JustObjectsPrototype.Universal
 					// configuring the new page by passing required information as a navigation
 					// parameter
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 					var objects = new ObservableCollection<object>
 					{
 						new Akte { Name = "Akte 1", Datum = DateTime.Now },
@@ -90,6 +107,28 @@ namespace JustObjectsPrototype.Universal
 					JOP.JopViewModel.Instance.Value.Init(objects);
 
 					rootFrame.Navigate(typeof(Shell.MasterDetailPage), e.Arguments);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 				}
 				// Ensure the current window is active
 				Window.Current.Activate();
@@ -120,51 +159,6 @@ namespace JustObjectsPrototype.Universal
 			deferral.Complete();
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -251,7 +245,7 @@ namespace JustObjectsPrototype.Universal
 
 		public List<int> Ints { get; set; }
 		public string Ints_Info { get { return string.Join(", ", Ints ?? new List<int>()); } }
-		
+
 		public override string ToString()
 		{
 			return (Vorname + " " + Nachname).Trim();
@@ -289,19 +283,4 @@ namespace JustObjectsPrototype.Universal
 			dokumente.Remove(this);
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
