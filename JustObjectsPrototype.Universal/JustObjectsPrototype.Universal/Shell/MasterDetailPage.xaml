@@ -14,189 +14,112 @@
 		</TransitionCollection>
 	</Page.Transitions>
 
-
 	<Page.Resources>
-		<DataTemplate x:Key="MasterListViewItemTemplate" x:DataType="local:ItemViewModel">
-			<Grid Margin="0,11,0,13">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-				</Grid.RowDefinitions>
-
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="Auto" />
-				</Grid.ColumnDefinitions>
-
-				<TextBlock 
-					Text="{x:Bind Title,Mode=OneWay}" 
-					Style="{ThemeResource BaseTextBlockStyle}" />
-
-				<TextBlock 
-					Text="{x:Bind Text,Mode=OneWay}"
-					MaxLines="1" 
-					Grid.Row="1" 
-					Style="{ThemeResource ListBodyTextBlockStyle}" />
-
-				<TextBlock
-					Text="{x:Bind DateCreatedHourMinute,Mode=OneWay}"
-					Grid.Column="1"
-					Margin="12,1,0,0"
-					Style="{ThemeResource ListCaptionAltTextblockStyle}" />
-			</Grid>
-		</DataTemplate>
-		<Style x:Key="SplitViewTogglePaneButtonStyle" TargetType="ToggleButton">
-			<Setter Property="FontSize" Value="20" />
-			<Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
-			<Setter Property="MinHeight" Value="48" />
-			<Setter Property="MinWidth" Value="48" />
-			<Setter Property="Margin" Value="0" />
-			<Setter Property="Padding" Value="0" />
-			<Setter Property="HorizontalAlignment" Value="Left" />
-			<Setter Property="VerticalAlignment" Value="Top" />
-			<Setter Property="HorizontalContentAlignment" Value="Center" />
-			<Setter Property="VerticalContentAlignment" Value="Center" />
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
-			<Setter Property="Content" Value="&#xE700;" />
-			<Setter Property="AutomationProperties.Name" Value="Menu" />
-			<Setter Property="UseSystemFocusVisuals" Value="True"/>
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="ToggleButton">
-						<Grid Background="{TemplateBinding Background}" x:Name="LayoutRoot">
-							<VisualStateManager.VisualStateGroups>
-								<VisualStateGroup x:Name="CommonStates">
-									<VisualState x:Name="Normal" />
-									<VisualState x:Name="PointerOver">
-										<Storyboard>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualState>
-									<VisualState x:Name="Pressed">
-										<Storyboard>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualState>
-									<VisualState x:Name="Disabled">
-										<Storyboard>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="(TextBlock.Foreground)">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualState>
-									<VisualState x:Name="Checked"/>
-									<VisualState x:Name="CheckedPointerOver">
-										<Storyboard>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualState>
-									<VisualState x:Name="CheckedPressed">
-										<Storyboard>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualState>
-									<VisualState x:Name="CheckedDisabled">
-										<Storyboard>
-											<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="(TextBlock.Foreground)">
-												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
-											</ObjectAnimationUsingKeyFrames>
-										</Storyboard>
-									</VisualState>
-								</VisualStateGroup>
-							</VisualStateManager.VisualStateGroups>
-							<ContentPresenter x:Name="ContentPresenter"
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ShellResources.xaml" />
+				<ResourceDictionary>
+					<Style x:Key="SplitViewTogglePaneButtonStyle" TargetType="ToggleButton">
+						<Setter Property="FontSize" Value="20" />
+						<Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
+						<Setter Property="MinHeight" Value="48" />
+						<Setter Property="MinWidth" Value="48" />
+						<Setter Property="Margin" Value="0" />
+						<Setter Property="Padding" Value="0" />
+						<Setter Property="HorizontalAlignment" Value="Left" />
+						<Setter Property="VerticalAlignment" Value="Top" />
+						<Setter Property="HorizontalContentAlignment" Value="Center" />
+						<Setter Property="VerticalContentAlignment" Value="Center" />
+						<Setter Property="Background" Value="Transparent" />
+						<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+						<Setter Property="Content" Value="&#xE700;" />
+						<Setter Property="AutomationProperties.Name" Value="Menu" />
+						<Setter Property="UseSystemFocusVisuals" Value="True"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="ToggleButton">
+									<Grid Background="{TemplateBinding Background}" x:Name="LayoutRoot">
+										<VisualStateManager.VisualStateGroups>
+											<VisualStateGroup x:Name="CommonStates">
+												<VisualState x:Name="Normal" />
+												<VisualState x:Name="PointerOver">
+													<Storyboard>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+													</Storyboard>
+												</VisualState>
+												<VisualState x:Name="Pressed">
+													<Storyboard>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+													</Storyboard>
+												</VisualState>
+												<VisualState x:Name="Disabled">
+													<Storyboard>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="(TextBlock.Foreground)">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+													</Storyboard>
+												</VisualState>
+												<VisualState x:Name="Checked"/>
+												<VisualState x:Name="CheckedPointerOver">
+													<Storyboard>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+													</Storyboard>
+												</VisualState>
+												<VisualState x:Name="CheckedPressed">
+													<Storyboard>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+													</Storyboard>
+												</VisualState>
+												<VisualState x:Name="CheckedDisabled">
+													<Storyboard>
+														<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="(TextBlock.Foreground)">
+															<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+														</ObjectAnimationUsingKeyFrames>
+													</Storyboard>
+												</VisualState>
+											</VisualStateGroup>
+										</VisualStateManager.VisualStateGroups>
+										<ContentPresenter x:Name="ContentPresenter"
 										  Content="{TemplateBinding Content}"
 										  Margin="{TemplateBinding Padding}"
 										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
 										  AutomationProperties.AccessibilityView="Raw" />
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="NavMenuItemContainerStyle" TargetType="ListViewItem">
-			<Setter Property="MinWidth" Value="{StaticResource SplitViewCompactPaneThemeLength}"/>
-			<Setter Property="Height" Value="48"/>
-			<Setter Property="Padding" Value="0"/>
-		</Style>
-		<DataTemplate x:Key="NavMenuItemTemplate" x:DataType="local:MenuItemViewModel">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="48" />
-					<ColumnDefinition />
-				</Grid.ColumnDefinitions>
-				<!-- Showing a ToolTip and the Label is redundant.  We put the ToolTip on the icon.
-					 It appears when the user hovers over the icon, but not the label which provides
-					 value when the SplitView is 'Compact' while reducing the likelihood of showing
-					 redundant information when the label is shown.-->
-				<FontIcon x:Name="Glyph" FontSize="16" Glyph="{x:Bind SymbolAsChar}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind Label}"/>
-				<TextBlock x:Name="Text" Grid.Column="1" Text="{x:Bind Label}" />
-			</Grid>
-		</DataTemplate>
-		<Style x:Key="NavigationSettingsButtonStyle" TargetType="Button" BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
-			<Setter Property="HorizontalAlignment" Value="Stretch"/>
-			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-			<Setter Property="Height" Value="48"/>
-			<Setter Property="Width" Value="NaN"/>
-			<Setter Property="MinWidth" Value="48"/>
-			<Setter Property="AutomationProperties.Name" Value="Settings"/>
-			<Setter Property="Content">
-				<Setter.Value>
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="48" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<FontIcon Grid.Column="0" FontSize="16" Glyph="&#xE713;" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-						<TextBlock Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Settings" VerticalAlignment="Center" />
-					</Grid>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style x:Key="NavigationBackButtonStyle" TargetType="Button" BasedOn="{StaticResource NavigationBackButtonNormalStyle}">
-			<Setter Property="HorizontalAlignment" Value="Stretch"/>
-			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-			<Setter Property="Height" Value="48"/>
-			<Setter Property="Width" Value="NaN"/>
-			<Setter Property="MinWidth" Value="48"/>
-			<Setter Property="AutomationProperties.Name" Value="Back"/>
-			<Setter Property="Content">
-				<Setter.Value>
-					<Grid x:Name="RootGrid">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="48" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<FontIcon x:Name="Glyph" Grid.Column="0" FontSize="16" Glyph="&#xE0D5;" MirroredWhenRightToLeft="True" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-						<TextBlock x:Name="Text" Grid.Column="1" Style="{ThemeResource BodyTextBlockStyle}" Text="Back" VerticalAlignment="Center" />
-					</Grid>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<local:NullIsVisible x:Key="nullIsVisible"/>
-		<local:FalseIsVisible x:Key="falseIsVisible"/>
+									</Grid>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+					<Style x:Key="NavMenuItemContainerStyle" TargetType="ListViewItem">
+						<Setter Property="MinWidth" Value="{StaticResource SplitViewCompactPaneThemeLength}"/>
+						<Setter Property="Height" Value="48"/>
+						<Setter Property="Padding" Value="0"/>
+					</Style>
+					<local:NullIsVisible x:Key="nullIsVisible"/>
+					<local:FalseIsVisible x:Key="falseIsVisible"/>
+				</ResourceDictionary>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</Page.Resources>
 
 
@@ -239,8 +162,19 @@
 					ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
 					ItemInvoked="NavMenuList_ItemInvoked"
 					ItemsSource="{Binding MenuItems}"
-					SelectedItem="{Binding SelectedMenuItem,Mode=TwoWay}"
-					ItemTemplate="{StaticResource NavMenuItemTemplate}">
+					SelectedItem="{Binding SelectedMenuItem,Mode=TwoWay}">
+					<local:NavMenuListView.ItemTemplate>
+						<DataTemplate x:DataType="local:MenuItemViewModel">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="48" />
+									<ColumnDefinition />
+								</Grid.ColumnDefinitions>
+								<FontIcon x:Name="Glyph" FontSize="16" Glyph="{x:Bind SymbolAsChar}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.ToolTip="{x:Bind Label}"/>
+								<TextBlock x:Name="Text" Grid.Column="1" Text="{x:Bind Label}" />
+							</Grid>
+						</DataTemplate>
+					</local:NavMenuListView.ItemTemplate>
 				</local:NavMenuListView>
 			</SplitView.Pane>
 
@@ -269,10 +203,40 @@
 					Grid.Row="1"
 					ItemContainerTransitions="{x:Null}"
 					IsItemClickEnabled="True"
-					ItemTemplate="{StaticResource MasterListViewItemTemplate}"
 					ItemsSource="{Binding MasterItems}"
 					SelectedItem="{Binding SelectedMasterItem,Mode=TwoWay}"
 					ItemClick="MasterListView_ItemClick">
+					<ListView.ItemTemplate>
+						<DataTemplate x:DataType="local:ItemViewModel">
+							<Grid Margin="0,11,0,13">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto" />
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+
+								<TextBlock 
+									Text="{x:Bind Title,Mode=OneWay}" 
+									Style="{ThemeResource BaseTextBlockStyle}" />
+
+								<TextBlock 
+									Text="{x:Bind Text,Mode=OneWay}"
+									MaxLines="1" 
+									Grid.Row="1" 
+									Style="{ThemeResource ListBodyTextBlockStyle}" />
+
+								<TextBlock
+									Text="{x:Bind DateCreatedHourMinute,Mode=OneWay}"
+									Grid.Column="1"
+									Margin="12,1,0,0"
+									Style="{ThemeResource ListCaptionAltTextblockStyle}" />
+							</Grid>
+						</DataTemplate>
+					</ListView.ItemTemplate>
 					<ListView.ItemContainerStyle>
 						<Style TargetType="ListViewItem">
 							<Setter Property="HorizontalContentAlignment" Value="Stretch" />
