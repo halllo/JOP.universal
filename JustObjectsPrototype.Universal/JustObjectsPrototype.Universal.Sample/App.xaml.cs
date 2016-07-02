@@ -68,8 +68,10 @@ namespace JustObjectsPrototype.Universal.Sample
 
 
 
-
-
+	public enum Aktenstatus
+	{
+		Potenziell, Angenommen, Abgelehnt
+	}
 
 	[JOP.Icon(Symbol.Folder)]
 	public class Akte
@@ -81,6 +83,7 @@ namespace JustObjectsPrototype.Universal.Sample
 		public int ID { get; set; }
 
 		public string Name { get; set; }
+		public Aktenstatus Status { get; set; }
 		public Kunde Mandant { get; set; }
 		public DateTime Datum { get; set; }
 

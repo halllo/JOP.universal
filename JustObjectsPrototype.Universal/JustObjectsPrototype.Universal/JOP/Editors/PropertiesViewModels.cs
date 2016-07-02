@@ -18,6 +18,8 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 
 					 : valueStore.CanRead && valueStore.ValueType == typeof(string) ? (IPropertyViewModel)new SimpleTypePropertyViewModel { ValueStore = valueStore }
 
+					 : valueStore.CanRead && valueStore.ValueType.GetTypeInfo().IsEnum ? (IPropertyViewModel)new EnumTypePropertyViewModel { ValueStore = valueStore }
+
 					 : valueStore.CanRead
 							&& valueStore.ValueType.GetTypeInfo().IsGenericType
 							&& (valueStore.ValueType.GetGenericTypeDefinition() == typeof(IEnumerable<>)

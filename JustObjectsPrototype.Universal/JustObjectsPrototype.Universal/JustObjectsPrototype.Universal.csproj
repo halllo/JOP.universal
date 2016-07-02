@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JOP\Editors\DateTimeToDateTimeOffsetConverter.cs" />
+    <Compile Include="JOP\Editors\EnumTypePropertyViewModel.cs" />
     <Compile Include="JOP\Editors\IPropertyViewModel.cs" />
     <Compile Include="JOP\Editors\IValueStore.cs" />
     <Compile Include="JOP\Editors\ObjectDisplay.cs" />

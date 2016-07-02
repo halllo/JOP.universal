@@ -7,6 +7,7 @@
 									BooleanPropertyTemplate="{StaticResource booleanPropertyTemplate}"
 									DateTimePropertyTemplate="{StaticResource dateTimePropertyTemplate}"
 									SimpleTypePropertyTemplate="{StaticResource simpleTypePropertyTemplate}"
+									EnumTypePropertyTemplate="{StaticResource enumTypePropertyTemplate}"
 									SimpleTypeListPropertyTemplate="{StaticResource simpleTypeListPropertyTemplate}"
 									ReferenceTypePropertyTemplate="{StaticResource referenceTypePropertyTemplate}"
 									ReferenceTypeListPropertyTemplate="{StaticResource referenceTypeListPropertyTemplate}"
@@ -39,6 +40,22 @@
 			</Grid.RowDefinitions>
 			<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
 			<TextBox Grid.Row="1" Text="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}" AcceptsReturn="True"/>
+		</Grid>
+	</DataTemplate>
+	<DataTemplate x:Key="enumTypePropertyTemplate">
+		<Grid Margin="10,10,0,10">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
+			<ComboBox Grid.Row="1" ItemsSource="{Binding References}" SelectedItem="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<local:ObjectDisplay Display="{Binding}"/>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 		</Grid>
 	</DataTemplate>
 	<DataTemplate x:Key="simpleTypeListPropertyTemplate">
