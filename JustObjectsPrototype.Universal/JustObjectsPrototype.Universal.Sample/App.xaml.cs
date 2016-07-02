@@ -98,6 +98,12 @@ namespace JustObjectsPrototype.Universal.Sample
 			akten.Clear();
 		}
 
+		[JOP.Icon(Symbol.Highlight)]
+		public static void Highlight_Second(ObservableCollection<Akte> akten)
+		{
+			akten[1].Highlighten();
+		}
+
 		[JOP.Icon(Symbol.Add)]
 		public static void Neu_Erzeugen(ObservableCollection<Akte> akten, int wieviele)
 		{
