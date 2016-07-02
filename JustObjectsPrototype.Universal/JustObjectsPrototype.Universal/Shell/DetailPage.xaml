@@ -17,8 +17,7 @@
 		</TransitionCollection>
 	</Page.Transitions>
 
-	<!-- Don't realize our content by default. See PageRoot_Loaded. -->
-	<ScrollViewer x:Name="RootPanel" x:DeferLoadStrategy="Lazy">
+	<ScrollViewer x:Name="RootPanel">
 
 		<local:DetailView 
 			Margin="12,8"

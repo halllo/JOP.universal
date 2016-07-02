@@ -37,6 +37,8 @@ namespace JustObjectsPrototype.Universal.Shell
 			Item = item;
 			JopViewModel.Instance.Value.SelectedMasterItem = item;
 
+			//TODO: register for change of SelectedMasterItem=null and navigate back
+
 			var backStack = Frame.BackStack;
 			var backStackCount = backStack.Count;
 
@@ -101,11 +103,6 @@ namespace JustObjectsPrototype.Universal.Shell
 				// We shouldn't see this page since we are in "wide master-detail" mode.
 				// Play a transition as we are navigating from a separate page.
 				NavigateBackForWideState(useTransition: true);
-			}
-			else
-			{
-				// Realize the main page content.
-				FindName("RootPanel");
 			}
 
 			Window.Current.SizeChanged += Window_SizeChanged;
