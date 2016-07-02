@@ -14,13 +14,27 @@ namespace JustObjectsPrototype.Universal
 			var objects = with.Repository;
 			if (objects.Any(o => o == null)) throw new ArgumentNullException();
 
-			JOP.JopViewModel.Instance.Value.ShowMethodInvocationDialog = ps =>
-			{
-				(Window.Current.Content as Frame).Navigate(typeof(JOP.MethodInvocationPage), null, new DrillInNavigationTransitionInfo());
-			};
-			JOP.JopViewModel.Instance.Value.Init(objects);
+			Frame rootFrame = Window.Current.Content as Frame;
 
-			(Window.Current.Content as Frame).Navigate(typeof(Shell.MasterDetailPage));
+			if (rootFrame == null)
+			{
+				rootFrame = new Frame();
+				rootFrame.NavigationFailed += (sender, e) => { throw new Exception("Failed to load Page " + e.SourcePageType.FullName); };
+
+				Window.Current.Content = rootFrame;
+			}
+
+			if (rootFrame.Content == null)
+			{
+				JOP.JopViewModel.Instance.Value.ShowMethodInvocationDialog = ps =>
+				{
+					rootFrame.Navigate(typeof(JOP.MethodInvocationPage), null, new DrillInNavigationTransitionInfo());
+				};
+				JOP.JopViewModel.Instance.Value.Init(objects);
+
+				rootFrame.Navigate(typeof(Shell.MasterDetailPage));
+			}
+			Window.Current.Activate();
 
 			return new Prototype { Repository = objects };
 		}
