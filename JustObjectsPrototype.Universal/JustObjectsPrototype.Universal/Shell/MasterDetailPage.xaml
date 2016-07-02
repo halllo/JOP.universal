@@ -162,7 +162,8 @@
 					ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
 					ItemInvoked="NavMenuList_ItemInvoked"
 					ItemsSource="{Binding MenuItems}"
-					SelectedItem="{Binding SelectedMenuItem,Mode=TwoWay}">
+					SelectedItem="{Binding SelectedMenuItem,Mode=TwoWay}"
+					SelectionChanged="NavMenuListView_SelectionChanged">
 					<local:NavMenuListView.ItemTemplate>
 						<DataTemplate x:DataType="local:MenuItemViewModel">
 							<Grid>

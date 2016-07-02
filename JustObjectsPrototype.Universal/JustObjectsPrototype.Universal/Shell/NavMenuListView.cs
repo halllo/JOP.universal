@@ -89,7 +89,7 @@ namespace JustObjectsPrototype.Universal.Shell
 				var lvi = (ListViewItem)this.ContainerFromIndex(i);
 				if (i != index)
 				{
-					lvi.IsSelected = false;
+					//lvi.IsSelected = false;
 				}
 				else if (i == index)
 				{

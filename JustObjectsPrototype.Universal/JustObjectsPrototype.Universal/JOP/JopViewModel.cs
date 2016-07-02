@@ -30,13 +30,19 @@ namespace JustObjectsPrototype.Universal.JOP
 
 		Objects _Objects;
 
-		public void Init(ICollection<object> objects)
+		public void Init(ICollection<object> objects, List<Type> types = null)
 		{
 			_Objects = new Objects(objects);
 
-
-			UpdateMenu(_Objects.Types);
-			_Objects.Types.CollectionChanged += (s, e) => UpdateMenu(_Objects.Types);
+			if (types != null && types.Count > 0)
+			{
+				UpdateMenu(new ObservableCollection<Type>(types));
+			}
+			else
+			{
+				UpdateMenu(_Objects.Types);
+				_Objects.Types.CollectionChanged += (s, e) => UpdateMenu(_Objects.Types);
+			}
 		}
 
 
@@ -61,10 +67,11 @@ namespace JustObjectsPrototype.Universal.JOP
 		{
 			if (o != null)
 			{
+				var previousType = SelectedType;
 				var menuItemType = SelectedType = (Type)o.Tag;
 
-				UpdateItems(menuItemType, _Objects.OfType(menuItemType));
-				_Objects.OfType(menuItemType).CollectionChanged += (s, e) => UpdateItems(menuItemType, _Objects.OfType(menuItemType));
+				UpdateItems(menuItemType, previousType, _Objects.OfType(menuItemType));
+				_Objects.OfType(menuItemType).CollectionChanged += (s, e) => UpdateItems(menuItemType, null, _Objects.OfType(menuItemType));
 
 
 				var staticMethods = menuItemType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
@@ -84,7 +91,7 @@ namespace JustObjectsPrototype.Universal.JOP
 		}
 
 		bool _UpdatingItemsEnabled = true;
-		private void UpdateItems(Type type, ObservableCollection<ObjectProxy> items)
+		private void UpdateItems(Type type, Type previousType, ObservableCollection<ObjectProxy> items)
 		{
 			if (!SelectedType.Equals(type) || !_UpdatingItemsEnabled) return;
 
@@ -92,13 +99,14 @@ namespace JustObjectsPrototype.Universal.JOP
 			{
 				(item.Tag as ObjectProxy).RemovePropertyChangedCallbacks();
 			}
+			var selectedId = previousType != null ? null : SelectedMasterItem?.Id;
 			MasterItems.Clear();
-
+			int idZaehler = -1;
 			foreach (var item in items)
 			{
 				var itemVM = new ItemViewModel
 				{
-					Id = ++ItemViewModel.IdZaehler,
+					Id = ++idZaehler,
 					Tag = item
 				};
 				UpdateViewModel(type, itemVM, item);
@@ -108,6 +116,15 @@ namespace JustObjectsPrototype.Universal.JOP
 					itemVM.RaiseChanged(e.PropertyName);
 				};
 				MasterItems.Add(itemVM);
+			}
+
+			if (selectedId.HasValue && selectedId.Value <= MasterItems.Count)
+			{
+				SelectedMasterItem = MasterItems[selectedId.Value];
+			}
+			else
+			{
+				SelectedMasterItem = null;
 			}
 		}
 
@@ -280,13 +297,14 @@ namespace JustObjectsPrototype.Universal.JOP
 			}
 
 			var typesToRefreshCandidates = from parameterInstance in parameterInstances
+										   where parameterInstance != null
 										   let parameterInstanceType = parameterInstance.GetType()
 										   where IsObservableCollection(parameterInstanceType)
 										   select parameterInstanceType.GetTypeInfo().GenericTypeArguments.First();
 			var typeToRefresh = typesToRefreshCandidates.FirstOrDefault(t => t.Equals(SelectedType));
 			if (typeToRefresh != null)
 			{
-				UpdateItems(typeToRefresh, _Objects.OfType(typeToRefresh));
+				UpdateItems(typeToRefresh, null, _Objects.OfType(typeToRefresh));
 			}
 
 

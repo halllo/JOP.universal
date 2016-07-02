@@ -65,6 +65,11 @@ namespace JustObjectsPrototype.Universal.Shell
 		{
 		}
 
+		private void NavMenuListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			_lastSelectedItem = null;
+		}
+
 		private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (ItemViewModel)e.ClickedItem;

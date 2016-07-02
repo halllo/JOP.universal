@@ -14,6 +14,9 @@ namespace JustObjectsPrototype.Universal
 			var objects = with.Repository;
 			if (objects.Any(o => o == null)) throw new ArgumentNullException();
 
+			var types = with.DisplayedTypes;
+			if (types.Any(o => o == null)) throw new ArgumentNullException();
+
 			Frame rootFrame = Window.Current.Content as Frame;
 
 			if (rootFrame == null)
@@ -30,7 +33,7 @@ namespace JustObjectsPrototype.Universal
 				{
 					rootFrame.Navigate(typeof(JOP.MethodInvocationPage), null, new DrillInNavigationTransitionInfo());
 				};
-				JOP.JopViewModel.Instance.Value.Init(objects);
+				JOP.JopViewModel.Instance.Value.Init(objects, types);
 
 				rootFrame.Navigate(typeof(Shell.MasterDetailPage));
 			}
@@ -62,8 +65,20 @@ namespace JustObjectsPrototype.Universal
 		internal PrototypeBuilder()
 		{
 			Repository = new List<object>();
+			DisplayedTypes = new List<Type>();
 		}
 
 		internal ICollection<object> Repository { get; set; }
+		internal List<Type> DisplayedTypes { get; set; }
+
+
+		public PrototypeBuilder AndViewOf<TNext>()
+		{
+			return new PrototypeBuilder
+			{
+				Repository = Repository,
+				DisplayedTypes = DisplayedTypes.Union(new[] { typeof(TNext) }).ToList()
+			};
+		}
 	}
 }

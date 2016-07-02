@@ -41,8 +41,6 @@ namespace JustObjectsPrototype.Universal.Shell
 
 	public class ItemViewModel : ViewModel
 	{
-		public static int IdZaehler = 0;
-
 		public int Id
 		{
 			get; set;
