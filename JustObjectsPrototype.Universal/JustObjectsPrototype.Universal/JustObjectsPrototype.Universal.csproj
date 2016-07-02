@@ -119,14 +119,13 @@
     <Compile Include="JOP\Editors\SelfcontainedValueStore.cs" />
     <Compile Include="JOP\Editors\SimpleTypeListPropertyViewModel.cs" />
     <Compile Include="JOP\Editors\SimpleTypePropertyViewModel.cs" />
-    <Compile Include="JOP\IconAttribute.cs" />
+    <Compile Include="JOP\Attributes.cs" />
     <Compile Include="JOP\JopViewModel.cs" />
     <Compile Include="JOP\MethodInvocationPage.xaml.cs">
       <DependentUpon>MethodInvocationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="JOP\ObjectProxy.cs" />
     <Compile Include="JOP\Objects.cs" />
-    <Compile Include="JOP\TypeCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell\CommandBarBridge.cs" />
     <Compile Include="Shell\DetailPage.xaml.cs">

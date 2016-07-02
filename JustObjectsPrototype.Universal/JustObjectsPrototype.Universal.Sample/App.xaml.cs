@@ -34,7 +34,11 @@ namespace JustObjectsPrototype.Universal.Sample
 				new Kunde { Vorname = "King", Nachname = "Kong" },
 			};
 
-			Show.Prototype(With.These(objects));
+			Show.Prototype(With.These(objects)
+				.OnChanged<Akte>(a => a.ID++)
+				.OnChanged<Kunde>(k => k.Geändert = true)
+				.OnChanged<Dokument>(d => d.Geändert = true)
+				);
 		}
 	}
 
@@ -73,11 +77,11 @@ namespace JustObjectsPrototype.Universal.Sample
 		public Akte()
 		{
 		}
+
 		public int ID { get; set; }
+
 		public string Name { get; set; }
-
 		public Kunde Mandant { get; set; }
-
 		public DateTime Datum { get; set; }
 
 		[JOP.Icon(Symbol.Highlight)]
@@ -117,7 +121,9 @@ namespace JustObjectsPrototype.Universal.Sample
 	[JOP.Icon(Symbol.Contact)]
 	public class Kunde
 	{
+		[JOP.Editor(@readonly: true)]
 		public bool Geändert { get; set; }
+
 		public string Vorname { get; set; }
 		public string Nachname { get; set; }
 
@@ -158,8 +164,14 @@ namespace JustObjectsPrototype.Universal.Sample
 	[JOP.Icon(Symbol.Document)]
 	public class Dokument
 	{
+		[JOP.Editor(@readonly: true)]
+		public bool Geändert { get; set; }
+
 		public Kunde Adressat { get; set; }
 		public string Inhalt { get; set; }
+
+		[JOP.Editor(hide: true)]
+		public string Ersteller { get; set; }
 
 		[JOP.Icon(Symbol.Remove)]
 		public void Löschen(ObservableCollection<Dokument> dokumente)

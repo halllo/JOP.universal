@@ -29,10 +29,12 @@ namespace JustObjectsPrototype.Universal.JOP
 
 
 		Objects _Objects;
+		Dictionary<Type, Action<ObjectChangedEventArgs>> _ChangedEvents { get; set; }
 
-		public void Init(ICollection<object> objects, List<Type> types = null)
+		public void Init(ICollection<object> objects, List<Type> types = null, Dictionary<Type, Action<ObjectChangedEventArgs>> changedEvents = null)
 		{
 			_Objects = new Objects(objects);
+			_ChangedEvents = changedEvents;
 
 			if (types != null && types.Count > 0)
 			{
@@ -118,7 +120,7 @@ namespace JustObjectsPrototype.Universal.JOP
 				MasterItems.Add(itemVM);
 			}
 
-			if (selectedId.HasValue && selectedId.Value <= MasterItems.Count)
+			if (selectedId.HasValue && selectedId.Value < MasterItems.Count)
 			{
 				SelectedMasterItem = MasterItems[selectedId.Value];
 			}
@@ -150,7 +152,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			if (selectedObject != null)
 			{
 				var type = selectedObject.ProxiedObject.GetType();
-				Properties = PropertiesViewModels.Of(PropertyValueStore.ForPropertiesOf(type, selectedObject, null), _Objects);
+				Properties = PropertiesViewModels.Of(PropertyValueStore.ForPropertiesOf(type, selectedObject, InvokeChangedEvents), _Objects);
 
 				var methods = type.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 				var functions = GetFunctions(selectedObject, methods);
@@ -352,6 +354,44 @@ namespace JustObjectsPrototype.Universal.JOP
 		{
 			var attrs = type.GetTypeInfo().Assembly.GetCustomAttributes<AssemblyCompanyAttribute>();
 			return attrs.OfType<AssemblyCompanyAttribute>().Any(attr => attr.Company == "Microsoft Corporation");
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		void InvokeChangedEvents(ObjectChangedEventArgs obj)
+		{
+			var type = obj.Object.GetType();
+			if (_ChangedEvents != null && _ChangedEvents.ContainsKey(type))
+			{
+				try
+				{
+					_ChangedEvents[type].Invoke(obj);
+				}
+				catch (Exception e)
+				{
+				}
+			}
 		}
 	}
 }

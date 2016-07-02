@@ -52,7 +52,11 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 
 		public bool CanRead
 		{
-			get { return Property.CanRead; }
+			get
+			{
+				return Property.CanRead
+					&& !(Property.GetCustomAttribute<EditorAttribute>()?.Hide ?? false);
+			}
 		}
 
 		public bool CanWrite
@@ -61,7 +65,8 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 			{
 				return Property.CanWrite
 					&& Property.SetMethod.IsPublic
-					&& Property.Name != "ID" && Property.Name != "Id";
+					&& Property.Name != "ID" && Property.Name != "Id"
+					&& !(Property.GetCustomAttribute<EditorAttribute>()?.Readonly ?? false);
 			}
 		}
 

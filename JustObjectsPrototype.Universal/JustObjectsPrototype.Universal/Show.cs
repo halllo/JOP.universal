@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JustObjectsPrototype.Universal.JOP.Editors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -33,7 +34,7 @@ namespace JustObjectsPrototype.Universal
 				{
 					rootFrame.Navigate(typeof(JOP.MethodInvocationPage), null, new DrillInNavigationTransitionInfo());
 				};
-				JOP.JopViewModel.Instance.Value.Init(objects, types);
+				JOP.JopViewModel.Instance.Value.Init(objects, types, with.ChangedEvents);
 
 				rootFrame.Navigate(typeof(Shell.MasterDetailPage));
 			}
@@ -66,18 +67,33 @@ namespace JustObjectsPrototype.Universal
 		{
 			Repository = new List<object>();
 			DisplayedTypes = new List<Type>();
+			ChangedEvents = new Dictionary<Type, Action<ObjectChangedEventArgs>>();
 		}
 
 		internal ICollection<object> Repository { get; set; }
 		internal List<Type> DisplayedTypes { get; set; }
-
+		internal Dictionary<Type, Action<ObjectChangedEventArgs>> ChangedEvents { get; set; }
 
 		public PrototypeBuilder AndViewOf<TNext>()
 		{
 			return new PrototypeBuilder
 			{
 				Repository = Repository,
-				DisplayedTypes = DisplayedTypes.Union(new[] { typeof(TNext) }).ToList()
+				DisplayedTypes = DisplayedTypes.Union(new[] { typeof(TNext) }).ToList(),
+				ChangedEvents = ChangedEvents,
+			};
+		}
+
+		public PrototypeBuilder OnChanged<T>(Action<T> changedCallback)
+		{
+			var newChangeEvents = new Dictionary<Type, Action<ObjectChangedEventArgs>>(ChangedEvents);
+			newChangeEvents.Add(typeof(T), new Action<ObjectChangedEventArgs>(o => changedCallback((T)o.Object)));
+
+			return new PrototypeBuilder
+			{
+				Repository = Repository,
+				DisplayedTypes = DisplayedTypes,
+				ChangedEvents = newChangeEvents
 			};
 		}
 	}
