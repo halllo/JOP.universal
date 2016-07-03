@@ -102,13 +102,25 @@ namespace JustObjectsPrototype.Universal.Sample
 		}
 
 		[JOP.Icon(Symbol.Delete)]
-		public static void Alle_Löschen(ObservableCollection<Akte> akten)
+		public void Alle_Dokumente_Löschen(ObservableCollection<Dokument> dokumente)
+		{
+			dokumente.Clear();
+		}
+
+		[JOP.Icon(Symbol.Delete)]
+		public void Erstes_Dokumente_Löschen(ObservableCollection<Dokument> dokumente)
+		{
+			dokumente.Remove(dokumente.First());
+		}
+
+		[JOP.Icon(Symbol.Delete)]
+		public void Alle_Akten_Löschen(ObservableCollection<Akte> akten)
 		{
 			akten.Clear();
 		}
 
 		[JOP.Icon(Symbol.Delete)]
-		public void Alle_Löschen2(ObservableCollection<Akte> akten)
+		public static void Alle_Löschen(ObservableCollection<Akte> akten)
 		{
 			akten.Clear();
 		}

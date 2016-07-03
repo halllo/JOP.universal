@@ -76,11 +76,11 @@ namespace JustObjectsPrototype.Universal.Shell
 		{
 			if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems.Contains(Item.Tag))
 			{
-				System.Diagnostics.Debug.WriteLine("one item removed");
+				OnBackRequested();
 			}
-			if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems.Contains(Item.Tag))
+			if (e.Action == NotifyCollectionChangedAction.Reset)
 			{
-				System.Diagnostics.Debug.WriteLine("all items removed");
+				OnBackRequested();
 			}
 		}
 
