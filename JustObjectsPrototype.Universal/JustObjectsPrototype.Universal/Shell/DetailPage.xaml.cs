@@ -1,4 +1,5 @@
 ﻿using JustObjectsPrototype.Universal.JOP;
+using System.Collections.Specialized;
 using System.Linq;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -37,8 +38,6 @@ namespace JustObjectsPrototype.Universal.Shell
 			Item = item;
 			JopViewModel.Instance.Value.SelectedMasterItem = item;
 
-			//TODO: register for change of SelectedMasterItem=null and navigate back
-
 			var backStack = Frame.BackStack;
 			var backStackCount = backStack.Count;
 
@@ -60,10 +59,12 @@ namespace JustObjectsPrototype.Universal.Shell
 			SystemNavigationManager systemNavigationManager = SystemNavigationManager.GetForCurrentView();
 			systemNavigationManager.BackRequested += DetailPage_BackRequested;
 			systemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+			JopViewModel.Instance.Value.DirectItemsChanged += DirectItemsChanged;
 		}
 
 		protected override void OnNavigatedFrom(NavigationEventArgs e)
 		{
+			JopViewModel.Instance.Value.DirectItemsChanged -= DirectItemsChanged;
 			base.OnNavigatedFrom(e);
 
 			SystemNavigationManager systemNavigationManager = SystemNavigationManager.GetForCurrentView();
@@ -71,7 +72,19 @@ namespace JustObjectsPrototype.Universal.Shell
 			systemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
 		}
 
-		private void OnBackRequested()
+		void DirectItemsChanged(NotifyCollectionChangedEventArgs e)
+		{
+			if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems.Contains(Item.Tag))
+			{
+				System.Diagnostics.Debug.WriteLine("one item removed");
+			}
+			if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems.Contains(Item.Tag))
+			{
+				System.Diagnostics.Debug.WriteLine("all items removed");
+			}
+		}
+
+		void OnBackRequested()
 		{
 			Frame.GoBack(new DrillInNavigationTransitionInfo());
 		}
@@ -91,12 +104,12 @@ namespace JustObjectsPrototype.Universal.Shell
 			}
 		}
 
-		private bool ShouldGoToWideState()
+		bool ShouldGoToWideState()
 		{
 			return Window.Current.Bounds.Width >= 720;
 		}
 
-		private void PageRoot_Loaded(object sender, RoutedEventArgs e)
+		void PageRoot_Loaded(object sender, RoutedEventArgs e)
 		{
 			if (ShouldGoToWideState())
 			{
@@ -108,12 +121,12 @@ namespace JustObjectsPrototype.Universal.Shell
 			Window.Current.SizeChanged += Window_SizeChanged;
 		}
 
-		private void PageRoot_Unloaded(object sender, RoutedEventArgs e)
+		void PageRoot_Unloaded(object sender, RoutedEventArgs e)
 		{
 			Window.Current.SizeChanged -= Window_SizeChanged;
 		}
 
-		private void Window_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+		void Window_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
 		{
 			if (ShouldGoToWideState())
 			{
@@ -125,7 +138,7 @@ namespace JustObjectsPrototype.Universal.Shell
 			}
 		}
 
-		private void DetailPage_BackRequested(object sender, BackRequestedEventArgs e)
+		void DetailPage_BackRequested(object sender, BackRequestedEventArgs e)
 		{
 			e.Handled = true;
 

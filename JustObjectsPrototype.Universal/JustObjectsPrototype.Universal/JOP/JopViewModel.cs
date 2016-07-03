@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using Windows.UI.Xaml.Controls;
@@ -72,8 +73,8 @@ namespace JustObjectsPrototype.Universal.JOP
 				var previousType = SelectedType;
 				var menuItemType = SelectedType = (Type)o.Tag;
 
-				UpdateItems(menuItemType, previousType, _Objects.OfType(menuItemType));
-				_Objects.OfType(menuItemType).CollectionChanged += (s, e) => UpdateItems(menuItemType, null, _Objects.OfType(menuItemType));
+				UpdateItems(menuItemType, previousType, _Objects.OfType(menuItemType), null);
+				_Objects.OfType(menuItemType).CollectionChanged += (s, e) => UpdateItems(menuItemType, null, _Objects.OfType(menuItemType), e);
 
 
 				var staticMethods = menuItemType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
@@ -93,9 +94,12 @@ namespace JustObjectsPrototype.Universal.JOP
 		}
 
 		bool _UpdatingItemsEnabled = true;
-		private void UpdateItems(Type type, Type previousType, ObservableCollection<ObjectProxy> items)
+		public event Action<NotifyCollectionChangedEventArgs> DirectItemsChanged;
+		private void UpdateItems(Type type, Type previousType, ObservableCollection<ObjectProxy> items, NotifyCollectionChangedEventArgs collectionChangedEventArgs)
 		{
-			if (!SelectedType.Equals(type) || !_UpdatingItemsEnabled) return;
+			if (!SelectedType.Equals(type)) return;
+			if (collectionChangedEventArgs != null) DirectItemsChanged?.Invoke(collectionChangedEventArgs);
+			if (!_UpdatingItemsEnabled) return;
 
 			foreach (var item in MasterItems)
 			{
@@ -306,7 +310,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			var typeToRefresh = typesToRefreshCandidates.FirstOrDefault(t => t.Equals(SelectedType));
 			if (typeToRefresh != null)
 			{
-				UpdateItems(typeToRefresh, null, _Objects.OfType(typeToRefresh));
+				UpdateItems(typeToRefresh, null, _Objects.OfType(typeToRefresh), null);
 			}
 
 

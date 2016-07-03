@@ -32,6 +32,8 @@ namespace JustObjectsPrototype.Universal.Sample
 				},
 				new Kunde { Vorname = "Max", Nachname = "Musterman" },
 				new Kunde { Vorname = "King", Nachname = "Kong" },
+				new Dokument { Inhalt = "dokument 1" },
+				new Dokument { Inhalt = "dokument 2" },
 			};
 
 			Show.Prototype(With.These(objects)
@@ -101,6 +103,12 @@ namespace JustObjectsPrototype.Universal.Sample
 
 		[JOP.Icon(Symbol.Delete)]
 		public static void Alle_Löschen(ObservableCollection<Akte> akten)
+		{
+			akten.Clear();
+		}
+
+		[JOP.Icon(Symbol.Delete)]
+		public void Alle_Löschen2(ObservableCollection<Akte> akten)
 		{
 			akten.Clear();
 		}
