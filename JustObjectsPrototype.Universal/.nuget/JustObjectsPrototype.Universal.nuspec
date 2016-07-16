@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
-        <id>JOP</id>
+        <id>JOP.universal</id>
         <version>$version$</version>
         <authors>Manuel Naujoks</authors>
         <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
@@ -13,6 +13,6 @@
         <tags>prototype prototyping objects poco jop justobjectsprototype</tags>
     </metadata>
     <files>
-        <file src="..\JustObjectsPrototype.Universal\bin\Release\JustObjectsPrototype.Universal.dll" target="lib\uap10\JustObjectsPrototype.Universal.dll" />
+        <file src="..\JustObjectsPrototype.Universal\bin\Debug\JustObjectsPrototype.Universal**" target="lib\uap10.0" />
     </files>
 </package>
