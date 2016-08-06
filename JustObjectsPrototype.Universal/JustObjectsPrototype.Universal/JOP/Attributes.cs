@@ -13,6 +13,16 @@ namespace JustObjectsPrototype.Universal.JOP
 		public Symbol Icon { get; private set; }
 	}
 
+	public class TitleAttribute : Attribute
+	{
+		public TitleAttribute(string title)
+		{
+			Title = title;
+		}
+
+		public string Title { get; private set; }
+	}
+
 	public class EditorAttribute : Attribute
 	{
 		public EditorAttribute(bool hide = false, bool @readonly = false)

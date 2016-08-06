@@ -16,12 +16,12 @@ namespace JustObjectsPrototype.Universal.Sample
 		protected override void OnLaunched(LaunchActivatedEventArgs e)
 		{
 			var objects = new ObservableCollection<object>
-	{
-		new Akte { Name = "Erstes Projekt", Datum = DateTime.Now },
-		new Akte { Name = "Große Akte" },
-		new Akte { Name = "Sonstiges" },
-		new Kunde { Vorname = "Manuel", Nachname = "Naujoks"},
-	};
+			{
+				new Akte { Name = "Erstes Projekt", Datum = DateTime.Now },
+				new Akte { Name = "Große Akte" },
+				new Akte { Name = "Sonstiges" },
+				new Kunde { Vorname = "Manuel", Nachname = "Naujoks"},
+			};
 
 			Show.Prototype(With.These(objects));
 		}
@@ -58,7 +58,7 @@ namespace JustObjectsPrototype.Universal.Sample
 		Potenziell, Angenommen, Abgelehnt
 	}
 
-	[JOP.Icon(Symbol.Folder)]
+	[JOP.Icon(Symbol.Folder), JOP.Title("Akten")]
 	public class Akte
 	{
 		public string Name { get; set; }
@@ -85,7 +85,7 @@ namespace JustObjectsPrototype.Universal.Sample
 		}
 	}
 
-	[JOP.Icon(Symbol.Contact)]
+	[JOP.Icon(Symbol.Contact), JOP.Title("Kunden")]
 	public class Kunde
 	{
 		public string Vorname { get; set; }

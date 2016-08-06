@@ -1,7 +1,8 @@
-﻿using JustObjectsPrototype.Universal.JOP.Editors;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using JustObjectsPrototype.Universal.JOP.Editors;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -58,6 +59,11 @@ namespace JustObjectsPrototype.Universal
 		public static PrototypeBuilder These(ICollection<object> objects)
 		{
 			return new PrototypeBuilder { Repository = objects };
+		}
+
+		public static PrototypeBuilder These(params IEnumerable<object>[] objects)
+		{
+			return new PrototypeBuilder { Repository = new ObservableCollection<object>(objects.SelectMany(l => l)) };
 		}
 	}
 

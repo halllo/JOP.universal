@@ -1,12 +1,12 @@
-﻿using JustObjectsPrototype.Universal.JOP.Editors;
-using JustObjectsPrototype.Universal.Shell;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
+using JustObjectsPrototype.Universal.JOP.Editors;
+using JustObjectsPrototype.Universal.Shell;
 using Windows.UI.Xaml.Controls;
 
 namespace JustObjectsPrototype.Universal.JOP
@@ -57,7 +57,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			{
 				var menuItemVM = new MenuItemViewModel
 				{
-					Label = type.Name,
+					Label = type.GetTypeInfo().GetCustomAttribute<TitleAttribute>()?.Title ?? type.Name,
 					Symbol = type.GetTypeInfo().GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder,
 					Tag = type
 				};
