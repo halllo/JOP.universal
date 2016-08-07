@@ -12,7 +12,9 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		{
 			var propertiesViewModels =
 				from valueStore in valueStores
-				select valueStore.CanRead && valueStore.ValueType == typeof(DateTime) ? (IPropertyViewModel)new DateTimePropertyViewModel { ValueStore = valueStore }
+				select valueStore.CanRead && valueStore.CustomView != null ? (IPropertyViewModel)new CustomViewViewModel { ValueStore = valueStore }
+
+					 : valueStore.CanRead && valueStore.ValueType == typeof(DateTime) ? (IPropertyViewModel)new DateTimePropertyViewModel { ValueStore = valueStore }
 
 					 : valueStore.CanRead && valueStore.ValueType == typeof(bool) ? (IPropertyViewModel)new BooleanPropertyViewModel { ValueStore = valueStore }
 
@@ -31,8 +33,7 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 							&& valueStore.ValueType.GetTypeInfo().IsGenericType
 							&& (valueStore.ValueType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
 								||
-								valueStore.ValueType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IEnumerable))) ?
-																														(IPropertyViewModel)new SimpleTypeListPropertyViewModel { ValueStore = valueStore }
+								valueStore.ValueType.GetGenericTypeDefinition().GetInterfaces().Contains(typeof(IEnumerable))) ? (IPropertyViewModel)new SimpleTypeListPropertyViewModel { ValueStore = valueStore }
 
 					 : valueStore.CanRead && objects.Types.Contains(valueStore.ValueType) ? (IPropertyViewModel)new ReferenceTypePropertyViewModel { ValueStore = valueStore, Objects = objects.OfType(valueStore.ValueType).Select(o => o.ProxiedObject) }
 

@@ -10,6 +10,7 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		bool CanRead { get; }
 		bool CanWrite { get; }
 		object Value { get; }
+		object CustomView { get; }
 
 		void SetValue(object value);
 	}

@@ -66,6 +66,9 @@ namespace JustObjectsPrototype.Universal.Sample
 		public Kunde Mandant { get; set; }
 		public DateTime Datum { get; set; }
 
+		[JOP.CustomView("YellowBackgroundTextInput")]
+		public string Bemerkungen { get; set; }
+
 		[JOP.Icon(Symbol.Document)]
 		public Dokument Rechnug_Schreiben(string inhalt)
 		{

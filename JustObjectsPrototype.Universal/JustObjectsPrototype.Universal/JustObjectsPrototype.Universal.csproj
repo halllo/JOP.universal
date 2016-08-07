@@ -111,6 +111,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JOP\Editors\CustomViewViewModel.cs" />
     <Compile Include="JOP\Editors\DateTimeToDateTimeOffsetConverter.cs" />
     <Compile Include="JOP\Editors\EnumTypePropertyViewModel.cs" />
     <Compile Include="JOP\Editors\IPropertyViewModel.cs" />

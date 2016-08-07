@@ -29,6 +29,11 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 			get; set;
 		}
 
+		public object CustomView
+		{
+			get; set;
+		}
+
 		public void SetValue(object value)
 		{
 			Value = value;

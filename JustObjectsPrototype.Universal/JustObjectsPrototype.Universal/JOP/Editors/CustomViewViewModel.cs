@@ -1,13 +1,10 @@
 ﻿using JustObjectsPrototype.Universal.Shell;
 using System;
+using Windows.UI.Xaml;
 
 namespace JustObjectsPrototype.Universal.JOP.Editors
 {
-	public class DateTimePropertyViewModel : SimpleTypePropertyViewModel { }
-
-	public class BooleanPropertyViewModel : SimpleTypePropertyViewModel { }
-
-	public class SimpleTypePropertyViewModel : ViewModel, IPropertyViewModel
+	public class CustomViewViewModel : ViewModel, IPropertyViewModel
 	{
 		IValueStore _ValueStore;
 		public IValueStore ValueStore
@@ -20,11 +17,9 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 			}
 		}
 
-		public bool CanWrite { get { return ValueStore.CanWrite; } }
+		public DataTemplate CustomView { get { return (DataTemplate)Application.Current.Resources[ValueStore.CustomView]; } }
 
 		public string Label { get { return ValueStore.Identifier; } }
-
-		public string Error { get; set; }
 
 		public Type ValueType { get { return ValueStore.ValueType; } }
 
@@ -36,7 +31,6 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 			}
 			set
 			{
-				Error = string.Empty;
 				try
 				{
 					var convertedValue = Convert.ChangeType(value, ValueType);
@@ -44,9 +38,9 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 				}
 				catch (Exception ex)
 				{
-					Error = ex.Message;
+					System.Diagnostics.Debug.WriteLine("Assignment error: " + ex.Message);
+					//System.Windows.MessageBox.Show("Assignment error: " + ex.Message);
 				}
-				Changed(() => Error);
 			}
 		}
 

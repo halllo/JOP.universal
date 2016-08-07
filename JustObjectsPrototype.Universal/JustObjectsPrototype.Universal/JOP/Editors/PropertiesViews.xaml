@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 					xmlns:local="using:JustObjectsPrototype.Universal.JOP.Editors"
 					>
-	
+
 	<local:PropertyTemplateSelector x:Key="propertyTemplateSelector"
 									BooleanPropertyTemplate="{StaticResource booleanPropertyTemplate}"
 									DateTimePropertyTemplate="{StaticResource dateTimePropertyTemplate}"
@@ -38,7 +38,11 @@
 				<RowDefinition/>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
-			<TextBlock Grid.Row="0" Text="{Binding Label}" Foreground="Gray"/>
+			<StackPanel Grid.Row="0" Orientation="Horizontal">
+				<TextBlock Text="{Binding Label}" Foreground="Gray"/>
+				<TextBlock Width="5"/>
+				<TextBlock Text="{Binding Error}" Foreground="Red"/>
+			</StackPanel>
 			<TextBox Grid.Row="1" Text="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}" AcceptsReturn="True"/>
 		</Grid>
 	</DataTemplate>
@@ -93,8 +97,8 @@
 				</ListBox.ItemTemplate>
 			</ListBox>
 		</Grid>
-    </DataTemplate>
-    <DataTemplate x:Key="referenceTypePropertyTemplate">
+	</DataTemplate>
+	<DataTemplate x:Key="referenceTypePropertyTemplate">
 		<Grid Margin="10,10,0,10">
 			<Grid.RowDefinitions>
 				<RowDefinition/>

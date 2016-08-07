@@ -34,4 +34,14 @@ namespace JustObjectsPrototype.Universal.JOP
 		public bool Hide { get; private set; }
 		public bool Readonly { get; private set; }
 	}
+
+	public class CustomViewAttribute : Attribute
+	{
+		public CustomViewAttribute(string dateTemplateResourceKey)
+		{
+			ResourceKey = dateTemplateResourceKey;
+		}
+
+		public string ResourceKey { get; private set; }
+	}
 }

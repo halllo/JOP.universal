@@ -5,4 +5,17 @@
     xmlns:local="using:JustObjectsPrototype.Universal.Sample"
     RequestedTheme="Dark">
 
+	<Application.Resources>
+		<DataTemplate x:Key="YellowBackgroundTextInput">
+			<Grid Margin="10,10,0,10" Background="Yellow">
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<TextBlock Text="{Binding Label}" Foreground="Gray"/>
+				<TextBox Grid.Row="1" Text="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}" AcceptsReturn="True" TextWrapping="Wrap" BorderThickness="0"/>
+			</Grid>
+		</DataTemplate>
+	</Application.Resources>	
+	
 </Application>

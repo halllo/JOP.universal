@@ -11,13 +11,16 @@ Just create a new Blank App (Universal Windows) and add POCO classes that implem
 ```csharp
 public enum Aktenstatus { Potenziell, Angenommen, Abgelehnt }
 
-[JOP.Icon(Symbol.Folder)]
+[JOP.Icon(Symbol.Folder), JOP.Title("Akten")]
 public class Akte
 {
 	public string Name { get; set; }
 	public Aktenstatus Status { get; set; }
 	public Kunde Mandant { get; set; }
 	public DateTime Datum { get; set; }
+
+	[JOP.CustomView("YellowBackgroundTextInput")]
+	public string Bemerkungen { get; set; }
 
 	[JOP.Icon(Symbol.Document)]
 	public Dokument Rechnug_Schreiben(string inhalt)
@@ -38,7 +41,7 @@ public class Akte
 	}
 }
 
-[JOP.Icon(Symbol.Contact)]
+[JOP.Icon(Symbol.Contact), JOP.Title("Kunden")]
 public class Kunde
 {
 	public string Vorname { get; set; }
@@ -79,7 +82,7 @@ protected override void OnLaunched(LaunchActivatedEventArgs e)
 	Show.Prototype(With.These(objects));
 }
 ```
-This gets you an UI like in the screenshot below, where you can 'play' with your object model by creating and deleting instances and invoke methods of your types.
+This gets you an UI like in the screenshot below, where you can 'play' with your object model by creating and deleting instances and invoke methods of your types. Icons, titles and custom view elements can be added by attributing your classes.
 ![Screenshot](https://raw.githubusercontent.com/halllo/JOP.universal/master/screenshot.png)
 
 Happy prototyping!

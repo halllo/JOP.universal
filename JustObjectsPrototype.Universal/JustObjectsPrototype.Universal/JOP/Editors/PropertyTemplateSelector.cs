@@ -15,7 +15,8 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 
 		protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
 		{
-			if (item is DateTimePropertyViewModel) { return DateTimePropertyTemplate; }
+			if (item is CustomViewViewModel) { return ((CustomViewViewModel)item).CustomView; }
+			else if (item is DateTimePropertyViewModel) { return DateTimePropertyTemplate; }
 			else if (item is BooleanPropertyViewModel) { return BooleanPropertyTemplate; }
 			else if (item is SimpleTypePropertyViewModel) { return SimpleTypePropertyTemplate; }
 			else if (item is EnumTypePropertyViewModel) { return EnumTypePropertyTemplate; }

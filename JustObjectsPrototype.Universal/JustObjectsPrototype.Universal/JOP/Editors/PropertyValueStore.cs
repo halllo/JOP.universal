@@ -78,6 +78,14 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 			}
 		}
 
+		public object CustomView
+		{
+			get
+			{
+				return Property.GetCustomAttribute<CustomViewAttribute>()?.ResourceKey;
+			}
+		}
+
 		public void SetValue(object value)
 		{
 			Property.SetValue(Instance.ProxiedObject, value);
