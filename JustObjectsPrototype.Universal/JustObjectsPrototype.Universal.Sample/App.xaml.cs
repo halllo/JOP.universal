@@ -23,7 +23,7 @@ namespace JustObjectsPrototype.Universal.Sample
 				new Kunde { Vorname = "Manuel", Nachname = "Naujoks"},
 			};
 
-			Show.Prototype(With.These(objects));
+			Show.Prototype(With.These(objects).AndOpen<Akte>());
 		}
 	}
 
@@ -70,7 +70,7 @@ namespace JustObjectsPrototype.Universal.Sample
 		public string Bemerkungen { get; set; }
 
 		[JOP.Icon(Symbol.Document)]
-		public Dokument Rechnug_Schreiben(string inhalt)
+		public Dokument Rechnug_Schreiben([JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
 			return new Dokument { Adressat = Mandant, Inhalt = inhalt };
 		}
@@ -81,8 +81,8 @@ namespace JustObjectsPrototype.Universal.Sample
 			akten.Add(new Akte { Name = "Neue Akte " + (akten.Count + 1), Datum = DateTime.Now });
 		}
 
-		[JOP.Icon(Symbol.Delete)]
-		public void Löschen(ObservableCollection<Akte> akten)
+		[JOP.Title("Löschen"), JOP.Icon(Symbol.Delete)]
+		public void Loeschen(ObservableCollection<Akte> akten)
 		{
 			akten.Remove(this);
 		}
