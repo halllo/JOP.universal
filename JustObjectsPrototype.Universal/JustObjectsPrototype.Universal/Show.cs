@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using JustObjectsPrototype.Universal.JOP;
 using JustObjectsPrototype.Universal.JOP.Editors;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,11 +32,12 @@ namespace JustObjectsPrototype.Universal
 
 			if (rootFrame.Content == null)
 			{
-				JOP.JopViewModel.Instance.Value.ShowMethodInvocationDialog = ps =>
+				JopViewModel.Instance.Value.ShowMethodInvocationDialog = ps =>
 				{
-					rootFrame.Navigate(typeof(JOP.MethodInvocationPage), null, new DrillInNavigationTransitionInfo());
+					rootFrame.Navigate(typeof(MethodInvocationPage), null, new DrillInNavigationTransitionInfo());
 				};
-				JOP.JopViewModel.Instance.Value.Init(objects, types, with.ChangedEvents);
+				JopViewModel.Instance.Value.Init(objects, types, with.ChangedEvents);
+				with.InternalSetup.Invoke(JopViewModel.Instance.Value);
 
 				rootFrame.Navigate(typeof(Shell.MasterDetailPage));
 			}
@@ -74,11 +76,13 @@ namespace JustObjectsPrototype.Universal
 			Repository = new List<object>();
 			DisplayedTypes = new List<Type>();
 			ChangedEvents = new Dictionary<Type, Action<ObjectChangedEventArgs>>();
+			InternalSetup = vm => { };
 		}
 
 		internal ICollection<object> Repository { get; set; }
 		internal List<Type> DisplayedTypes { get; set; }
 		internal Dictionary<Type, Action<ObjectChangedEventArgs>> ChangedEvents { get; set; }
+		internal Action<JopViewModel> InternalSetup { get; set; }
 
 		public PrototypeBuilder AndViewOf<TNext>()
 		{
@@ -87,6 +91,22 @@ namespace JustObjectsPrototype.Universal
 				Repository = Repository,
 				DisplayedTypes = DisplayedTypes.Union(new[] { typeof(TNext) }).ToList(),
 				ChangedEvents = ChangedEvents,
+				InternalSetup = InternalSetup,
+			};
+		}
+
+		public PrototypeBuilder AndOpen<T>()
+		{
+			return new PrototypeBuilder
+			{
+				Repository = Repository,
+				DisplayedTypes = DisplayedTypes,
+				ChangedEvents = ChangedEvents,
+				InternalSetup = vm =>
+				{
+					InternalSetup(vm);
+					vm.SelectedMenuItem = vm.MenuItems.Where(mi => mi.Tag.Equals(typeof(T))).First();
+				},
 			};
 		}
 
@@ -99,7 +119,8 @@ namespace JustObjectsPrototype.Universal
 			{
 				Repository = Repository,
 				DisplayedTypes = DisplayedTypes,
-				ChangedEvents = newChangeEvents
+				ChangedEvents = newChangeEvents,
+				InternalSetup = InternalSetup,
 			};
 		}
 	}
