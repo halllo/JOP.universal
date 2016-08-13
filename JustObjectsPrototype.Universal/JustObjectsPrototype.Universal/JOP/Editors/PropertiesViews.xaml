@@ -15,7 +15,7 @@
 	<local:DateTimeToDateTimeOffsetConverter x:Key="dateTimeToDateTimeOffsetConverter"/>
 
 	<DataTemplate x:Key="booleanPropertyTemplate">
-		<Grid Margin="10">
+		<Grid Margin="0,10,0,10">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
@@ -23,7 +23,7 @@
 		</Grid>
 	</DataTemplate>
 	<DataTemplate x:Key="dateTimePropertyTemplate">
-		<Grid Margin="10">
+		<Grid Margin="0,10,0,10">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>
@@ -33,7 +33,7 @@
 		</Grid>
 	</DataTemplate>
 	<DataTemplate x:Key="simpleTypePropertyTemplate">
-		<Grid Margin="10">
+		<Grid Margin="0,10,0,10">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>
@@ -47,7 +47,7 @@
 		</Grid>
 	</DataTemplate>
 	<DataTemplate x:Key="enumTypePropertyTemplate">
-		<Grid Margin="10">
+		<Grid Margin="0,10,0,10">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>
@@ -63,7 +63,7 @@
 		</Grid>
 	</DataTemplate>
 	<DataTemplate x:Key="simpleTypeListPropertyTemplate">
-		<Grid Margin="10">
+		<Grid Margin="0,10,0,10">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>
@@ -99,7 +99,7 @@
 		</Grid>
 	</DataTemplate>
 	<DataTemplate x:Key="referenceTypePropertyTemplate">
-		<Grid Margin="10">
+		<Grid Margin="0,10,0,10">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>
@@ -115,7 +115,7 @@
 		</Grid>
 	</DataTemplate>
 	<DataTemplate x:Key="referenceTypeListPropertyTemplate">
-		<Grid Margin="10">
+		<Grid Margin="0,10,0,10">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>
