@@ -141,13 +141,27 @@ namespace JustObjectsPrototype.Universal.JOP
 				.Where(p => p.GetIndexParameters().Length == 0)
 				.ToList();
 
-			var firstString = properties.FirstOrDefault(p => p.PropertyType == typeof(string));
-			var secondString = properties.Except(new[] { firstString }).FirstOrDefault(p => p.PropertyType == typeof(string));
-			var firstDateTime = properties.FirstOrDefault(p => p.PropertyType == typeof(DateTime));
+			var toStrings = type.GetMethods().Where(m => m.Name == "ToString" && m.DeclaringType == type && m.GetParameters().Length == 0);
+			if (toStrings.Any())
+			{
+				var toStringResult = toStrings.First().Invoke(item.ProxiedObject, new object[0]);
+				itemVM.Title = toStringResult != null ? toStringResult.ToString() : string.Empty;
+			}
+			else
+			{
+				var firstString = properties.FirstOrDefault(p => p.PropertyType == typeof(string));
+				var secondString = properties.Except(new[] { firstString }).FirstOrDefault(p => p.PropertyType == typeof(string));
+				itemVM.Title = firstString != null ? FirstCharacters(100, item.GetMember(firstString.Name) as string) : item.ProxiedObject.ToString();
+				itemVM.Text = secondString != null ? FirstCharacters(100, item.GetMember(secondString.Name) as string) : null;
+			}
 
-			itemVM.Title = firstString != null ? item.GetMember(firstString.Name) as string : item.ProxiedObject.ToString();
-			itemVM.Text = secondString != null ? item.GetMember(secondString.Name) as string : null;
+			var firstDateTime = properties.FirstOrDefault(p => p.PropertyType == typeof(DateTime));
 			itemVM.Date = firstDateTime != null ? item.GetMember(firstDateTime.Name) as DateTime? : null;
+		}
+
+		private string FirstCharacters(int count, string text)
+		{
+			return string.IsNullOrEmpty(text) ? text : new string(text.Take(count).ToArray());
 		}
 
 		protected override void OnSelectedMasterItem(ItemViewModel o)

@@ -56,9 +56,11 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 				var toStringResult = toStrings.First().Invoke(value, new object[0]);
 				return toStringResult != null ? toStringResult.ToString() : string.Empty;
 			}
-
-			var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0);
-			return "{" + string.Join(", ", properties.Select(p => p.Name + ": \"" + p.GetValue(value) + "\"")) + "}";
+			else
+			{
+				var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0);
+				return "{" + string.Join(", ", properties.Select(p => p.Name + ": \"" + p.GetValue(value) + "\"")) + "}";
+			}
 		}
 
 		internal static string Nicely(Type type)
