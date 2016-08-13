@@ -5,8 +5,10 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using JustObjectsPrototype.Universal.JOP.Editors;
 using JustObjectsPrototype.Universal.Shell;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace JustObjectsPrototype.Universal.JOP
@@ -238,7 +240,7 @@ namespace JustObjectsPrototype.Universal.JOP
 				   select Tuple.Create(
 					   m.GetCustomAttribute<TitleAttribute>()?.Title ?? ObjectDisplay.Nicely(m),
 					   m.GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder,
-					   new Command(() =>
+					   new Command(async () =>
 				   {
 					   var parameters = m.GetParameters();
 					   var parameterValueStores = parameters
@@ -260,22 +262,22 @@ namespace JustObjectsPrototype.Universal.JOP
 					   {
 						   MethodInvocationTitle = ObjectDisplay.Nicely(m);
 						   MethodInvocationParameters = propertiesViewModels;
-						   MethodInvocationContinuation = new Command(() => InvokeMethod(instance, m, parameterValueStores));
+						   MethodInvocationContinuation = new Command(async () => await InvokeMethod(instance, m, parameterValueStores));
 						   ShowMethodInvocationDialog(parameterValueStoresWithoutObservableCollections);
 					   }
 					   else
 					   {
-						   InvokeMethod(instance, m, parameterValueStores);
+						   await InvokeMethod(instance, m, parameterValueStores);
 					   }
 				   }));
 		}
 
-		private void InvokeMethod(ObjectProxy instance, MethodInfo method, List<IValueStore> parameterValueStores)
+		private async Task InvokeMethod(ObjectProxy instance, MethodInfo method, List<IValueStore> parameterValueStores)
 		{
 			var parameterInstances = parameterValueStores
 									.Select(vs => IsObservableCollection(vs.ValueType)
 									   ? _Objects.OfType_OneWayToSourceChangePropagation(vs.ValueType.GetGenericArguments().First())
-									   : vs.Value)
+									   : Convert.ChangeType(vs.Value, vs.ValueType))
 									.ToList();
 
 			object result = null;
@@ -283,7 +285,22 @@ namespace JustObjectsPrototype.Universal.JOP
 			try
 			{
 				_UpdatingItemsEnabled = false;
-				result = method.Invoke(instance != null ? instance.ProxiedObject : null, parameterInstances.ToArray());
+				var methodResult = method.Invoke(instance != null ? instance.ProxiedObject : null, parameterInstances.ToArray());
+				if (methodResult is Task)
+				{
+					var methodResultTask = (Task)methodResult;
+					await methodResultTask;
+					var methodResultTaskType = methodResultTask.GetType();
+					if (methodResultTaskType.GetTypeInfo().GenericTypeArguments[0].FullName != "System.Threading.Tasks.VoidTaskResult")
+					{
+						var resultProperty = methodResultTaskType.GetProperty("Result");
+						result = resultProperty.GetValue(methodResultTask);
+					}
+				}
+				else
+				{
+					result = method.Invoke(instance != null ? instance.ProxiedObject : null, parameterInstances.ToArray());
+				}
 			}
 			catch (TargetInvocationException tie)
 			{

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -97,6 +101,11 @@ namespace JustObjectsPrototype.Universal.Sample
 		public override string ToString()
 		{
 			return (Vorname + " " + Nachname).Trim();
+		}
+
+		public async Task Say_Hello(string name)
+		{
+			await new MessageDialog("Hello " + name).ShowAsync();
 		}
 	}
 
