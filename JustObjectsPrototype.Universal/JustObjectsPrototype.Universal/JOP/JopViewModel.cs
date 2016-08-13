@@ -231,7 +231,7 @@ namespace JustObjectsPrototype.Universal.JOP
 						.Select(p => new SelfcontainedValueStore
 						{
 							Identifier = ObjectDisplay.Nicely(p),
-							Value = null,
+							Value = p.DefaultValue,
 							ValueType = p.ParameterType,
 							CustomView = p.GetCustomAttribute<CustomViewAttribute>()?.ResourceKey,
 						}).ToList<IValueStore>();
