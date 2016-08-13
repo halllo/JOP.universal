@@ -351,6 +351,7 @@ namespace JustObjectsPrototype.Universal.JOP
 
 			if (result != null)
 			{
+				var jumpToResult = method.GetCustomAttribute<JumpToResultAttribute>() != null;
 				var resultType = result.GetType();
 
 				if (resultType.GetTypeInfo().IsGenericType
@@ -370,6 +371,7 @@ namespace JustObjectsPrototype.Universal.JOP
 							objectsOfType.Add(new ObjectProxy(resultItem));
 						}
 					}
+					if (jumpToResult) JumpToResult(resultItemType);
 				}
 				if (resultType.GetTypeInfo().IsValueType == false && IsMicrosoftType(resultType) == false)
 				{
@@ -378,10 +380,38 @@ namespace JustObjectsPrototype.Universal.JOP
 					{
 						objectsOfType.Add(new ObjectProxy(result));
 					}
+					if (jumpToResult) JumpToResult(resultType, result);
 				}
 			}
 			if (instance != null) instance.RaisePropertyChanged(string.Empty);
 			if (Properties != null) Properties.ForEach(p => p.Refresh());
+		}
+
+		void JumpToResult(Type resultType, object result = null)
+		{
+			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+			{
+				SelectedMenuItem = MenuItems.First(mi => mi.Tag == resultType);
+				if (result != null)
+				{
+					var resultProxy = _Objects.GetProxy(result);
+					SelectedMasterItem = MasterItems.First(mi => mi.Tag == resultProxy);
+
+					var detailPage = (((Frame)Windows.UI.Xaml.Window.Current.Content)).Content as DetailPage;
+					if (detailPage != null)
+					{
+						detailPage.Item = SelectedMasterItem;
+						//KNOWN BUG: resizing into narrow state doesn't go to DetailPage until it is selected again.
+					}
+				}
+				else
+				{
+					if ((((Frame)Windows.UI.Xaml.Window.Current.Content)).Content is DetailPage)
+					{
+						((Frame)Windows.UI.Xaml.Window.Current.Content).GoBack();
+					}
+				}
+			});
 		}
 
 		static bool IsObservableCollection(Type type)

@@ -73,10 +73,16 @@ namespace JustObjectsPrototype.Universal.Sample
 		[JOP.CustomView("YellowBackgroundTextInput")]
 		public string Bemerkungen { get; set; }
 
-		[JOP.Icon(Symbol.Document)]
+		[JOP.Icon(Symbol.Document), JOP.JumpToResult()]
 		public Dokument Rechnug_Schreiben([JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
 			return new Dokument { Adressat = Mandant, Inhalt = inhalt };
+		}
+
+		[JOP.Icon(Symbol.Document), JOP.JumpToResult()]
+		public List<Dokument> Rechnugen_Schreiben(int wie_viele = 3, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
+		{
+			return Enumerable.Range(1, wie_viele).Select(i => new Dokument { Adressat = Mandant, Inhalt = inhalt + i }).ToList();
 		}
 
 		[JOP.Icon(Symbol.Add)]
@@ -103,9 +109,11 @@ namespace JustObjectsPrototype.Universal.Sample
 			return (Vorname + " " + Nachname).Trim();
 		}
 
-		public async Task Say_Hello(string name)
+		[JOP.JumpToResult]
+		public async Task<Kunde> Say_Hello(string name)
 		{
 			await new MessageDialog("Hello " + name).ShowAsync();
+			return new Kunde { Vorname = name, Nachname = DateTime.Now.Ticks + "" };
 		}
 	}
 

@@ -44,4 +44,11 @@ namespace JustObjectsPrototype.Universal.JOP
 
 		public string ResourceKey { get; private set; }
 	}
+
+	public class JumpToResultAttribute : Attribute
+	{
+		public JumpToResultAttribute()
+		{
+		}
+	}
 }
