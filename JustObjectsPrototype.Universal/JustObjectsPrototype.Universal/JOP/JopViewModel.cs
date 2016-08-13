@@ -57,7 +57,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			{
 				var menuItemVM = new MenuItemViewModel
 				{
-					Label = type.GetTypeInfo().GetCustomAttribute<TitleAttribute>()?.Title ?? type.Name,
+					Label = type.GetTypeInfo().GetCustomAttribute<TitleAttribute>()?.Title ?? ObjectDisplay.Nicely(type),
 					Symbol = type.GetTypeInfo().GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder,
 					Tag = type
 				};
@@ -221,7 +221,10 @@ namespace JustObjectsPrototype.Universal.JOP
 				   where m.DeclaringType != typeof(object)
 				   where m.IsSpecialName == false
 				   where m.Name != "ToString"
-				   select Tuple.Create(ObjectDisplay.Nicely(m), m.GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder, new Command(() =>
+				   select Tuple.Create(
+					   m.GetCustomAttribute<TitleAttribute>()?.Title ?? ObjectDisplay.Nicely(m),
+					   m.GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder,
+					   new Command(() =>
 				   {
 					   var parameters = m.GetParameters();
 					   var parameterValueStores = parameters
@@ -230,6 +233,7 @@ namespace JustObjectsPrototype.Universal.JOP
 							Identifier = ObjectDisplay.Nicely(p),
 							Value = null,
 							ValueType = p.ParameterType,
+							CustomView = p.GetCustomAttribute<CustomViewAttribute>()?.ResourceKey,
 						}).ToList<IValueStore>();
 
 					   var parameterValueStoresWithoutObservableCollections = parameterValueStores

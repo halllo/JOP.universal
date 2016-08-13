@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -58,6 +59,11 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 
 			var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.GetIndexParameters().Length == 0);
 			return "{" + string.Join(", ", properties.Select(p => p.Name + ": \"" + p.GetValue(value) + "\"")) + "}";
+		}
+
+		internal static string Nicely(Type type)
+		{
+			return type.Name.Replace("_", " ");
 		}
 
 		public static string Nicely(MemberInfo property)
