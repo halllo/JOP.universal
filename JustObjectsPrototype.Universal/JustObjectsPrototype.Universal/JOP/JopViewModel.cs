@@ -299,7 +299,7 @@ namespace JustObjectsPrototype.Universal.JOP
 				}
 				else
 				{
-					result = method.Invoke(instance != null ? instance.ProxiedObject : null, parameterInstances.ToArray());
+					result = methodResult;
 				}
 			}
 			catch (TargetInvocationException tie)

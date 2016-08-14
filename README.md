@@ -1,4 +1,4 @@
-JOP.universal - Just Objects Prototype for Windows Universal Platform
+﻿JOP.universal - Just Objects Prototype for Windows Universal Platform
 =====================================================================
 Intuitive super-fast prototyping with skills you already have. Create only your domain objects and get a prototype shell for free.
 
@@ -50,6 +50,13 @@ public class Kunde
 	public override string ToString()
 	{
 		return (Vorname + " " + Nachname).Trim();
+	}
+
+	[JOP.JumpToResult]
+	public async Task<Kunde> Say_Hello(string vorname, string nachname)
+	{
+		await new MessageDialog("Hello " + name).ShowAsync();
+		return new Kunde { Vorname = vorname, Nachname = nachname };
 	}
 }
 
