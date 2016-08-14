@@ -17,6 +17,8 @@ namespace JustObjectsPrototype.Universal.Shell
 			DataContext = JopViewModel.Instance.Value;
 		}
 
+		internal VisualState CurrentState => AdaptiveStates.CurrentState;
+
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			base.OnNavigatedTo(e);
@@ -72,7 +74,11 @@ namespace JustObjectsPrototype.Universal.Shell
 
 		private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
-			var clickedItem = (ItemViewModel)e.ClickedItem;
+			GotoDetail((ItemViewModel)e.ClickedItem);
+		}
+
+		internal void GotoDetail(ItemViewModel clickedItem)
+		{
 			_lastSelectedItem = clickedItem;
 
 			if (AdaptiveStates.CurrentState == NarrowState)

@@ -403,6 +403,14 @@ namespace JustObjectsPrototype.Universal.JOP
 						detailPage.Item = SelectedMasterItem;
 						//KNOWN BUG: resizing into narrow state doesn't go to DetailPage until it is selected again.
 					}
+					else
+					{
+						var masterDetailPage = (((Frame)Windows.UI.Xaml.Window.Current.Content)).Content as MasterDetailPage;
+						if (masterDetailPage != null && masterDetailPage.CurrentState.Name == "NarrowState")
+						{
+							masterDetailPage.GotoDetail(SelectedMasterItem);
+						}
+					}
 				}
 				else
 				{

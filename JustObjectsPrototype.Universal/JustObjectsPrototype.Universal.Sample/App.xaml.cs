@@ -115,6 +115,12 @@ namespace JustObjectsPrototype.Universal.Sample
 			await new MessageDialog("Hello " + name).ShowAsync();
 			return new Kunde { Vorname = name, Nachname = DateTime.Now.Ticks + "" };
 		}
+
+		[JOP.JumpToResult]
+		public static Kunde Neu(string vorname, string nachname)
+		{
+			return new Kunde { Vorname = vorname, Nachname = nachname };
+		}
 	}
 
 	[JOP.Icon(Symbol.Document)]
