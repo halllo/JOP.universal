@@ -15,6 +15,8 @@ namespace JustObjectsPrototype.Universal.Shell
 			this.InitializeComponent();
 
 			DataContext = JopViewModel.Instance.Value;
+
+			detailView.Prepare();
 		}
 
 		internal VisualState CurrentState => AdaptiveStates.CurrentState;

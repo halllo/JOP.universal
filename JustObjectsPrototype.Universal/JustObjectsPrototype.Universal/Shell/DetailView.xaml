@@ -13,7 +13,7 @@
 		<ResourceDictionary Source="../JOP/Editors/PropertiesViews.xaml" />
 	</UserControl.Resources>
 
-	<StackPanel>
+	<StackPanel x:Name="stackPanel">
 
 		<CommandBar x:Name="commandBar" Background="Transparent" IsOpen="True" IsSticky="True"
 					local:CommandBarBridge.DetailCommandsProperty="{Binding}" Closing="OpenAgain">
@@ -26,9 +26,11 @@
 			HorizontalAlignment="Left"
 			Text="{Binding Title}"/>
 
-		<ItemsControl ItemsSource="{x:Bind JopViewModel.Properties, Mode=OneWay}" 
+		<ItemsControl ItemsSource="{x:Bind ViewModel.Properties, Mode=OneWay}" 
 					  ItemTemplateSelector="{StaticResource propertyTemplateSelector}"
-					  Padding="20">
+					  Padding="20"
+					  x:Name="itemsControl" Visibility="Collapsed"
+					  >
 			<ItemsControl.ItemsPanel>
 				<ItemsPanelTemplate>
 					<StackPanel Orientation="Vertical"/>

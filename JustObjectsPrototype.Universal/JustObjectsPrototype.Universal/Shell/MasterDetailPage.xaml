@@ -253,7 +253,8 @@
 					Padding="24,0"
 					BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}">
 
-					<local:DetailView DataContext="{Binding SelectedMasterItem}"/>
+					<local:DetailView DataContext="{Binding SelectedMasterItem}"
+									  x:Name="detailView"/>
 
 				</ScrollViewer>
 

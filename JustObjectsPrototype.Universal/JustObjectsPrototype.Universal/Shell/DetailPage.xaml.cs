@@ -1,6 +1,6 @@
-﻿using JustObjectsPrototype.Universal.JOP;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Linq;
+using JustObjectsPrototype.Universal.JOP;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -27,6 +27,17 @@ namespace JustObjectsPrototype.Universal.Shell
 		public DetailPage()
 		{
 			this.InitializeComponent();
+			Loaded += DetailPage_Loaded;
+		}
+
+		private void DetailPage_Loaded(object sender, RoutedEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine("DetailPage.Loaded");
+
+			Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+			{
+				detailView.Prepare();
+			});
 		}
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -70,6 +81,8 @@ namespace JustObjectsPrototype.Universal.Shell
 			SystemNavigationManager systemNavigationManager = SystemNavigationManager.GetForCurrentView();
 			systemNavigationManager.BackRequested -= DetailPage_BackRequested;
 			systemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+
+			detailView.Unprepare();
 		}
 
 		void DirectItemsChanged(NotifyCollectionChangedEventArgs e)
