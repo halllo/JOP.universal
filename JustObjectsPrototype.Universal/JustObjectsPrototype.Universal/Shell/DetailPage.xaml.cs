@@ -34,10 +34,7 @@ namespace JustObjectsPrototype.Universal.Shell
 		{
 			System.Diagnostics.Debug.WriteLine("DetailPage.Loaded");
 
-			Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-			{
-				detailView.Prepare();
-			});
+			Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => detailView.Prepare());
 		}
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)

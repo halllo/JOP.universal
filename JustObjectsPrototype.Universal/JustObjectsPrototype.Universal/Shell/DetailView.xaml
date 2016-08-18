@@ -26,10 +26,11 @@
 			HorizontalAlignment="Left"
 			Text="{Binding Title}"/>
 
-		<ItemsControl ItemsSource="{x:Bind ViewModel.Properties, Mode=OneWay}" 
-					  ItemTemplateSelector="{StaticResource propertyTemplateSelector}"
+		<ProgressBar x:Name="progressBar" IsIndeterminate="True"/>
+
+		<ItemsControl ItemTemplateSelector="{StaticResource propertyTemplateSelector}"
 					  Padding="20"
-					  x:Name="itemsControl" Visibility="Collapsed"
+					  x:Name="itemsControl"
 					  >
 			<ItemsControl.ItemsPanel>
 				<ItemsPanelTemplate>
