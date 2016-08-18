@@ -74,9 +74,9 @@ namespace JustObjectsPrototype.Universal.Sample
 		public string Bemerkungen { get; set; }
 
 		[JOP.Icon(Symbol.Document), JOP.JumpToResult()]
-		public Dokument Rechnug_Schreiben([JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
+		public Dokument Rechnug_Schreiben(Kunde mandant, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
-			return new Dokument { Adressat = Mandant, Inhalt = inhalt };
+			return new Dokument { Adressat = mandant ?? Mandant, Inhalt = inhalt };
 		}
 
 		[JOP.Icon(Symbol.Document), JOP.JumpToResult()]
