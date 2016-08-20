@@ -50,7 +50,10 @@ namespace JustObjectsPrototype.Universal.JOP
 			}
 		}
 
-
+		public ObservableCollection<ObjectProxy> ObjectsOfType<T>()
+		{
+			return _Objects.OfType(typeof(T));
+		}
 
 		private void UpdateMenu(ObservableCollection<Type> types)
 		{
@@ -408,32 +411,35 @@ namespace JustObjectsPrototype.Universal.JOP
 		{
 			Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
 			{
-				SelectedMenuItem = MenuItems.First(mi => mi.Tag == resultType);
-				if (result != null)
+				SelectedMenuItem = MenuItems.FirstOrDefault(mi => mi.Tag == resultType);
+				if (SelectedMenuItem != null)
 				{
-					var resultProxy = _Objects.GetProxy(result);
-					SelectedMasterItem = MasterItems.First(mi => mi.Tag == resultProxy);
-
-					var detailPage = (((Frame)Windows.UI.Xaml.Window.Current.Content)).Content as DetailPage;
-					if (detailPage != null)
+					if (result != null)
 					{
-						detailPage.Item = SelectedMasterItem;
-						//KNOWN BUG: resizing into narrow state doesn't go to DetailPage until it is selected again.
+						var resultProxy = _Objects.GetProxy(result);
+						SelectedMasterItem = MasterItems.First(mi => mi.Tag == resultProxy);
+
+						var detailPage = (((Frame)Windows.UI.Xaml.Window.Current.Content)).Content as DetailPage;
+						if (detailPage != null)
+						{
+							detailPage.Item = SelectedMasterItem;
+							//KNOWN BUG: resizing into narrow state doesn't go to DetailPage until it is selected again.
+						}
+						else
+						{
+							var masterDetailPage = (((Frame)Windows.UI.Xaml.Window.Current.Content)).Content as MasterDetailPage;
+							if (masterDetailPage != null && masterDetailPage.CurrentState.Name == "NarrowState")
+							{
+								masterDetailPage.GotoDetail(SelectedMasterItem);
+							}
+						}
 					}
 					else
 					{
-						var masterDetailPage = (((Frame)Windows.UI.Xaml.Window.Current.Content)).Content as MasterDetailPage;
-						if (masterDetailPage != null && masterDetailPage.CurrentState.Name == "NarrowState")
+						if ((((Frame)Windows.UI.Xaml.Window.Current.Content)).Content is DetailPage)
 						{
-							masterDetailPage.GotoDetail(SelectedMasterItem);
+							((Frame)Windows.UI.Xaml.Window.Current.Content).GoBack();
 						}
-					}
-				}
-				else
-				{
-					if ((((Frame)Windows.UI.Xaml.Window.Current.Content)).Content is DetailPage)
-					{
-						((Frame)Windows.UI.Xaml.Window.Current.Content).GoBack();
 					}
 				}
 			});

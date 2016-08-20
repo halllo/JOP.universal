@@ -142,7 +142,17 @@ namespace JustObjectsPrototype.Universal
 				InternalSetup = vm =>
 				{
 					InternalSetup(vm);
-					vm.SelectedMenuItem = vm.MenuItems.Where(mi => mi.Tag.Equals(typeof(T))).First();
+
+					var menuItemOfTyp = vm.MenuItems.Where(mi => mi.Tag.Equals(typeof(T))).FirstOrDefault();
+					if (menuItemOfTyp != null)
+					{
+						vm.SelectedMenuItem = menuItemOfTyp;
+					}
+					else
+					{
+						vm.ObjectsOfType<T>();
+						vm.SelectedMenuItem = vm.MenuItems.Where(mi => mi.Tag.Equals(typeof(T))).FirstOrDefault();
+					}
 				},
 			};
 		}
