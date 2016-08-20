@@ -16,22 +16,30 @@ namespace JustObjectsPrototype.Universal.Sample
 			this.InitializeComponent();
 		}
 
-		protected override void OnLaunched(LaunchActivatedEventArgs e)
+		protected override async void OnLaunched(LaunchActivatedEventArgs e)
 		{
-			var objects = new ObservableCollection<object>
+			if ((await Kundenspeicher.All()).Any() == false)
 			{
-				new Akte { Name = "Erstes Projekt", Datum = DateTime.Now },
-				new Akte { Name = "Große Akte" },
-				new Akte { Name = "Sonstiges" },
-				new Kunde { Vorname = "Manuel", Nachname = "Naujoks"},
-			};
+				await Kundenspeicher.Save(new Kunde { Vorname = "Manuel", Nachname = "Naujoks" });
+			}
 
-			Show.Prototype(With.These(objects).AndOpen<Akte>());
+			//Einstellungen.Alles_Löschen();
+
+			Show.Prototype(
+				With.These(
+					await Aktenspeicher.All(),
+					await Kundenspeicher.All(),
+					await Dokumentspeicher.All())
+				.OnChanged<Akte>(async a => await Aktenspeicher.SaveOrUpdate(a))
+				.OnChanged<Kunde>(async k => await Kundenspeicher.SaveOrUpdate(k))
+				.OnChanged<Dokument>(async d => await Dokumentspeicher.SaveOrUpdate(d))
+				.AndOpen<Akte>());
 		}
+
+		public static readonly Store<Akte> Aktenspeicher = new Store<Akte>(a => a.Id.ToString());
+		public static readonly Store<Kunde> Kundenspeicher = new Store<Kunde>(k => k.Id.ToString());
+		public static readonly Store<Dokument> Dokumentspeicher = new Store<Dokument>(d => d.Id.ToString());
 	}
-
-
-
 
 
 
@@ -64,6 +72,9 @@ namespace JustObjectsPrototype.Universal.Sample
 	[JOP.Icon(Symbol.Folder), JOP.Title("Akten")]
 	public class Akte
 	{
+		[JOP.Editor(hide: true)]
+		public Guid Id { get; set; } = Guid.NewGuid();
+
 		public string Name { get; set; }
 		public Aktenstatus Status { get; set; }
 		public Kunde Mandant { get; set; }
@@ -73,26 +84,36 @@ namespace JustObjectsPrototype.Universal.Sample
 		public string Bemerkungen { get; set; }
 
 		[JOP.Icon(Symbol.Document), JOP.RequiresConfirmation, JOP.JumpsToResult()]
-		public Dokument Rechnug_Schreiben(Kunde mandant, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
+		public async Task<Dokument> Rechnug_Schreiben(Kunde mandant, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
-			return new Dokument { Adressat = mandant ?? Mandant, Inhalt = inhalt };
+			var dokument = new Dokument { Adressat = mandant ?? Mandant, Inhalt = inhalt };
+			await App.Dokumentspeicher.Save(dokument);
+			return dokument;
 		}
 
 		[JOP.Icon(Symbol.Document), JOP.RequiresConfirmation, JOP.JumpsToResult()]
-		public List<Dokument> Rechnugen_Schreiben(int wie_viele = 3, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
+		public async Task<List<Dokument>> Rechnugen_Schreiben(int wie_viele = 3, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
-			return Enumerable.Range(1, wie_viele).Select(i => new Dokument { Adressat = Mandant, Inhalt = inhalt + i }).ToList();
+			var dokumente = Enumerable.Range(1, wie_viele).Select(i => new Dokument { Adressat = Mandant, Inhalt = inhalt + i }).ToList();
+			foreach (var dokument in dokumente)
+			{
+				await App.Dokumentspeicher.Save(dokument);
+			}
+			return dokumente;
 		}
 
 		[JOP.Icon(Symbol.Add)]
-		public static void Neu(ObservableCollection<Akte> akten)
+		public static async void Neu(ObservableCollection<Akte> akten)
 		{
-			akten.Add(new Akte { Name = "Neue Akte " + (akten.Count + 1), Datum = DateTime.Now });
+			var akte = new Akte { Name = "Neue Akte " + (akten.Count + 1), Datum = DateTime.Now };
+			await App.Aktenspeicher.Save(akte);
+			akten.Add(akte);
 		}
 
 		[JOP.Title("Löschen"), JOP.Icon(Symbol.Delete), JOP.RequiresConfirmation]
-		public void Loeschen(ObservableCollection<Akte> akten)
+		public async void Loeschen(ObservableCollection<Akte> akten)
 		{
+			await App.Aktenspeicher.Delete(this);
 			akten.Remove(this);
 		}
 	}
@@ -100,6 +121,9 @@ namespace JustObjectsPrototype.Universal.Sample
 	[JOP.Icon(Symbol.Contact), JOP.Title("Kunden")]
 	public class Kunde
 	{
+		[JOP.Editor(hide: true)]
+		public Guid Id { get; set; } = Guid.NewGuid();
+
 		public string Vorname { get; set; }
 		public string Nachname { get; set; }
 
@@ -112,25 +136,33 @@ namespace JustObjectsPrototype.Universal.Sample
 		public async Task<Kunde> Say_Hello(string name)
 		{
 			await Show.Message("Hello " + name);
-			return new Kunde { Vorname = name, Nachname = DateTime.Now.Ticks + "" };
+			var kunde = new Kunde { Vorname = name, Nachname = DateTime.Now.Ticks + "" };
+			await App.Kundenspeicher.Save(kunde);
+			return kunde;
 		}
 
 		[JOP.JumpsToResult]
-		public static Kunde Neu(string vorname, string nachname)
+		public async static Task<Kunde> Neu(string vorname, string nachname)
 		{
-			return new Kunde { Vorname = vorname, Nachname = nachname };
+			var kunde = new Kunde { Vorname = vorname, Nachname = nachname };
+			await App.Kundenspeicher.Save(kunde);
+			return kunde;
 		}
 	}
 
 	[JOP.Icon(Symbol.Document)]
 	public class Dokument
 	{
+		[JOP.Editor(hide: true)]
+		public Guid Id { get; set; } = Guid.NewGuid();
+
 		public Kunde Adressat { get; set; }
 		public string Inhalt { get; set; }
 
 		[JOP.Icon(Symbol.Remove)]
-		public void Löschen(ObservableCollection<Dokument> dokumente)
+		public async void Löschen(ObservableCollection<Dokument> dokumente)
 		{
+			await App.Dokumentspeicher.Delete(this);
 			dokumente.Remove(this);
 		}
 	}
