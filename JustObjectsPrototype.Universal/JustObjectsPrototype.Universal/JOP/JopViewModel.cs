@@ -242,34 +242,51 @@ namespace JustObjectsPrototype.Universal.JOP
 					   m.GetCustomAttribute<IconAttribute>()?.Icon ?? Symbol.Placeholder,
 					   new Command(async () =>
 				   {
-					   var parameters = m.GetParameters();
-					   var parameterValueStores = parameters
-						.Select(p => new SelfcontainedValueStore
-						{
-							Identifier = ObjectDisplay.Nicely(p),
-							Value = ((p.Attributes & ParameterAttributes.HasDefault) == ParameterAttributes.HasDefault) ? p.DefaultValue : null,
-							ValueType = p.ParameterType,
-							CustomView = p.GetCustomAttribute<CustomViewAttribute>()?.ResourceKey,
-						}).ToList<IValueStore>();
-
-					   var parameterValueStoresWithoutObservableCollections = parameterValueStores
-						.Where(vs => IsObservableCollection(vs.ValueType) == false)
-						.ToList();
-
-					   var propertiesViewModels = PropertiesViewModels.Of(parameterValueStoresWithoutObservableCollections, _Objects);
-
-					   if (parameterValueStoresWithoutObservableCollections.Any())
+					   var methodName = m.GetCustomAttribute<TitleAttribute>()?.Title ?? ObjectDisplay.Nicely(m);
+					   var requireConfirmation = m.GetCustomAttribute<RequiresConfirmationAttribute>() != null;
+					   if (requireConfirmation)
 					   {
-						   MethodInvocationTitle = ObjectDisplay.Nicely(m);
-						   MethodInvocationParameters = propertiesViewModels;
-						   MethodInvocationContinuation = new Command(async () => await InvokeMethod(instance, m, parameterValueStores));
-						   ShowMethodInvocationDialog(parameterValueStoresWithoutObservableCollections);
+						   await Show.Message(methodName + "?", onYes: async () =>
+						   {
+							   await ExecuteFunction(instance, m, methodName);
+						   });
 					   }
 					   else
 					   {
-						   await InvokeMethod(instance, m, parameterValueStores);
+						   await ExecuteFunction(instance, m, methodName);
 					   }
 				   }));
+		}
+
+		private async Task ExecuteFunction(ObjectProxy instance, MethodInfo method, string methodName)
+		{
+			var parameters = method.GetParameters();
+			var parameterValueStores = parameters
+			 .Select(p => new SelfcontainedValueStore
+			 {
+				 Identifier = ObjectDisplay.Nicely(p),
+				 Value = ((p.Attributes & ParameterAttributes.HasDefault) == ParameterAttributes.HasDefault) ? p.DefaultValue : null,
+				 ValueType = p.ParameterType,
+				 CustomView = p.GetCustomAttribute<CustomViewAttribute>()?.ResourceKey,
+			 }).ToList<IValueStore>();
+
+			var parameterValueStoresWithoutObservableCollections = parameterValueStores
+			 .Where(vs => IsObservableCollection(vs.ValueType) == false)
+			 .ToList();
+
+			var propertiesViewModels = PropertiesViewModels.Of(parameterValueStoresWithoutObservableCollections, _Objects);
+
+			if (parameterValueStoresWithoutObservableCollections.Any())
+			{
+				MethodInvocationTitle = methodName;
+				MethodInvocationParameters = propertiesViewModels;
+				MethodInvocationContinuation = new Command(async () => await InvokeMethod(instance, method, parameterValueStores));
+				ShowMethodInvocationDialog(parameterValueStoresWithoutObservableCollections);
+			}
+			else
+			{
+				await InvokeMethod(instance, method, parameterValueStores);
+			}
 		}
 
 		private async Task InvokeMethod(ObjectProxy instance, MethodInfo method, List<IValueStore> parameterValueStores)
@@ -351,7 +368,7 @@ namespace JustObjectsPrototype.Universal.JOP
 
 			if (result != null)
 			{
-				var jumpToResult = method.GetCustomAttribute<JumpToResultAttribute>() != null;
+				var jumpToResult = method.GetCustomAttribute<JumpsToResultAttribute>() != null;
 				var resultType = result.GetType();
 
 				if (resultType.GetTypeInfo().IsGenericType

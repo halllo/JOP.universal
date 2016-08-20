@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using JustObjectsPrototype.Universal.JOP;
 using JustObjectsPrototype.Universal.JOP.Editors;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -12,6 +14,41 @@ namespace JustObjectsPrototype.Universal
 {
 	public static class Show
 	{
+		public static async Task Message(string text)
+		{
+			await new MessageDialog(text).ShowAsync();
+		}
+
+		public static async Task Message(string text, Action onYes)
+		{
+			var dialog = new MessageDialog(text);
+			dialog.Options = MessageDialogOptions.None;
+			dialog.Commands.Add(new UICommand("Yes", cmd => onYes()));
+			dialog.Commands.Add(new UICommand("No", cmd => { }));
+			dialog.CancelCommandIndex = 1;
+			dialog.DefaultCommandIndex = 0;
+			await dialog.ShowAsync();
+		}
+
+		public static async Task Message(string text, Func<Task> onYes)
+		{
+			var tcs = new TaskCompletionSource<bool>();
+
+			var dialog = new MessageDialog(text);
+			dialog.Options = MessageDialogOptions.None;
+			dialog.Commands.Add(new UICommand("Yes", async cmd =>
+			{
+				await onYes();
+				tcs.SetResult(true);
+			}));
+			dialog.Commands.Add(new UICommand("No", cmd => { tcs.SetResult(false); }));
+			dialog.CancelCommandIndex = 1;
+			dialog.DefaultCommandIndex = 0;
+			await dialog.ShowAsync();
+
+			await tcs.Task;
+		}
+
 		public static Prototype Prototype(PrototypeBuilder with)
 		{
 			var objects = with.Repository;

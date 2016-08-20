@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -73,13 +72,13 @@ namespace JustObjectsPrototype.Universal.Sample
 		[JOP.CustomView("YellowBackgroundTextInput")]
 		public string Bemerkungen { get; set; }
 
-		[JOP.Icon(Symbol.Document), JOP.JumpToResult()]
+		[JOP.Icon(Symbol.Document), JOP.RequiresConfirmation, JOP.JumpsToResult()]
 		public Dokument Rechnug_Schreiben(Kunde mandant, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
 			return new Dokument { Adressat = mandant ?? Mandant, Inhalt = inhalt };
 		}
 
-		[JOP.Icon(Symbol.Document), JOP.JumpToResult()]
+		[JOP.Icon(Symbol.Document), JOP.RequiresConfirmation, JOP.JumpsToResult()]
 		public List<Dokument> Rechnugen_Schreiben(int wie_viele = 3, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
 			return Enumerable.Range(1, wie_viele).Select(i => new Dokument { Adressat = Mandant, Inhalt = inhalt + i }).ToList();
@@ -91,7 +90,7 @@ namespace JustObjectsPrototype.Universal.Sample
 			akten.Add(new Akte { Name = "Neue Akte " + (akten.Count + 1), Datum = DateTime.Now });
 		}
 
-		[JOP.Title("Löschen"), JOP.Icon(Symbol.Delete)]
+		[JOP.Title("Löschen"), JOP.Icon(Symbol.Delete), JOP.RequiresConfirmation]
 		public void Loeschen(ObservableCollection<Akte> akten)
 		{
 			akten.Remove(this);
@@ -109,14 +108,14 @@ namespace JustObjectsPrototype.Universal.Sample
 			return (Vorname + " " + Nachname).Trim();
 		}
 
-		[JOP.JumpToResult]
+		[JOP.JumpsToResult]
 		public async Task<Kunde> Say_Hello(string name)
 		{
-			await new MessageDialog("Hello " + name).ShowAsync();
+			await Show.Message("Hello " + name);
 			return new Kunde { Vorname = name, Nachname = DateTime.Now.Ticks + "" };
 		}
 
-		[JOP.JumpToResult]
+		[JOP.JumpsToResult]
 		public static Kunde Neu(string vorname, string nachname)
 		{
 			return new Kunde { Vorname = vorname, Nachname = nachname };

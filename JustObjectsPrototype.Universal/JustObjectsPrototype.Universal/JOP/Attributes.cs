@@ -45,9 +45,16 @@ namespace JustObjectsPrototype.Universal.JOP
 		public string ResourceKey { get; private set; }
 	}
 
-	public class JumpToResultAttribute : Attribute
+	public class JumpsToResultAttribute : Attribute
 	{
-		public JumpToResultAttribute()
+		public JumpsToResultAttribute()
+		{
+		}
+	}
+
+	public class RequiresConfirmationAttribute : Attribute
+	{
+		public RequiresConfirmationAttribute()
 		{
 		}
 	}
