@@ -3,7 +3,11 @@ using Windows.UI.Xaml.Controls;
 
 namespace JustObjectsPrototype.Universal.JOP
 {
-	public class IconAttribute : Attribute
+	public abstract class JOPAttribute : Attribute
+	{
+	}
+
+	public class IconAttribute : JOPAttribute
 	{
 		public IconAttribute(Symbol icon)
 		{
@@ -13,7 +17,7 @@ namespace JustObjectsPrototype.Universal.JOP
 		public Symbol Icon { get; private set; }
 	}
 
-	public class TitleAttribute : Attribute
+	public class TitleAttribute : JOPAttribute
 	{
 		public TitleAttribute(string title)
 		{
@@ -23,7 +27,7 @@ namespace JustObjectsPrototype.Universal.JOP
 		public string Title { get; private set; }
 	}
 
-	public class EditorAttribute : Attribute
+	public class EditorAttribute : JOPAttribute
 	{
 		public EditorAttribute(bool hide = false, bool @readonly = false)
 		{
@@ -35,7 +39,7 @@ namespace JustObjectsPrototype.Universal.JOP
 		public bool Readonly { get; private set; }
 	}
 
-	public class CustomViewAttribute : Attribute
+	public class CustomViewAttribute : JOPAttribute
 	{
 		public CustomViewAttribute(string dateTemplateResourceKey)
 		{
@@ -45,14 +49,14 @@ namespace JustObjectsPrototype.Universal.JOP
 		public string ResourceKey { get; private set; }
 	}
 
-	public class JumpsToResultAttribute : Attribute
+	public class JumpsToResultAttribute : JOPAttribute
 	{
 		public JumpsToResultAttribute()
 		{
 		}
 	}
 
-	public class RequiresConfirmationAttribute : Attribute
+	public class RequiresConfirmationAttribute : JOPAttribute
 	{
 		public RequiresConfirmationAttribute()
 		{

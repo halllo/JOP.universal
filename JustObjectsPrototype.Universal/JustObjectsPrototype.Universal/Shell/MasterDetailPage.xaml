@@ -117,6 +117,7 @@
 					</Style>
 					<local:NullIsVisible x:Key="nullIsVisible"/>
 					<local:FalseIsVisible x:Key="falseIsVisible"/>
+					<local:TrueIsVisible x:Key="trueIsVisible"/>
 				</ResourceDictionary>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>

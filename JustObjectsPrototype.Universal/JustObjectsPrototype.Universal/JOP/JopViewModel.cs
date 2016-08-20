@@ -393,7 +393,7 @@ namespace JustObjectsPrototype.Universal.JOP
 					}
 					if (jumpToResult) JumpToResult(resultItemType);
 				}
-				if (resultType.GetTypeInfo().IsValueType == false && IsMicrosoftType(resultType) == false)
+				else if (resultType.GetTypeInfo().IsValueType == false && IsMicrosoftType(resultType) == false)
 				{
 					var objectsOfType = _Objects.OfType(resultType);
 					if (objectsOfType.All(o => !o.ProxiedObject.Equals(result)))

@@ -25,7 +25,7 @@ namespace JustObjectsPrototype.Universal.JOP
 
 			_ObjectToProxy = objects.ToDictionary(o => o, o => new ObjectProxy(o));
 
-			var objectsByType = objects.ToLookup(o => o.GetType());
+			var objectsByType = objects.ToLookup(o => GetCorrespondingType(o.GetType()));
 			var typesAndObjects = objectsByType.Select(t => t.Key).ToDictionary(t => t, t =>
 			{
 				var observableCollection = new ObservableCollection<ObjectProxy>(objectsByType[t].Select(o => _ObjectToProxy[o]));
@@ -52,6 +52,8 @@ namespace JustObjectsPrototype.Universal.JOP
 
 		public ObservableCollection<ObjectProxy> OfType(Type type)
 		{
+			type = GetCorrespondingType(type);
+
 			if (_ObjectsByTypes.ContainsKey(type) == false)
 			{
 				var observableCollection = new ObservableCollection<ObjectProxy>();
@@ -85,13 +87,26 @@ namespace JustObjectsPrototype.Universal.JOP
 			return observableCollection;
 		}
 
+		static Type GetCorrespondingType(Type t)
+		{
+			var baseType = t.GetTypeInfo().BaseType;
+			if (baseType.GetTypeInfo().GetCustomAttributes<JOPAttribute>(true).Any())
+			{
+				return baseType;
+			}
+			else
+			{
+				return t;
+			}
+		}
+
 		void objectlist_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			if (e.Action == NotifyCollectionChangedAction.Add)
 			{
 				foreach (var newItem in e.NewItems)
 				{
-					var type = newItem.GetType();
+					var type = GetCorrespondingType(newItem.GetType());
 					if (_ObjectsByTypes.ContainsKey(type) == false)
 					{
 						var newTypeObjectsList = new ObservableCollection<ObjectProxy>();

@@ -23,13 +23,16 @@ namespace JustObjectsPrototype.Universal.Sample
 				await Kundenspeicher.Save(new Kunde { Vorname = "Manuel", Nachname = "Naujoks" });
 			}
 
-			//Einstellungen.Alles_Löschen();
+			//await Aktenspeicher.DeleteAll();
+			//await Kundenspeicher.DeleteAll();
+			//await Dokumentspeicher.DeleteAll();
 
-			Show.Prototype(
+			Prototype = Show.Prototype(
 				With.These(
 					await Aktenspeicher.All(),
 					await Kundenspeicher.All(),
-					await Dokumentspeicher.All())
+					await Dokumentspeicher.All(),
+					Einstellungen.Alle)
 				.OnChanged<Akte>(async a => await Aktenspeicher.SaveOrUpdate(a))
 				.OnChanged<Kunde>(async k => await Kundenspeicher.SaveOrUpdate(k))
 				.OnChanged<Dokument>(async d => await Dokumentspeicher.SaveOrUpdate(d))
@@ -39,6 +42,7 @@ namespace JustObjectsPrototype.Universal.Sample
 		public static readonly Store<Akte> Aktenspeicher = new Store<Akte>(a => a.Id.ToString());
 		public static readonly Store<Kunde> Kundenspeicher = new Store<Kunde>(k => k.Id.ToString());
 		public static readonly Store<Dokument> Dokumentspeicher = new Store<Dokument>(d => d.Id.ToString());
+		public static Prototype Prototype;
 	}
 
 
@@ -166,4 +170,38 @@ namespace JustObjectsPrototype.Universal.Sample
 			dokumente.Remove(this);
 		}
 	}
+
+	[JOP.Icon(Symbol.Setting)]
+	public abstract class Einstellungen
+	{
+		public static Einstellungen[] Alle => new Einstellungen[] { new AllgemeineEinstellungen(), new SpeicherEinstellungen() };
+
+		class SpeicherEinstellungen : Einstellungen
+		{
+			public override string ToString() => "Speicher";
+
+			public IEnumerable<object> Gespeicherte_Objekte => App.Prototype.Repository.Where(o => !(o is Einstellungen));
+
+			[JOP.Icon(Symbol.Delete)]
+			public async Task Alles_Löschen()
+			{
+				await App.Aktenspeicher.DeleteAll();
+				await App.Kundenspeicher.DeleteAll();
+				await App.Dokumentspeicher.DeleteAll();
+
+				var allesAußerEinstellungen = App.Prototype.Repository.Where(o => !(o is Einstellungen)).ToList();
+				allesAußerEinstellungen.ForEach(o => App.Prototype.Repository.Remove(o));
+			}
+		}
+
+		class AllgemeineEinstellungen : Einstellungen
+		{
+			public override string ToString() => "Allgemein";
+
+			public string Value1 { get; set; }
+
+			public string Value2 { get; set; }
+		}
+	}
 }
+

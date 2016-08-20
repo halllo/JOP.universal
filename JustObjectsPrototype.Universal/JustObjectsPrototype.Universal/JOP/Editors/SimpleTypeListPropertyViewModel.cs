@@ -1,10 +1,10 @@
-﻿using JustObjectsPrototype.Universal.Shell;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using JustObjectsPrototype.Universal.Shell;
 
 namespace JustObjectsPrototype.Universal.JOP.Editors
 {
@@ -37,6 +37,7 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 					addReference = new Command(() => collection.Add(new SimpleTypeWrapper
 					{
 						Value = null,
+						CanWrite = CanWrite,
 						ValueChanged = Assign,
 						RemoveRequest = RemoveEntry
 					}));
@@ -54,6 +55,7 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 		{
 			public Action<SimpleTypeWrapper> RemoveRequest { get; set; }
 			public Action ValueChanged { get; set; }
+			public bool CanWrite { get; set; }
 			object _value;
 			public object Value
 			{
@@ -98,6 +100,7 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 						wrapper = values.OfType<object>().Select(s => new SimpleTypeWrapper
 						{
 							Value = s,
+							CanWrite = CanWrite,
 							ValueChanged = Assign,
 							RemoveRequest = RemoveEntry
 						});
