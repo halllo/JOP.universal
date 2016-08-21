@@ -300,11 +300,7 @@
 	</Grid>
 
 	<Page.BottomAppBar>
-		<CommandBar local:CommandBarBridge.MasterCommandsProperty="{x:Bind DataContext}">
-			<CommandBar.Content>
-				<TextBlock Text="{Binding SelectedMenuItem.Label}" Margin="12,14"/>
-			</CommandBar.Content>
-		</CommandBar>
+		<CommandBar local:CommandBarBridge.MasterCommandsProperty="{x:Bind DataContext}" />
 	</Page.BottomAppBar>
 </Page>
 	

@@ -40,9 +40,6 @@
 
 	<Page.BottomAppBar>
 		<CommandBar>
-			<CommandBar.Content>
-				<TextBlock Text="{x:Bind ViewModel.MethodInvocationTitle, Mode=OneWay}" Margin="12,14"/>
-			</CommandBar.Content>
 			<AppBarButton Icon="Accept" Label="Ok" Click="AppBarButton_OkClick"/>
 		</CommandBar>
 	</Page.BottomAppBar>

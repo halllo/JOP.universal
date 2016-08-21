@@ -267,7 +267,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			var parameterValueStores = parameters
 			 .Select(p => new SelfcontainedValueStore
 			 {
-				 Identifier = ObjectDisplay.Nicely(p),
+				 Identifier = p.GetCustomAttribute<TitleAttribute>()?.Title ?? ObjectDisplay.Nicely(p),
 				 Value = ((p.Attributes & ParameterAttributes.HasDefault) == ParameterAttributes.HasDefault) ? p.DefaultValue : null,
 				 ValueType = p.ParameterType,
 				 CustomView = p.GetCustomAttribute<CustomViewAttribute>()?.ResourceKey,

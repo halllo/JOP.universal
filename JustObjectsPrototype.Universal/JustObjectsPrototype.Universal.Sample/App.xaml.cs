@@ -79,6 +79,7 @@ namespace JustObjectsPrototype.Universal.Sample
 		[JOP.Editor(hide: true)]
 		public Guid Id { get; set; } = Guid.NewGuid();
 
+		[JOP.Title("Aktenname")]
 		public string Name { get; set; }
 		public Aktenstatus Status { get; set; }
 		public Kunde Mandant { get; set; }
@@ -96,7 +97,7 @@ namespace JustObjectsPrototype.Universal.Sample
 		}
 
 		[JOP.Icon(Symbol.Document), JOP.RequiresConfirmation, JOP.JumpsToResult()]
-		public async Task<List<Dokument>> Rechnugen_Schreiben(int wie_viele = 3, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
+		public async Task<List<Dokument>> Rechnugen_Schreiben([JOP.Title("wie viele?")]int wie_viele = 3, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
 			var dokumente = Enumerable.Range(1, wie_viele).Select(i => new Dokument { Adressat = Mandant, Inhalt = inhalt + i }).ToList();
 			foreach (var dokument in dokumente)

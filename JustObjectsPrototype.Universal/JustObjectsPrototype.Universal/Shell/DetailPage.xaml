@@ -28,10 +28,6 @@
 	</ScrollViewer>
 
 	<Page.BottomAppBar>
-		<CommandBar local:CommandBarBridge.DetailCommandsProperty="{x:Bind Item,Mode=OneWay}">
-			<CommandBar.Content>
-				<TextBlock Text="{x:Bind Item.Title,Mode=OneWay}" Margin="12,14"/>
-			</CommandBar.Content>
-		</CommandBar>
+		<CommandBar local:CommandBarBridge.DetailCommandsProperty="{x:Bind Item,Mode=OneWay}"/>
 	</Page.BottomAppBar>
 </Page>

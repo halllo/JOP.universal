@@ -42,7 +42,7 @@ namespace JustObjectsPrototype.Universal.JOP.Editors
 
 		public string Identifier
 		{
-			get { return ObjectDisplay.Nicely(Property); }
+			get { return Property.GetCustomAttribute<TitleAttribute>()?.Title ?? ObjectDisplay.Nicely(Property); }
 		}
 
 		public Type ValueType
