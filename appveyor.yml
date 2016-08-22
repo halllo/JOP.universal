@@ -11,7 +11,7 @@ assembly_info:
   assembly_file_version: "{version}"
   assembly_informational_version: "{version}"
 
-configuration: Debug
+configuration: Release
 
 build:
   project: JustObjectsPrototype.Universal\JustObjectsPrototype.Universal.sln
@@ -23,7 +23,7 @@ after_test:
   - ps: .\JustObjectsPrototype.Universal\.nuget\pack.ps1
 
 artifacts:
-  - path: JustObjectsPrototype.Universal\JustObjectsPrototype.Universal\bin\Debug\JustObjectsPrototype.Universal.dll
+  - path: JustObjectsPrototype.Universal\JustObjectsPrototype.Universal\bin\Release\JustObjectsPrototype.Universal.dll
     name: JustObjectsPrototype.Universal.dll
   - path: '**\JOP.universal*.nupkg'
     name: JOP.universal.nupkg

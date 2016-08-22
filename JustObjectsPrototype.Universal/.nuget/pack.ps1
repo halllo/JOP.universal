@@ -13,7 +13,7 @@ function GetFiles($path = $pwd)
 
 
 $root = (split-path -parent $MyInvocation.MyCommand.Definition) + '\..'
-$version = [System.Reflection.Assembly]::LoadFile("$root\JustObjectsPrototype.Universal\bin\Debug\JustObjectsPrototype.Universal.dll").GetName().Version
+$version = [System.Reflection.Assembly]::LoadFile("$root\JustObjectsPrototype.Universal\bin\Release\JustObjectsPrototype.Universal.dll").GetName().Version
 $versionStr = "{0}.{1}.{2}" -f ($version.Major, $version.Minor, $version.Build)
 
 Write-Host "Setting .nuspec version tag to $versionStr"
