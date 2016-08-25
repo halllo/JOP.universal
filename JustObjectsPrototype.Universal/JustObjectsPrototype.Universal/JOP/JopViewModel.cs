@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JustObjectsPrototype.Universal.JOP.Editors;
+using JustObjectsPrototype.Universal.Shell;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,8 +8,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using JustObjectsPrototype.Universal.JOP.Editors;
-using JustObjectsPrototype.Universal.Shell;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
@@ -71,15 +71,23 @@ namespace JustObjectsPrototype.Universal.JOP
 		}
 
 		private Type SelectedType { get; set; }
+		private NotifyCollectionChangedEventHandler selectedTypeObjectsChangedEventHandler;
 		protected override void OnSelectedMenuItem(MenuItemViewModel o)
 		{
 			if (o != null)
 			{
 				var previousType = SelectedType;
-				var menuItemType = SelectedType = (Type)o.Tag;
+				if (previousType != null)
+				{
+					var previousObjectsOfType = _Objects.OfType(previousType);
+					previousObjectsOfType.CollectionChanged -= selectedTypeObjectsChangedEventHandler;
+				}
 
-				UpdateItems(menuItemType, previousType, _Objects.OfType(menuItemType), null);
-				_Objects.OfType(menuItemType).CollectionChanged += (s, e) => UpdateItems(menuItemType, null, _Objects.OfType(menuItemType), e);
+				var menuItemType = SelectedType = (Type)o.Tag;
+				var objectsOfType = _Objects.OfType(menuItemType);
+				UpdateItems(menuItemType, previousType, objectsOfType, null);
+				selectedTypeObjectsChangedEventHandler = new NotifyCollectionChangedEventHandler((s, e) => UpdateItems(menuItemType, null, _Objects.OfType(menuItemType), e));
+				objectsOfType.CollectionChanged += selectedTypeObjectsChangedEventHandler;
 
 
 				var staticMethods = menuItemType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
@@ -362,10 +370,9 @@ namespace JustObjectsPrototype.Universal.JOP
 										   let parameterInstanceType = parameterInstance.GetType()
 										   where IsObservableCollection(parameterInstanceType)
 										   select parameterInstanceType.GetTypeInfo().GenericTypeArguments.First();
-			var typeToRefresh = typesToRefreshCandidates.FirstOrDefault(t => t.Equals(SelectedType));
-			if (typeToRefresh != null)
+			if (typesToRefreshCandidates.Any(t => t.Equals(SelectedType)) || method.GetCustomAttribute<ChangesPrototypeInstancesAttribute>() != null)
 			{
-				UpdateItems(typeToRefresh, null, _Objects.OfType(typeToRefresh), null);
+				UpdateItems(SelectedType, null, _Objects.OfType(SelectedType), null);
 			}
 
 
@@ -488,7 +495,7 @@ namespace JustObjectsPrototype.Universal.JOP
 				{
 					_ChangedEvents[type].Invoke(obj);
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 				}
 			}

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using JustObjectsPrototype.Universal.JOP;
+using JustObjectsPrototype.Universal.JOP.Editors;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using JustObjectsPrototype.Universal.JOP;
-using JustObjectsPrototype.Universal.JOP.Editors;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -91,6 +91,23 @@ namespace JustObjectsPrototype.Universal
 		}
 
 		public ICollection<object> Repository { get; internal set; }
+
+		public void Remember()
+		{
+			var objects = Repository;
+			var types = objects.Select(o => o.GetType().AssemblyQualifiedName).Distinct().ToList();
+			var typesString = string.Join(Environment.NewLine, types);
+
+			var speicher = new Store("objects");
+			speicher.SaveOrUpdateSync("types", typesString);
+			speicher.File<ICollection<object>>("instances").SaveOrUpdateSync(objects);
+		}
+
+		public void Forget()
+		{
+			var speicher = new Store("objects");
+			speicher.DeleteAllSync();
+		}
 	}
 
 	public static class With
@@ -103,6 +120,32 @@ namespace JustObjectsPrototype.Universal
 		public static PrototypeBuilder These(params IEnumerable<object>[] objects)
 		{
 			return new PrototypeBuilder { Repository = new ObservableCollection<object>(objects.SelectMany(l => l)) };
+		}
+
+		public static PrototypeBuilder Remembered(IEnumerable<object> defaults = null)
+		{
+			var speicher = new Store("objects");
+			var storedObjects = speicher.File<ICollection<object>>("instances");
+			IEnumerable<object> objs = null;
+			try
+			{
+				var typesString = speicher.GetSync("types");
+				var typeStrings = typesString.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+				var types = typeStrings.Select(s => Type.GetType(s)).ToList();
+				storedObjects.KnownTypes = types;
+				objs = storedObjects.ReadSync();
+			}
+			catch (Exception)
+			{
+				speicher.DeleteAllSync();
+			}
+
+			if (objs == null || !objs.Any())
+			{
+				objs = defaults ?? Enumerable.Empty<object>();
+			}
+
+			return These(new ObservableCollection<object>(objs));
 		}
 	}
 

@@ -24,7 +24,7 @@ namespace JustObjectsPrototype.Universal
 			return folderForType;
 		}
 
-		protected async Task WriteFile(string filename, CreationCollisionOption options, Func<IRandomAccessStream, Task> writeAction)
+		protected async Task Write(string filename, CreationCollisionOption options, Func<IRandomAccessStream, Task> writeAction)
 		{
 			var folder = await GetFolder();
 			var file = await folder.CreateFileAsync(filename, options);
@@ -34,23 +34,20 @@ namespace JustObjectsPrototype.Universal
 			}
 		}
 
-		protected async Task ReadAll(Func<IRandomAccessStream, Task> readAction)
+		protected async Task Read(string filename, Func<IRandomAccessStream, Task> readAction)
 		{
 			var folder = await GetFolder();
-			var files = await folder.GetFilesAsync();
-			foreach (var file in files)
+			var file = await folder.GetFileAsync(filename);
+			using (var openedFile = await file.OpenAsync(FileAccessMode.Read))
 			{
-				using (var openedFile = await file.OpenAsync(FileAccessMode.Read))
-				{
-					await readAction(openedFile);
-				}
+				await readAction(openedFile);
 			}
 		}
 
 
 		public async Task SaveOrUpdate(string filename, string filecontent, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
 		{
-			await WriteFile(filename, options, async openedFile =>
+			await Write(filename, options, async openedFile =>
 			{
 				using (var streamWriter = new StreamWriter(openedFile.AsStreamForWrite()))
 				{
@@ -60,18 +57,42 @@ namespace JustObjectsPrototype.Universal
 			});
 		}
 
-		public async Task<List<string>> All()
+		public void SaveOrUpdateSync(string filename, string filecontent, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
 		{
-			var result = new List<string>();
-			await ReadAll(async openedFile =>
+			AsyncHelpers.RunSync(() => SaveOrUpdate(filename, filecontent, options));
+		}
+
+		public async Task<string> Get(string filename)
+		{
+			string result = null;
+			await Read(filename, async openedFile =>
 			{
 				using (var streamReader = new StreamReader(openedFile.AsStreamForRead()))
 				{
 					var filecontent = await streamReader.ReadToEndAsync();
-					result.Add(filecontent);
+					result = filecontent;
 				}
 			});
 			return result;
+		}
+
+		public string GetSync(string filename)
+		{
+			return AsyncHelpers.RunSync(() => Get(filename));
+		}
+
+		public StoreFile<T> File<T>(string filename)
+		{
+			return new StoreFile<T>(
+				readAction: async r => await Read(filename, async openedFile =>
+				{
+					await Task.CompletedTask; r(openedFile);
+				}),
+				writeAction: async (o, w) => await Write(filename, o, async openedFile =>
+				{
+					w(openedFile);
+					await openedFile.FlushAsync();
+				}));
 		}
 
 		public async Task Delete(string filename)
@@ -90,49 +111,61 @@ namespace JustObjectsPrototype.Universal
 				await file.DeleteAsync();
 			}
 		}
+
+		public void DeleteAllSync()
+		{
+			AsyncHelpers.RunSync(() => DeleteAll());
+		}
 	}
 
-
-	public class Store<T> : Store
+	public class StoreFile<T>
 	{
-		Func<T, string> filenameSelector;
+		Func<Action<IRandomAccessStream>, Task> readAction;
+		Func<CreationCollisionOption, Action<IRandomAccessStream>, Task> writeAction;
+		DataContractSerializer serializer;
 
-		public Store(Func<T, string> filenameSelector) : base(typeof(T).FullName)
+		internal StoreFile(
+			Func<Action<IRandomAccessStream>, Task> readAction,
+			Func<CreationCollisionOption, Action<IRandomAccessStream>, Task> writeAction)
 		{
-			this.filenameSelector = filenameSelector;
+			this.readAction = readAction;
+			this.writeAction = writeAction;
+
 		}
 
-		public async Task Save(T t)
+		public List<Type> KnownTypes { get; set; }
+
+		public async Task<T> Read()
 		{
-			await SaveOrUpdate(t, CreationCollisionOption.FailIfExists);
+			var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings { PreserveObjectReferences = true, KnownTypes = KnownTypes });
+			T result = default(T);
+			await readAction(openedFile =>
+			{
+				using (var streamReader = new StreamReader(openedFile.AsStreamForRead()))
+				{
+					result = (T)serializer.ReadObject(openedFile.AsStreamForRead());
+				}
+			});
+			return result;
+		}
+
+		public T ReadSync()
+		{
+			return AsyncHelpers.RunSync(() => Read());
 		}
 
 		public async Task SaveOrUpdate(T t, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
 		{
-			await WriteFile(filenameSelector(t), options, async openedFile =>
+			var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings { PreserveObjectReferences = true, KnownTypes = KnownTypes });
+			await writeAction(options, openedFile =>
 			{
-				var serializer = new DataContractSerializer(typeof(T));
 				serializer.WriteObject(openedFile.AsStreamForWrite(), t);
-				await openedFile.FlushAsync();
 			});
 		}
 
-		public async Task Delete(T t)
+		public void SaveOrUpdateSync(T t, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
 		{
-			await Delete(filenameSelector(t));
-		}
-
-		public new async Task<List<T>> All()
-		{
-			var result = new List<T>();
-			var serializer = new DataContractSerializer(typeof(T));
-			await ReadAll(async openedFile =>
-			{
-				await Task.CompletedTask;
-				var readObject = serializer.ReadObject(openedFile.AsStreamForRead());
-				result.Add((T)readObject);
-			});
-			return result;
+			AsyncHelpers.RunSync(() => SaveOrUpdate(t, options));
 		}
 	}
 }

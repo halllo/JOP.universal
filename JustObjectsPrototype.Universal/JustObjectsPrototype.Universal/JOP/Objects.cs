@@ -127,7 +127,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			{
 				foreach (var oldItem in e.OldItems)
 				{
-					var type = oldItem.GetType();
+					var type = GetCorrespondingType(oldItem.GetType());
 					if (_ObjectsByTypes.ContainsKey(type) == true && _ObjectToProxy.ContainsKey(oldItem) == true)
 					{
 						var oldProxy = _ObjectToProxy[oldItem];
@@ -192,11 +192,11 @@ namespace JustObjectsPrototype.Universal.JOP
 			{
 				var type = _ObjectsByTypes.First(kvp => kvp.Value == sender).Key;
 
-				foreach (var kvp in _ObjectToProxy.Where(p => p.Key.GetType() == type).ToList())
+				foreach (var kvp in _ObjectToProxy.Where(p => GetCorrespondingType(p.Key.GetType()) == type).ToList())
 				{
 					_ObjectToProxy.Remove(kvp.Key);
 				}
-				foreach (var o in _Objects.Where(o => o.GetType() == type).ToList())
+				foreach (var o in _Objects.Where(o => GetCorrespondingType(o.GetType()) == type).ToList())
 				{
 					_Objects.Remove(o);
 					if (Removed != null) Removed(o);

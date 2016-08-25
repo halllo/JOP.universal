@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -14,34 +15,28 @@ namespace JustObjectsPrototype.Universal.Sample
 		public App()
 		{
 			this.InitializeComponent();
+			Suspending += App_Suspending;
+		}
+
+		private void App_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+		{
+			Prototype.Remember();
 		}
 
 		protected override async void OnLaunched(LaunchActivatedEventArgs e)
 		{
-			if ((await Kundenspeicher.All()).Any() == false)
-			{
-				await Kundenspeicher.Save(new Kunde { Vorname = "Manuel", Nachname = "Naujoks" });
-			}
-
-			//await Aktenspeicher.DeleteAll();
-			//await Kundenspeicher.DeleteAll();
-			//await Dokumentspeicher.DeleteAll();
-
 			Prototype = Show.Prototype(
-				With.These(
-					await Aktenspeicher.All(),
-					await Kundenspeicher.All(),
-					await Dokumentspeicher.All(),
-					Einstellungen.Alle)
-				.OnChanged<Akte>(async a => await Aktenspeicher.SaveOrUpdate(a))
-				.OnChanged<Kunde>(async k => await Kundenspeicher.SaveOrUpdate(k))
-				.OnChanged<Dokument>(async d => await Dokumentspeicher.SaveOrUpdate(d))
+				With.Remembered(Enumerable.Concat<object>(
+					new[] { new Kunde { Vorname = "Manuel", Nachname = "Naujoks" } },
+					Einstellungen.Alle
+				))
+				.AndViewOf<Akte>()
+				.AndViewOf<Kunde>()
+				.AndViewOf<Dokument>()
+				.AndViewOf<Einstellungen>()
 				.AndOpen<Akte>());
 		}
 
-		public static readonly Store<Akte> Aktenspeicher = new Store<Akte>(a => a.Id.ToString());
-		public static readonly Store<Kunde> Kundenspeicher = new Store<Kunde>(k => k.Id.ToString());
-		public static readonly Store<Dokument> Dokumentspeicher = new Store<Dokument>(d => d.Id.ToString());
 		public static Prototype Prototype;
 	}
 
@@ -92,7 +87,6 @@ namespace JustObjectsPrototype.Universal.Sample
 		public async Task<Dokument> Rechnug_Schreiben(Kunde mandant, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
 			var dokument = new Dokument { Adressat = mandant ?? Mandant, Inhalt = inhalt };
-			await App.Dokumentspeicher.Save(dokument);
 			return dokument;
 		}
 
@@ -100,10 +94,6 @@ namespace JustObjectsPrototype.Universal.Sample
 		public async Task<List<Dokument>> Rechnugen_Schreiben([JOP.Title("wie viele?")]int wie_viele = 3, [JOP.CustomView("YellowBackgroundTextInput")]string inhalt = "neuer Dokumentinhalt")
 		{
 			var dokumente = Enumerable.Range(1, wie_viele).Select(i => new Dokument { Adressat = Mandant, Inhalt = inhalt + i }).ToList();
-			foreach (var dokument in dokumente)
-			{
-				await App.Dokumentspeicher.Save(dokument);
-			}
 			return dokumente;
 		}
 
@@ -111,14 +101,12 @@ namespace JustObjectsPrototype.Universal.Sample
 		public static async void Neu(ObservableCollection<Akte> akten)
 		{
 			var akte = new Akte { Name = "Neue Akte " + (akten.Count + 1), Datum = DateTime.Now };
-			await App.Aktenspeicher.Save(akte);
 			akten.Add(akte);
 		}
 
 		[JOP.Title("Löschen"), JOP.Icon(Symbol.Delete), JOP.RequiresConfirmation]
 		public async void Loeschen(ObservableCollection<Akte> akten)
 		{
-			await App.Aktenspeicher.Delete(this);
 			akten.Remove(this);
 		}
 	}
@@ -142,15 +130,13 @@ namespace JustObjectsPrototype.Universal.Sample
 		{
 			await Show.Message("Hello " + name);
 			var kunde = new Kunde { Vorname = name, Nachname = DateTime.Now.Ticks + "" };
-			await App.Kundenspeicher.Save(kunde);
 			return kunde;
 		}
 
-		[JOP.JumpsToResult]
+		[JOP.Icon(Symbol.NewFolder), JOP.JumpsToResult]
 		public async static Task<Kunde> Neu(string vorname, string nachname)
 		{
 			var kunde = new Kunde { Vorname = vorname, Nachname = nachname };
-			await App.Kundenspeicher.Save(kunde);
 			return kunde;
 		}
 	}
@@ -167,40 +153,38 @@ namespace JustObjectsPrototype.Universal.Sample
 		[JOP.Icon(Symbol.Remove)]
 		public async void Löschen(ObservableCollection<Dokument> dokumente)
 		{
-			await App.Dokumentspeicher.Delete(this);
 			dokumente.Remove(this);
 		}
 	}
 
-	[JOP.Icon(Symbol.Setting)]
+	[DataContract, JOP.Icon(Symbol.Setting)]
 	public abstract class Einstellungen
 	{
 		public static Einstellungen[] Alle => new Einstellungen[] { new AllgemeineEinstellungen(), new SpeicherEinstellungen() };
 
-		class SpeicherEinstellungen : Einstellungen
+		[DataContract]
+		public class SpeicherEinstellungen : Einstellungen
 		{
 			public override string ToString() => "Speicher";
 
 			public IEnumerable<object> Gespeicherte_Objekte => App.Prototype.Repository.Where(o => !(o is Einstellungen));
 
-			[JOP.Icon(Symbol.Delete)]
+			[JOP.Icon(Symbol.Delete), JOP.RequiresConfirmation, JOP.ChangesPrototypeInstances]
 			public async Task Alles_Löschen()
 			{
-				await App.Aktenspeicher.DeleteAll();
-				await App.Kundenspeicher.DeleteAll();
-				await App.Dokumentspeicher.DeleteAll();
-
-				var allesAußerEinstellungen = App.Prototype.Repository.Where(o => !(o is Einstellungen)).ToList();
-				allesAußerEinstellungen.ForEach(o => App.Prototype.Repository.Remove(o));
+				App.Prototype.Forget();
+				App.Prototype.Repository.Clear();
 			}
 		}
 
-		class AllgemeineEinstellungen : Einstellungen
+		[DataContract]
+		public class AllgemeineEinstellungen : Einstellungen
 		{
 			public override string ToString() => "Allgemein";
 
+			[DataMember]
 			public string Value1 { get; set; }
-
+			[DataMember]
 			public string Value2 { get; set; }
 		}
 	}
