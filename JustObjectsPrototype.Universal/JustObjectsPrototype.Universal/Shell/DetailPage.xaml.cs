@@ -1,6 +1,5 @@
-﻿using System.Collections.Specialized;
-using System.Linq;
-using JustObjectsPrototype.Universal.JOP;
+﻿using JustObjectsPrototype.Universal.JOP;
+using System.Collections.Specialized;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,16 +10,16 @@ namespace JustObjectsPrototype.Universal.Shell
 {
 	public sealed partial class DetailPage : Page
 	{
-		private static DependencyProperty s_itemProperty = DependencyProperty.Register("Item", typeof(ItemViewModel), typeof(DetailPage), new PropertyMetadata(null));
+		private static DependencyProperty s_itemProperty = DependencyProperty.Register("Item", typeof(object), typeof(DetailPage), new PropertyMetadata(null));
 
 		public static DependencyProperty ItemProperty
 		{
 			get { return s_itemProperty; }
 		}
 
-		public ItemViewModel Item
+		public object Item
 		{
-			get { return (ItemViewModel)GetValue(s_itemProperty); }
+			get { return GetValue(s_itemProperty); }
 			set { SetValue(s_itemProperty, value); }
 		}
 
@@ -42,9 +41,7 @@ namespace JustObjectsPrototype.Universal.Shell
 			System.Diagnostics.Debug.WriteLine("DetailPage.OnNavigatedTo");
 			base.OnNavigatedTo(e);
 
-			var item = JopViewModel.Instance.Value.MasterItems.FirstOrDefault(mi => mi.Id == (int)e.Parameter);
-			Item = item;
-			JopViewModel.Instance.Value.SelectedMasterItem = item;
+			Item = JopViewModel.Instance.Value.SelectedMasterItem;
 
 			var backStack = Frame.BackStack;
 			var backStackCount = backStack.Count;
@@ -58,7 +55,7 @@ namespace JustObjectsPrototype.Universal.Shell
 				// will show the correct item in the side-by-side view.
 				var modifiedEntry = new PageStackEntry(
 					masterPageEntry.SourcePageType,
-					Item.Id,
+					0,
 					masterPageEntry.NavigationTransitionInfo
 					);
 				backStack.Add(modifiedEntry);
@@ -84,7 +81,7 @@ namespace JustObjectsPrototype.Universal.Shell
 
 		void DirectItemsChanged(NotifyCollectionChangedEventArgs e)
 		{
-			if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems.Contains(Item.Tag))
+			if (e.Action == NotifyCollectionChangedAction.Remove && e.OldItems.Contains(Item))
 			{
 				OnBackRequested();
 			}

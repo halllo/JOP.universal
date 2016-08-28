@@ -115,6 +115,12 @@
 						<Setter Property="Height" Value="48"/>
 						<Setter Property="Padding" Value="0"/>
 					</Style>
+					<DataTemplate x:Key="MasterItemTemplate">
+						<Grid Margin="0,11,0,13">
+							<TextBlock Text="{Binding ToStringOrFirstString}" Style="{ThemeResource BaseTextBlockStyle}" />
+						</Grid>
+					</DataTemplate>
+					<local:ItemTemplateSelector x:Key="MasterItemTemplateSelector" DefaultTemplate="{StaticResource MasterItemTemplate}"/>
 					<local:NullIsVisible x:Key="nullIsVisible"/>
 					<local:FalseIsVisible x:Key="falseIsVisible"/>
 					<local:TrueIsVisible x:Key="trueIsVisible"/>
@@ -208,38 +214,8 @@
 					IsItemClickEnabled="True"
 					ItemsSource="{Binding MasterItems}"
 					SelectedItem="{Binding SelectedMasterItem,Mode=TwoWay}"
+					ItemTemplateSelector="{StaticResource MasterItemTemplateSelector}"
 					ItemClick="MasterListView_ItemClick">
-					<ListView.ItemTemplate>
-						<DataTemplate x:DataType="local:ItemViewModel">
-							<Grid Margin="0,11,0,13">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto" />
-									<RowDefinition Height="Auto" />
-								</Grid.RowDefinitions>
-
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="*" />
-									<ColumnDefinition Width="Auto" />
-								</Grid.ColumnDefinitions>
-
-								<TextBlock 
-									Text="{x:Bind Title,Mode=OneWay}" 
-									Style="{ThemeResource BaseTextBlockStyle}" />
-
-								<TextBlock 
-									Text="{x:Bind Text,Mode=OneWay}"
-									MaxLines="1" 
-									Grid.Row="1" 
-									Style="{ThemeResource ListBodyTextBlockStyle}" />
-
-								<TextBlock
-									Text="{x:Bind DateCreatedHourMinute,Mode=OneWay}"
-									Grid.Column="1"
-									Margin="12,1,0,0"
-									Style="{ThemeResource ListCaptionAltTextblockStyle}" />
-							</Grid>
-						</DataTemplate>
-					</ListView.ItemTemplate>
 					<ListView.ItemContainerStyle>
 						<Style TargetType="ListViewItem">
 							<Setter Property="HorizontalContentAlignment" Value="Stretch" />

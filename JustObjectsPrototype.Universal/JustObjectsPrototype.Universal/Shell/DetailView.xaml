@@ -15,8 +15,9 @@
 
 	<StackPanel x:Name="stackPanel">
 
-		<CommandBar x:Name="commandBar" Background="Transparent" IsOpen="True" IsSticky="True"
-					local:CommandBarBridge.DetailCommandsProperty="{Binding}" Closing="OpenAgain">
+		<CommandBar x:Name="commandBar" Background="Transparent" Margin="0,0,0,10"
+					IsOpen="True" IsSticky="True" Closing="OpenAgain"
+					local:CommandBarBridge.DetailCommandsProperty="{Binding}">
 
 		</CommandBar>
 
@@ -24,7 +25,7 @@
 			Margin="0,8"
 			Style="{ThemeResource TitleTextBlockStyle}"
 			HorizontalAlignment="Left"
-			Text="{Binding Title}"/>
+			Text="{Binding ToStringOrFirstString}"/>
 
 		<ProgressBar x:Name="progressBar" IsIndeterminate="True"/>
 

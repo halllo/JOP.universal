@@ -122,7 +122,6 @@ namespace JustObjectsPrototype.Universal
 	{
 		Func<Action<IRandomAccessStream>, Task> readAction;
 		Func<CreationCollisionOption, Action<IRandomAccessStream>, Task> writeAction;
-		DataContractSerializer serializer;
 
 		internal StoreFile(
 			Func<Action<IRandomAccessStream>, Task> readAction,

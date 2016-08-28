@@ -20,7 +20,7 @@ namespace JustObjectsPrototype.Universal.JOP
 		private JopViewModel()
 		{
 			MenuItems = new ObservableCollection<MenuItemViewModel> { };
-			MasterItems = new ObservableCollection<ItemViewModel> { };
+			MasterItems = new ObservableCollection<object> { };
 			MasterCommands = new ObservableCollection<ActionViewModel> { };
 			DetailCommands = new ObservableCollection<ActionViewModel> { };
 		}
@@ -71,24 +71,23 @@ namespace JustObjectsPrototype.Universal.JOP
 		}
 
 		private Type SelectedType { get; set; }
-		private NotifyCollectionChangedEventHandler selectedTypeObjectsChangedEventHandler;
+		private NotifyCollectionChangedEventHandler MasterItemsChangedEventHandler { get; set; }
 		protected override void OnSelectedMenuItem(MenuItemViewModel o)
 		{
 			if (o != null)
 			{
-				var previousType = SelectedType;
-				if (previousType != null)
+				if (SelectedType != null)
 				{
-					var previousObjectsOfType = _Objects.OfType(previousType);
-					previousObjectsOfType.CollectionChanged -= selectedTypeObjectsChangedEventHandler;
+					var objectsOfPreviousType = _Objects.OfType(SelectedType);
+					objectsOfPreviousType.CollectionChanged -= MasterItemsChangedEventHandler;
 				}
 
 				var menuItemType = SelectedType = (Type)o.Tag;
 				var objectsOfType = _Objects.OfType(menuItemType);
-				UpdateItems(menuItemType, previousType, objectsOfType, null);
-				selectedTypeObjectsChangedEventHandler = new NotifyCollectionChangedEventHandler((s, e) => UpdateItems(menuItemType, null, _Objects.OfType(menuItemType), e));
-				objectsOfType.CollectionChanged += selectedTypeObjectsChangedEventHandler;
-
+				MasterItemsChangedEventHandler = new NotifyCollectionChangedEventHandler((s, e) => DirectItemsChanged?.Invoke(e));
+				objectsOfType.CollectionChanged += MasterItemsChangedEventHandler;
+				MasterItems = objectsOfType;
+				Changed("MasterItems");
 
 				var staticMethods = menuItemType.GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
 				var staticFunctions = GetFunctions(null, staticMethods);
@@ -106,80 +105,13 @@ namespace JustObjectsPrototype.Universal.JOP
 			}
 		}
 
-		bool _UpdatingItemsEnabled = true;
 		public event Action<NotifyCollectionChangedEventArgs> DirectItemsChanged;
-		private void UpdateItems(Type type, Type previousType, ObservableCollection<ObjectProxy> items, NotifyCollectionChangedEventArgs collectionChangedEventArgs)
+
+
+
+		protected override void OnSelectedMasterItem(object o)
 		{
-			if (!SelectedType.Equals(type)) return;
-			if (collectionChangedEventArgs != null) DirectItemsChanged?.Invoke(collectionChangedEventArgs);
-			if (!_UpdatingItemsEnabled) return;
-
-			foreach (var item in MasterItems)
-			{
-				(item.Tag as ObjectProxy).RemovePropertyChangedCallbacks();
-			}
-			var selectedId = previousType != null ? null : SelectedMasterItem?.Id;
-			MasterItems.Clear();
-			int idZaehler = -1;
-			foreach (var item in items)
-			{
-				var itemVM = new ItemViewModel
-				{
-					Id = ++idZaehler,
-					Tag = item
-				};
-				UpdateViewModel(type, itemVM, item);
-				item.PropertyChanged += (s, e) =>
-				{
-					UpdateViewModel(type, itemVM, item);
-					itemVM.RaiseChanged(e.PropertyName);
-				};
-				MasterItems.Add(itemVM);
-			}
-
-			if (selectedId.HasValue && selectedId.Value < MasterItems.Count)
-			{
-				SelectedMasterItem = MasterItems[selectedId.Value];
-			}
-			else
-			{
-				SelectedMasterItem = null;
-			}
-		}
-
-		private void UpdateViewModel(Type type, ItemViewModel itemVM, ObjectProxy item)
-		{
-			var properties = type
-				.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)
-				.Where(p => p.GetIndexParameters().Length == 0)
-				.ToList();
-
-			var toStrings = type.GetMethods().Where(m => m.Name == "ToString" && m.DeclaringType == type && m.GetParameters().Length == 0);
-			if (toStrings.Any())
-			{
-				var toStringResult = toStrings.First().Invoke(item.ProxiedObject, new object[0]);
-				itemVM.Title = toStringResult != null ? toStringResult.ToString() : string.Empty;
-			}
-			else
-			{
-				var firstString = properties.FirstOrDefault(p => p.PropertyType == typeof(string));
-				var secondString = properties.Except(new[] { firstString }).FirstOrDefault(p => p.PropertyType == typeof(string));
-				itemVM.Title = firstString != null ? FirstCharacters(100, item.GetMember(firstString.Name) as string) : item.ProxiedObject.ToString();
-				itemVM.Text = secondString != null ? FirstCharacters(100, item.GetMember(secondString.Name) as string) : null;
-			}
-
-			var firstDateTime = properties.FirstOrDefault(p => p.PropertyType == typeof(DateTime));
-			itemVM.Date = firstDateTime != null ? item.GetMember(firstDateTime.Name) as DateTime? : null;
-		}
-
-		private string FirstCharacters(int count, string text)
-		{
-			return string.IsNullOrEmpty(text) ? text : new string(text.Take(count).ToArray());
-		}
-
-		protected override void OnSelectedMasterItem(ItemViewModel o)
-		{
-			var selectedObject = o?.Tag as ObjectProxy;
+			var selectedObject = o as ObjectProxy;
 			if (selectedObject != null)
 			{
 				var type = selectedObject.ProxiedObject.GetType();
@@ -312,7 +244,6 @@ namespace JustObjectsPrototype.Universal.JOP
 
 			try
 			{
-				_UpdatingItemsEnabled = false;
 				var methodResult = method.Invoke(instance != null ? instance.ProxiedObject : null, parameterInstances.ToArray());
 				if (methodResult is Task)
 				{
@@ -336,43 +267,12 @@ namespace JustObjectsPrototype.Universal.JOP
 				//MessageBox.Show("An Exception occured in " + m.Name + ".\n\n" + tie.InnerException.ToString(), "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
 			}
-			finally
-			{
-				_UpdatingItemsEnabled = true;
-			}
 
 
-			var objectsToRefreshCandidates = parameterInstances.SelectMany(i =>
+			var objectsOfSelectedType = _Objects.OfType(SelectedType);
+			foreach (var objectToRefresh in objectsOfSelectedType)
 			{
-				if (i != null && IsObservableCollection(i.GetType()))
-				{
-					return new object[0];
-				}
-				else if (i is IEnumerable)
-				{
-					return ((IEnumerable)i).OfType<object>();
-				}
-				else
-				{
-					return new[] { i }.OfType<object>();
-				}
-			});
-			var ofTypeMethod = typeof(Enumerable).GetMethod("OfType").MakeGenericMethod(SelectedType);
-			var objectsToRefresh = (IEnumerable<object>)ofTypeMethod.Invoke(null, new[] { objectsToRefreshCandidates });
-			foreach (var objectToRefresh in objectsToRefresh)
-			{
-				var proxy = _Objects.GetProxy(objectToRefresh);
-				if (proxy != null) proxy.RaisePropertyChanged(string.Empty);
-			}
-
-			var typesToRefreshCandidates = from parameterInstance in parameterInstances
-										   where parameterInstance != null
-										   let parameterInstanceType = parameterInstance.GetType()
-										   where IsObservableCollection(parameterInstanceType)
-										   select parameterInstanceType.GetTypeInfo().GenericTypeArguments.First();
-			if (typesToRefreshCandidates.Any(t => t.Equals(SelectedType)) || method.GetCustomAttribute<ChangesPrototypeInstancesAttribute>() != null)
-			{
-				UpdateItems(SelectedType, null, _Objects.OfType(SelectedType), null);
+				objectToRefresh.RaisePropertyChanged(string.Empty);
 			}
 
 
@@ -424,7 +324,7 @@ namespace JustObjectsPrototype.Universal.JOP
 					if (result != null)
 					{
 						var resultProxy = _Objects.GetProxy(result);
-						SelectedMasterItem = MasterItems.First(mi => mi.Tag == resultProxy);
+						SelectedMasterItem = MasterItems.First(mi => mi == resultProxy);
 
 						var detailPage = (((Frame)Windows.UI.Xaml.Window.Current.Content)).Content as DetailPage;
 						if (detailPage != null)

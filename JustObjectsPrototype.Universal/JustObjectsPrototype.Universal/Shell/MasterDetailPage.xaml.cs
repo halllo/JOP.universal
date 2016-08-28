@@ -8,7 +8,7 @@ namespace JustObjectsPrototype.Universal.Shell
 {
 	public partial class MasterDetailPage : Page
 	{
-		private ItemViewModel _lastSelectedItem;
+		private object _lastSelectedItem;
 
 		public MasterDetailPage()
 		{
@@ -38,7 +38,7 @@ namespace JustObjectsPrototype.Universal.Shell
 			if (newState == NarrowState && oldState == DefaultState && _lastSelectedItem != null)
 			{
 				// Resize down to the detail item. Don't play a transition.
-				Frame.Navigate(typeof(DetailPage), _lastSelectedItem.Id, new SuppressNavigationTransitionInfo());
+				Frame.Navigate(typeof(DetailPage), 0, new SuppressNavigationTransitionInfo());
 			}
 			else if (newState == DefaultState && oldState == NarrowState)
 			{
@@ -76,17 +76,18 @@ namespace JustObjectsPrototype.Universal.Shell
 
 		private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
-			GotoDetail((ItemViewModel)e.ClickedItem);
+			JopViewModel.Instance.Value.SelectedMasterItem = e.ClickedItem;
+			GotoDetail(e.ClickedItem);
 		}
 
-		internal void GotoDetail(ItemViewModel clickedItem)
+		internal void GotoDetail(object clickedItem)
 		{
 			_lastSelectedItem = clickedItem;
 
 			if (AdaptiveStates.CurrentState == NarrowState)
 			{
 				// Use "drill in" transition for navigating from master list to detail view
-				Frame.Navigate(typeof(DetailPage), clickedItem.Id, new DrillInNavigationTransitionInfo());
+				Frame.Navigate(typeof(DetailPage), 0, new DrillInNavigationTransitionInfo());
 			}
 		}
 	}

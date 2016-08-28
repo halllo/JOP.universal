@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Windows.Globalization.DateTimeFormatting;
 using Windows.UI.Xaml.Controls;
 
 namespace JustObjectsPrototype.Universal.Shell
@@ -35,43 +34,6 @@ namespace JustObjectsPrototype.Universal.Shell
 		public object Tag { get; set; }
 
 		public MenuItemViewModel()
-		{
-		}
-	}
-
-	public class ItemViewModel : ViewModel
-	{
-		public int Id
-		{
-			get; set;
-		}
-
-		public string DateCreatedHourMinute
-		{
-			get
-			{
-				if (Date == null) return string.Empty;
-				else
-				{
-					try
-					{
-						var formatter = new DateTimeFormatter("shortdate");
-						return formatter.Format(Date.Value);
-					}
-					catch (Exception)
-					{
-						return "-";
-					}
-				}
-			}
-		}
-
-		public string Title { get; set; }
-		public string Text { get; set; }
-		public object Tag { get; set; }
-		public DateTime? Date { get; set; }
-
-		public ItemViewModel()
 		{
 		}
 	}
@@ -149,8 +111,8 @@ namespace JustObjectsPrototype.Universal.Shell
 		protected abstract void OnSelectedMenuItem(MenuItemViewModel o);
 
 
-		public ObservableCollection<ItemViewModel> MasterItems { get; set; }
-		public ItemViewModel SelectedMasterItem
+		public IEnumerable<object> MasterItems { get; set; }
+		public object SelectedMasterItem
 		{
 			get { return _SelectedMasterItem; }
 			set
@@ -159,8 +121,8 @@ namespace JustObjectsPrototype.Universal.Shell
 				OnSelectedMasterItem(_SelectedMasterItem);
 			}
 		}
-		ItemViewModel _SelectedMasterItem;
-		protected abstract void OnSelectedMasterItem(ItemViewModel o);
+		object _SelectedMasterItem;
+		protected abstract void OnSelectedMasterItem(object o);
 
 
 		public ObservableCollection<ActionViewModel> MasterCommands { get; set; }

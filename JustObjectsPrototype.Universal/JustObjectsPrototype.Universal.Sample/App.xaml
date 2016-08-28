@@ -6,6 +6,35 @@
     RequestedTheme="Dark">
 
 	<Application.Resources>
+
+		<DataTemplate x:Key="AkteListItem">
+			<Grid Margin="0,10,0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition Height="5"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<TextBlock
+					Text="{Binding ProxiedObject.Name}" 
+					/>
+				<StackPanel Grid.Row="2" Orientation="Horizontal">
+					<TextBlock Text="Mandant" FontSize="12" Opacity="0.5" Margin="0,0,5,0"/>
+					<TextBlock 
+						Text="{Binding ProxiedObject.Mandant}" 
+						FontSize="12"
+						/>
+				</StackPanel>
+				<TextBlock Grid.Column="1" VerticalAlignment="Center"
+					Text="{Binding ProxiedObject.Status}" 
+					FontSize="10"
+					/>
+			</Grid>
+		</DataTemplate>
+
 		<DataTemplate x:Key="YellowBackgroundTextInput">
 			<Grid Margin="0,10,0,10" Background="Yellow">
 				<Grid.RowDefinitions>
@@ -16,6 +45,6 @@
 				<TextBox Grid.Row="1" Text="{Binding Value,Mode=TwoWay}" IsEnabled="{Binding CanWrite}" AcceptsReturn="True" TextWrapping="Wrap" BorderThickness="0"/>
 			</Grid>
 		</DataTemplate>
-	</Application.Resources>	
-	
+	</Application.Resources>
+
 </Application>

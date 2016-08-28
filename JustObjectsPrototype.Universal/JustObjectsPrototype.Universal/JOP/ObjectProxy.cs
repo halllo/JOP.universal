@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JustObjectsPrototype.Universal.JOP.Editors;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
@@ -10,6 +11,11 @@ namespace JustObjectsPrototype.Universal.JOP
 	public class ObjectProxy : DynamicObject, INotifyPropertyChanged
 	{
 		public object ProxiedObject { get; set; }
+
+		public string ToStringOrFirstString
+		{
+			get { return ObjectDisplay.ToStringOrFirstString(ProxiedObject); }
+		}
 
 		public ObjectProxy() { }
 		public ObjectProxy(object proxiedObject)

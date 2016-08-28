@@ -68,7 +68,7 @@ namespace JustObjectsPrototype.Universal.Sample
 		Potenziell, Angenommen, Abgelehnt
 	}
 
-	[JOP.Icon(Symbol.Folder), JOP.Title("Akten")]
+	[JOP.Icon(Symbol.Folder), JOP.Title("Akten"), JOP.CustomView("AkteListItem")]
 	public class Akte
 	{
 		[JOP.Editor(hide: true)]
@@ -109,6 +109,14 @@ namespace JustObjectsPrototype.Universal.Sample
 		{
 			akten.Remove(this);
 		}
+
+		public void Change()
+		{
+			foreach (var item in App.Prototype.Repository.OfType<Akte>())
+			{
+				item.Name += "!";
+			}
+		}
 	}
 
 	[JOP.Icon(Symbol.Contact), JOP.Title("Kunden")]
@@ -138,6 +146,12 @@ namespace JustObjectsPrototype.Universal.Sample
 		{
 			var kunde = new Kunde { Vorname = vorname, Nachname = nachname };
 			return kunde;
+		}
+
+		public void Ersten_Löschen()
+		{
+			var erster = App.Prototype.Repository.OfType<Kunde>().First();
+			App.Prototype.Repository.Remove(erster);
 		}
 	}
 
@@ -169,11 +183,18 @@ namespace JustObjectsPrototype.Universal.Sample
 
 			public IEnumerable<object> Gespeicherte_Objekte => App.Prototype.Repository.Where(o => !(o is Einstellungen));
 
-			[JOP.Icon(Symbol.Delete), JOP.RequiresConfirmation, JOP.ChangesPrototypeInstances]
+			[JOP.Icon(Symbol.Delete), JOP.RequiresConfirmation]
 			public async Task Alles_Löschen()
 			{
 				App.Prototype.Forget();
 				App.Prototype.Repository.Clear();
+			}
+
+			[JOP.Icon(Symbol.GoToStart), JOP.JumpsToResult]
+			public object Gehe_zu_zweitem_Kunden()
+			{
+				var zweiterKunde = App.Prototype.Repository.OfType<Kunde>().Skip(1).FirstOrDefault();
+				return zweiterKunde;
 			}
 		}
 

@@ -145,6 +145,7 @@
     <Compile Include="Shell\DetailView.xaml.cs">
       <DependentUpon>DetailView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Shell\ItemTemplateSelector.cs" />
     <Compile Include="Shell\MainViewModel.cs" />
     <Compile Include="Shell\MasterDetailPage.xaml.cs">
       <DependentUpon>MasterDetailPage.xaml</DependentUpon>

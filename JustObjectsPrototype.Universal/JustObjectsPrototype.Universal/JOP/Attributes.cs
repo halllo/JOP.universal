@@ -62,11 +62,4 @@ namespace JustObjectsPrototype.Universal.JOP
 		{
 		}
 	}
-
-	public class ChangesPrototypeInstancesAttribute : JOPAttribute
-	{
-		public ChangesPrototypeInstancesAttribute()
-		{
-		}
-	}
 }
