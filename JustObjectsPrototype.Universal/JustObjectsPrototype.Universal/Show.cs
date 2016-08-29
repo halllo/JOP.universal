@@ -1,10 +1,10 @@
-﻿using JustObjectsPrototype.Universal.JOP;
-using JustObjectsPrototype.Universal.JOP.Editors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using JustObjectsPrototype.Universal.JOP;
+using JustObjectsPrototype.Universal.JOP.Editors;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -92,10 +92,10 @@ namespace JustObjectsPrototype.Universal
 
 		public ICollection<object> Repository { get; internal set; }
 
-		public void Remember()
+		public void Remember(params Type[] additionalKnownTypes)
 		{
 			var objects = Repository;
-			var types = objects.Select(o => o.GetType().AssemblyQualifiedName).Distinct().ToList();
+			var types = objects.Select(o => o.GetType()).Concat(additionalKnownTypes).Select(t => t.AssemblyQualifiedName).Distinct().ToList();
 			var typesString = string.Join(Environment.NewLine, types);
 
 			var speicher = new Store("objects");
