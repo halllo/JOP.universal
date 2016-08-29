@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -60,6 +61,13 @@ namespace JustObjectsPrototype.Universal
 		public void SaveOrUpdateSync(string filename, string filecontent, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
 		{
 			AsyncHelpers.RunSync(() => SaveOrUpdate(filename, filecontent, options));
+		}
+
+		public async Task<List<string>> Browse()
+		{
+			var folder = await GetFolder();
+			var files = await folder.GetFilesAsync();
+			return files.Select(f => f.Name).ToList();
 		}
 
 		public async Task<string> Get(string filename)
