@@ -1,4 +1,6 @@
-﻿using Windows.UI.Core;
+﻿using System;
+using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -39,10 +41,18 @@ namespace JustObjectsPrototype.Universal.JOP
 			Frame.GoBack(new DrillInNavigationTransitionInfo());
 		}
 
-		private void AppBarButton_OkClick(object sender, RoutedEventArgs e)
+		private async void AppBarButton_OkClick(object sender, RoutedEventArgs e)
 		{
-			ViewModel.MethodInvocationContinuation.Execute(null);
-			(Window.Current.Content as Frame).GoBack(new DrillInNavigationTransitionInfo());
+			AppBar.Focus(FocusState.Keyboard);
+			await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+			{
+				await Task.Delay(100);
+				await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+				{
+					ViewModel.MethodInvocationContinuation.Execute(null);
+					(Window.Current.Content as Frame).GoBack(new DrillInNavigationTransitionInfo());
+				});
+			});
 		}
 	}
 }

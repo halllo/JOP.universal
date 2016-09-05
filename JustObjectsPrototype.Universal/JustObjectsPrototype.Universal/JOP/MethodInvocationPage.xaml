@@ -39,7 +39,7 @@
 	</Grid>
 
 	<Page.BottomAppBar>
-		<CommandBar>
+		<CommandBar x:Name="AppBar">
 			<AppBarButton Icon="Accept" Label="Ok" Click="AppBarButton_OkClick"/>
 		</CommandBar>
 	</Page.BottomAppBar>
