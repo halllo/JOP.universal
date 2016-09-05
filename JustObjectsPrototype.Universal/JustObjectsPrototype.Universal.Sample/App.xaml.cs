@@ -117,6 +117,12 @@ namespace JustObjectsPrototype.Universal.Sample
 				item.Name += "!";
 			}
 		}
+
+		public async Task Test(DateTime? datum1, DateTime datum2)
+		{
+			await Show.Message(datum1.ToString());
+			await Show.Message(datum2.ToString());
+		}
 	}
 
 	[JOP.Icon(Symbol.Contact), JOP.Title("Kunden")]

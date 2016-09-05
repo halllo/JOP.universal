@@ -1,6 +1,4 @@
-﻿using JustObjectsPrototype.Universal.JOP.Editors;
-using JustObjectsPrototype.Universal.Shell;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +6,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using JustObjectsPrototype.Universal.JOP.Editors;
+using JustObjectsPrototype.Universal.Shell;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
@@ -205,17 +205,20 @@ namespace JustObjectsPrototype.Universal.JOP
 		{
 			var parameters = method.GetParameters();
 			var parameterValueStores = parameters
-			 .Select(p => new SelfcontainedValueStore
-			 {
-				 Identifier = p.GetCustomAttribute<TitleAttribute>()?.Title ?? ObjectDisplay.Nicely(p),
-				 Value = ((p.Attributes & ParameterAttributes.HasDefault) == ParameterAttributes.HasDefault) ? p.DefaultValue : null,
-				 ValueType = p.ParameterType,
-				 CustomView = p.GetCustomAttribute<CustomViewAttribute>()?.ResourceKey,
-			 }).ToList<IValueStore>();
+				.Select(p => new SelfcontainedValueStore
+				{
+					Identifier = p.GetCustomAttribute<TitleAttribute>()?.Title ?? ObjectDisplay.Nicely(p),
+					Value =
+						((p.Attributes & ParameterAttributes.HasDefault) == ParameterAttributes.HasDefault) ? p.DefaultValue
+						: p.ParameterType == typeof(DateTime) ? (object)DateTime.Today
+						: null,
+					ValueType = p.ParameterType,
+					CustomView = p.GetCustomAttribute<CustomViewAttribute>()?.ResourceKey,
+				}).ToList<IValueStore>();
 
 			var parameterValueStoresWithoutObservableCollections = parameterValueStores
-			 .Where(vs => IsObservableCollection(vs.ValueType) == false)
-			 .ToList();
+				.Where(vs => IsObservableCollection(vs.ValueType) == false)
+				.ToList();
 
 			var propertiesViewModels = PropertiesViewModels.Of(parameterValueStoresWithoutObservableCollections, _Objects);
 
@@ -237,7 +240,7 @@ namespace JustObjectsPrototype.Universal.JOP
 			var parameterInstances = parameterValueStores
 									.Select(vs => IsObservableCollection(vs.ValueType)
 									   ? _Objects.OfType_OneWayToSourceChangePropagation(vs.ValueType.GetGenericArguments().First())
-									   : Convert.ChangeType(vs.Value, vs.ValueType))
+									   : (vs.Value == null ? null : Convert.ChangeType(vs.Value, Nullable.GetUnderlyingType(vs.ValueType) ?? vs.ValueType)))
 									.ToList();
 
 			object result = null;
