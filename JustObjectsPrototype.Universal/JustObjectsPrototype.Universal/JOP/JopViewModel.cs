@@ -166,7 +166,7 @@ namespace JustObjectsPrototype.Universal.JOP
 
 
 
-
+		public bool InProgress { get; set; }
 
 		public Action<List<IValueStore>> ShowMethodInvocationDialog { get; set; }
 		public string MethodInvocationTitle { get; set; }
@@ -247,6 +247,8 @@ namespace JustObjectsPrototype.Universal.JOP
 
 			try
 			{
+				InProgress = method.GetCustomAttribute<WithProgressBarAttribute>() != null;
+				Changed(() => InProgress);
 				var methodResult = method.Invoke(instance != null ? instance.ProxiedObject : null, parameterInstances.ToArray());
 				if (methodResult is Task)
 				{
@@ -269,6 +271,11 @@ namespace JustObjectsPrototype.Universal.JOP
 				System.Diagnostics.Debug.WriteLine("An Exception occured in " + method.Name + ".\n\n" + tie.InnerException.ToString());
 				//MessageBox.Show("An Exception occured in " + m.Name + ".\n\n" + tie.InnerException.ToString(), "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
 				return;
+			}
+			finally
+			{
+				InProgress = false;
+				Changed(() => InProgress);
 			}
 
 

@@ -56,6 +56,13 @@ namespace JustObjectsPrototype.Universal.JOP
 		}
 	}
 
+	public class WithProgressBarAttribute : JOPAttribute
+	{
+		public WithProgressBarAttribute()
+		{
+		}
+	}
+
 	public class RequiresConfirmationAttribute : JOPAttribute
 	{
 		public RequiresConfirmationAttribute()

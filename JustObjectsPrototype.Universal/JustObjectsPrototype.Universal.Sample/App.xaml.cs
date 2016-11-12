@@ -118,10 +118,11 @@ namespace JustObjectsPrototype.Universal.Sample
 			}
 		}
 
-		public async Task Test(DateTime? datum1, DateTime datum2)
+		[JOP.WithProgressBar]
+		public async Task Warte3Sekunden()
 		{
-			await Show.Message(datum1.ToString());
-			await Show.Message(datum2.ToString());
+			await Task.Delay(3000);
+			await Show.Message("3 Sekunden später.");
 		}
 	}
 

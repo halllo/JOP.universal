@@ -272,6 +272,7 @@
 					  IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
 					  />
 
+		<ProgressBar IsIndeterminate="True" Visibility="{Binding InProgress,Converter={StaticResource trueIsVisible}}"/>
 
 	</Grid>
 

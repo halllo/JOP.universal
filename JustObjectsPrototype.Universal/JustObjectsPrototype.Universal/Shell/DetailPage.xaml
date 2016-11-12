@@ -16,16 +16,25 @@
 			<NavigationThemeTransition />
 		</TransitionCollection>
 	</Page.Transitions>
+	<Page.Resources>
+		<local:TrueIsVisible x:Key="trueIsVisible"/>
+	</Page.Resources>
 
-	<ScrollViewer x:Name="RootPanel">
+	<Grid>
+		
+		<ScrollViewer x:Name="RootPanel">
 
-		<local:DetailView 
+			<local:DetailView 
 			x:Name="detailView"
 			Margin="12,8"
 			CommandBarVisible="False"
 			DataContext="{x:Bind Item, Mode=OneWay}"/>
 
-	</ScrollViewer>
+		</ScrollViewer>
+
+		<ProgressBar IsIndeterminate="True" x:Name="progressBar" Visibility="{Binding InProgress,Converter={StaticResource trueIsVisible}}"/>
+
+	</Grid>
 
 	<Page.BottomAppBar>
 		<CommandBar local:CommandBarBridge.DetailCommandsProperty="{x:Bind Item,Mode=OneWay}"/>

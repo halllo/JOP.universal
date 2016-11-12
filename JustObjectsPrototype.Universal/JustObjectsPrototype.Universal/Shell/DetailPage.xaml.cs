@@ -11,12 +11,10 @@ namespace JustObjectsPrototype.Universal.Shell
 	public sealed partial class DetailPage : Page
 	{
 		private static DependencyProperty s_itemProperty = DependencyProperty.Register("Item", typeof(object), typeof(DetailPage), new PropertyMetadata(null));
-
 		public static DependencyProperty ItemProperty
 		{
 			get { return s_itemProperty; }
 		}
-
 		public object Item
 		{
 			get { return GetValue(s_itemProperty); }
@@ -26,6 +24,7 @@ namespace JustObjectsPrototype.Universal.Shell
 		public DetailPage()
 		{
 			this.InitializeComponent();
+			progressBar.DataContext = JopViewModel.Instance.Value;
 			Loaded += DetailPage_Loaded;
 		}
 
@@ -40,7 +39,7 @@ namespace JustObjectsPrototype.Universal.Shell
 		{
 			System.Diagnostics.Debug.WriteLine("DetailPage.OnNavigatedTo");
 			base.OnNavigatedTo(e);
-
+			
 			Item = JopViewModel.Instance.Value.SelectedMasterItem;
 
 			var backStack = Frame.BackStack;
